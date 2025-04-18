@@ -426,6 +426,8 @@ export class ClientGameRunner {
       const units = this.gameView
         .nearbyUnits(tile, 50, [
           UnitType.Warship,
+          UnitType.NuclearWarship,
+          UnitType.SAMWarship,
           UnitType.TradeShip,
           UnitType.TransportShip,
         ])

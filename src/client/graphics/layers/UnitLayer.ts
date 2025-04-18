@@ -80,6 +80,7 @@ export class UnitLayer implements Layer {
     this.eventBus.on(UnitSelectionEvent, (e) => this.onUnitSelectionChange(e));
     this.redraw();
 
+    // idk if this is the right place to do this
     loadAllSprites();
   }
 
@@ -102,7 +103,7 @@ export class UnitLayer implements Layer {
 
     // Only select warships owned by the player
     return this.game
-      .units(UnitType.Warship)
+      .units(UnitType.Warship, UnitType.NuclearWarship, UnitType.SAMWarship)
       .filter(
         (unit) =>
           unit.isActive() &&
@@ -203,18 +204,6 @@ export class UnitLayer implements Layer {
       ?.[GameUpdateType.Unit]?.forEach((unit) => {
         this.onUnitEvent(this.game.unit(unit.id));
       });
-    this.boatToTrail.forEach((trail, unit) => {
-      for (const t of trail) {
-        this.paintCell(
-          this.game.x(t),
-          this.game.y(t),
-          this.relationship(unit),
-          this.theme.territoryColor(unit.owner()),
-          150,
-          this.transportShipTrailContext,
-        );
-      }
-    });
   }
 
   private relationship(unit: UnitView): Relationship {
@@ -241,6 +230,8 @@ export class UnitLayer implements Layer {
         this.handleBoatEvent(unit);
         break;
       case UnitType.Warship:
+      case UnitType.SAMWarship:
+      case UnitType.NuclearWarship:
         this.handleWarShipEvent(unit);
         break;
       case UnitType.Shell:
@@ -377,6 +368,8 @@ export class UnitLayer implements Layer {
   }
 
   private handleTradeShipEvent(unit: UnitView) {
+    const rel = this.relationship(unit);
+
     // Clear previous area
     for (const t of this.game.bfs(
       unit.lastTile(),

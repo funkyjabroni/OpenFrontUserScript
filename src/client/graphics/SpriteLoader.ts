@@ -2,7 +2,9 @@ import { Colord } from "colord";
 import atomBombSprite from "../../../resources/sprites/atombomb.png";
 import hydrogenBombSprite from "../../../resources/sprites/hydrogenbomb.png";
 import mirvSprite from "../../../resources/sprites/mirv2.png";
+import nuclearWarshipSprite from "../../../resources/sprites/nuclearWarship.png";
 import samMissileSprite from "../../../resources/sprites/samMissile.png";
+import SAMWarshipSprite from "../../../resources/sprites/SAMWarship.png";
 import tradeShipSprite from "../../../resources/sprites/tradeship.png";
 import transportShipSprite from "../../../resources/sprites/transportship.png";
 import warshipSprite from "../../../resources/sprites/warship.png";
@@ -13,6 +15,8 @@ import { UnitView } from "../../core/game/GameView";
 const SPRITE_CONFIG: Partial<Record<UnitType, string>> = {
   [UnitType.TransportShip]: transportShipSprite,
   [UnitType.Warship]: warshipSprite,
+  [UnitType.NuclearWarship]: nuclearWarshipSprite,
+  [UnitType.SAMWarship]: SAMWarshipSprite,
   [UnitType.SAMMissile]: samMissileSprite,
   [UnitType.AtomBomb]: atomBombSprite,
   [UnitType.HydrogenBomb]: hydrogenBombSprite,
@@ -76,17 +80,15 @@ export const getColoredSprite = (
   unit: UnitView,
   theme: Theme,
   customTerritoryColor?: Colord,
-  customBorderColor?: Colord,
 ): HTMLCanvasElement => {
   const owner = unit.owner();
   const territoryColor = customTerritoryColor ?? theme.territoryColor(owner);
-  const borderColor = customBorderColor ?? theme.borderColor(owner);
+  const borderColor = theme.borderColor(owner);
   const spawnHighlightColor = theme.spawnHighlightColor();
   const colorKey = customTerritoryColor
     ? customTerritoryColor.toRgbString()
-    : "";
+    : String(unit.isCooldown());
   const key = owner.id() + unit.type() + colorKey;
-
   if (coloredSpriteCache.has(key)) {
     return coloredSpriteCache.get(key)!;
   }
@@ -96,7 +98,11 @@ export const getColoredSprite = (
   const territoryRgb = territoryColor.toRgb();
   const borderRgb = borderColor.toRgb();
   const spawnHighlightRgb = spawnHighlightColor.toRgb();
-
+  if (unit.isCooldown() == true) {
+    borderRgb.r = 0;
+    borderRgb.g = 0;
+    borderRgb.b = 0;
+  }
   const canvas = document.createElement("canvas");
   const ctx = canvas.getContext("2d")!;
   canvas.width = sprite.width;

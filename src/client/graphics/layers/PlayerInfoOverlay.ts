@@ -108,7 +108,13 @@ export class PlayerInfoOverlay extends LitElement implements Layer {
       this.setVisible(true);
     } else if (!this.game.isLand(tile)) {
       const units = this.game
-        .units(UnitType.Warship, UnitType.TradeShip, UnitType.TransportShip)
+        .units(
+          UnitType.Warship,
+          UnitType.TradeShip,
+          UnitType.TransportShip,
+          UnitType.NuclearWarship,
+          UnitType.SAMWarship,
+        )
         .filter((u) => euclideanDistWorld(worldCoord, u.tile(), this.game) < 50)
         .sort(distSortUnitWorld(worldCoord, this.game));
 
@@ -228,10 +234,12 @@ export class PlayerInfoOverlay extends LitElement implements Layer {
           Cities: ${player.units(UnitType.City).length}
         </div>
         <div class="text-sm opacity-80" translate="no">
-          Missile launchers: ${player.units(UnitType.MissileSilo).length}
+          Missile launchers:
+          ${player.units(UnitType.MissileSilo, UnitType.NuclearWarship).length}
         </div>
         <div class="text-sm opacity-80" translate="no">
-          SAMs: ${player.units(UnitType.SAMLauncher).length}
+          SAMs:
+          ${player.units(UnitType.SAMLauncher, UnitType.SAMWarship).length}
         </div>
         ${relationHtml}
       </div>

@@ -3,6 +3,7 @@ import { customElement, state } from "lit/decorators.js";
 import warshipIcon from "../../../../resources/images/BattleshipIconWhite.svg";
 import cityIcon from "../../../../resources/images/CityIconWhite.svg";
 import goldCoinIcon from "../../../../resources/images/GoldCoinIcon.svg";
+import laboratoryIcon from "../../../../resources/images/LaboratoryIconWhite.svg";
 import mirvIcon from "../../../../resources/images/MIRVIcon.svg";
 import missileSiloIcon from "../../../../resources/images/MissileSiloIconWhite.svg";
 import hydrogenBombIcon from "../../../../resources/images/MushroomCloudIconWhite.svg";
@@ -34,21 +35,39 @@ const buildTable: BuildItemDisplay[][] = [
       countable: false,
     },
     {
-      unitType: UnitType.MIRV,
-      icon: mirvIcon,
-      description: "Huge explosion, only targets selected player",
-      countable: false,
-    },
-    {
       unitType: UnitType.HydrogenBomb,
       icon: hydrogenBombIcon,
       description: "Large explosion",
       countable: false,
     },
     {
+      unitType: UnitType.MIRV,
+      icon: mirvIcon,
+      description: "Huge explosion, only targets selected player",
+      countable: false,
+    },
+    {
+      unitType: UnitType.Laboratory,
+      icon: laboratoryIcon,
+      description: "Unlock new technologies",
+      countable: true,
+    },
+    {
       unitType: UnitType.Warship,
       icon: warshipIcon,
       description: "Captures trade ships, destroys ships and boats",
+      countable: true,
+    },
+    {
+      unitType: UnitType.NuclearWarship,
+      icon: warshipIcon,
+      description: "Captures trade ships, destroys ships, boats and send nukes",
+      countable: true,
+    },
+    {
+      unitType: UnitType.SAMWarship,
+      icon: warshipIcon,
+      description: "TEST",
       countable: true,
     },
     {
@@ -414,9 +433,11 @@ export class BuildMenu extends LitElement implements Layer {
         row.filter(
           (item) =>
             ![
+              UnitType.Laboratory,
               UnitType.AtomBomb,
               UnitType.MIRV,
               UnitType.HydrogenBomb,
+              UnitType.NuclearWarship,
               UnitType.MissileSilo,
               UnitType.SAMLauncher,
             ].includes(item.unitType),

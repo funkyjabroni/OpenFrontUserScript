@@ -730,16 +730,27 @@ export class PlayerImpl implements Player {
   }
 
   canBuild(unitType: UnitType, targetTile: TileRef): TileRef | false {
+    // prevent the building of nukes if not having enough labs
+    if (
+      (this.units(UnitType.Laboratory).length < 1 &&
+        unitType == UnitType.HydrogenBomb) ||
+      (this.units(UnitType.Laboratory).length < 3 && unitType == UnitType.MIRV)
+    ) {
+      return false;
+    }
     // prevent the building of nukes and nuke related buildings
     if (this.mg.config().disableNukes()) {
       if (
         unitType === UnitType.MissileSilo ||
+        unitType === UnitType.NuclearWarship ||
         unitType === UnitType.MIRV ||
         unitType === UnitType.AtomBomb ||
         unitType === UnitType.HydrogenBomb ||
         unitType === UnitType.SAMLauncher ||
+        unitType === UnitType.SAMWarship ||
         unitType === UnitType.SAMMissile ||
-        unitType === UnitType.MIRVWarhead
+        unitType === UnitType.MIRVWarhead ||
+        unitType === UnitType.Laboratory
       ) {
         return false;
       }
@@ -763,6 +774,8 @@ export class PlayerImpl implements Player {
       case UnitType.Port:
         return this.portSpawn(targetTile);
       case UnitType.Warship:
+      case UnitType.NuclearWarship:
+      case UnitType.SAMWarship:
         return this.warshipSpawn(targetTile);
       case UnitType.Shell:
       case UnitType.SAMMissile:
@@ -775,6 +788,7 @@ export class PlayerImpl implements Player {
       case UnitType.DefensePost:
       case UnitType.SAMLauncher:
       case UnitType.City:
+      case UnitType.Laboratory:
       case UnitType.Construction:
         return this.landBasedStructureSpawn(targetTile);
       default:
@@ -790,7 +804,7 @@ export class PlayerImpl implements Player {
       }
     }
     // only get missilesilos that are not on cooldown
-    const spawns = this.units(UnitType.MissileSilo)
+    const spawns = this.units(UnitType.MissileSilo, UnitType.NuclearWarship)
       .map((u) => u as Unit)
       .filter((silo) => {
         return !silo.isCooldown();

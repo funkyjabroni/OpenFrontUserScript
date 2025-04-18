@@ -13,12 +13,12 @@ import { PathFinder } from "../pathfinding/PathFinding";
 import { PseudoRandom } from "../PseudoRandom";
 import { ShellExecution } from "./ShellExecution";
 
-export class WarshipExecution implements Execution {
+export class NuclearWarshipExecution implements Execution {
   private random: PseudoRandom;
 
-  private _owner: Player;
+  private player: Player;
   private active = true;
-  private warship: Unit = null;
+  private nuclearWarship: Unit = null;
   private mg: Game = null;
 
   private target: Unit = null;
@@ -41,12 +41,12 @@ export class WarshipExecution implements Execution {
 
   init(mg: Game, ticks: number): void {
     if (!mg.hasPlayer(this.playerID)) {
-      console.log(`WarshipExecution: player ${this.playerID} not found`);
+      console.log(`NuclearWarshipExecution: player ${this.playerID} not found`);
       this.active = false;
       return;
     }
     this.pathfinder = PathFinder.Mini(mg, 5000, false);
-    this._owner = mg.player(this.playerID);
+    this.player = mg.player(this.playerID);
     this.mg = mg;
     this.patrolTile = this.patrolCenterTile;
     this.random = new PseudoRandom(mg.ticks());
@@ -55,13 +55,13 @@ export class WarshipExecution implements Execution {
   // Only for warships with "moveTarget" set
   goToMoveTarget(target: TileRef): boolean {
     // Patrol unless we are hunting down a tradeship
-    const result = this.pathfinder.nextTile(this.warship.tile(), target);
+    const result = this.pathfinder.nextTile(this.nuclearWarship.tile(), target);
     switch (result.type) {
       case PathFindResultType.Completed:
-        this.warship.setMoveTarget(null);
+        this.nuclearWarship.setMoveTarget(null);
         return;
       case PathFindResultType.NextTile:
-        this.warship.move(result.tile);
+        this.nuclearWarship.move(result.tile);
         break;
       case PathFindResultType.Pending:
         break;
@@ -76,9 +76,9 @@ export class WarshipExecution implements Execution {
       this.lastShellAttack = this.mg.ticks();
       this.mg.addExecution(
         new ShellExecution(
-          this.warship.tile(),
-          this.warship.owner(),
-          this.warship,
+          this.nuclearWarship.tile(),
+          this.nuclearWarship.owner(),
+          this.nuclearWarship,
           this.target,
         ),
       );
@@ -92,11 +92,11 @@ export class WarshipExecution implements Execution {
   }
 
   private patrol() {
-    this.warship.setWarshipTarget(this.target);
+    this.nuclearWarship.setWarshipTarget(this.target);
     if (this.target == null || this.target.type() != UnitType.TradeShip) {
       // Patrol unless we are hunting down a tradeship
       const result = this.pathfinder.nextTile(
-        this.warship.tile(),
+        this.nuclearWarship.tile(),
         this.patrolTile,
       );
       switch (result.type) {
@@ -104,7 +104,7 @@ export class WarshipExecution implements Execution {
           this.patrolTile = this.randomTile();
           break;
         case PathFindResultType.NextTile:
-          this.warship.move(result.tile);
+          this.nuclearWarship.move(result.tile);
           break;
         case PathFindResultType.Pending:
           return;
@@ -117,89 +117,84 @@ export class WarshipExecution implements Execution {
   }
 
   tick(ticks: number): void {
-    if (this.warship == null) {
-      const spawn = this._owner.canBuild(UnitType.Warship, this.patrolTile);
+    if (this.nuclearWarship == null) {
+      const spawn = this.player.canBuild(
+        UnitType.NuclearWarship,
+        this.patrolTile,
+      );
       if (spawn == false) {
         this.active = false;
         return;
       }
-      this.warship = this._owner.buildUnit(UnitType.Warship, 0, spawn);
+      this.nuclearWarship = this.player.buildUnit(
+        UnitType.NuclearWarship,
+        0,
+        spawn,
+        {
+          cooldownDuration: this.mg.config().SiloCooldown(),
+        },
+      );
       return;
     }
-    if (!this.warship.isActive()) {
+    if (!this.nuclearWarship.isActive()) {
       this.active = false;
       return;
     }
     if (this.target != null && !this.target.isActive()) {
       this.target = null;
     }
-    const hasPort = this._owner.units(UnitType.Port).length > 0;
+    const hasPort = this.player.units(UnitType.Port).length > 0;
     const ships = this.mg
-      .nearbyUnits(
-        this.warship.tile(),
-        130, // Search range
-        [
-          UnitType.TransportShip,
-          UnitType.Warship,
-          UnitType.TradeShip,
-          UnitType.SAMWarship,
-          UnitType.NuclearWarship,
-        ],
-      )
+      .nearbyUnits(this.nuclearWarship.tile(), 130, [
+        UnitType.TransportShip,
+        UnitType.Warship,
+        UnitType.TradeShip,
+        UnitType.SAMWarship,
+        UnitType.NuclearWarship,
+      ])
       .filter(
         ({ unit }) =>
-          unit.owner() !== this.warship.owner() &&
-          unit !== this.warship &&
-          !unit.owner().isFriendly(this.warship.owner()) &&
+          unit.owner() !== this.player &&
+          unit !== this.nuclearWarship &&
+          !unit.owner().isFriendly(this.player) &&
           !this.alreadySentShell.has(unit) &&
           (unit.type() !== UnitType.TradeShip || hasPort) &&
           (unit.type() !== UnitType.TradeShip ||
-            unit.dstPort()?.owner() !== this._owner),
+            unit.dstPort()?.owner() !== this.player),
       );
 
+    if (
+      this.nuclearWarship.isCooldown() &&
+      this.nuclearWarship.ticksLeftInCooldown(
+        this.mg.config().SiloCooldown(),
+      ) == 0
+    ) {
+      this.nuclearWarship.setCooldown(false);
+    }
     this.target =
       ships.sort((a, b) => {
-        const { unit: unitA, distSquared: distA } = a;
-        const { unit: unitB, distSquared: distB } = b;
+        const priority = (unit: Unit): number => {
+          if (
+            [
+              UnitType.Warship,
+              UnitType.NuclearWarship,
+              UnitType.SAMWarship,
+            ].includes(unit.type())
+          )
+            return 0;
+          if (unit.type() === UnitType.TransportShip) return 1;
+          return 2;
+        };
 
-        // Prioritize Warships
-        if (
-          unitA.type() ===
-            (UnitType.Warship ||
-              UnitType.NuclearWarship ||
-              UnitType.SAMWarship) &&
-          unitB.type() !==
-            (UnitType.Warship || UnitType.NuclearWarship || UnitType.SAMWarship)
-        )
-          return -1;
-        if (
-          unitA.type() !==
-            (UnitType.Warship ||
-              UnitType.NuclearWarship ||
-              UnitType.SAMWarship) &&
-          unitB.type() ===
-            (UnitType.Warship || UnitType.NuclearWarship || UnitType.SAMWarship)
-        )
-          return 1;
+        const aScore = priority(a.unit);
+        const bScore = priority(b.unit);
 
-        // Then favor Transport Ships over Trade Ships
-        if (
-          unitA.type() === UnitType.TransportShip &&
-          unitB.type() !== UnitType.TransportShip
-        )
-          return -1;
-        if (
-          unitA.type() !== UnitType.TransportShip &&
-          unitB.type() === UnitType.TransportShip
-        )
-          return 1;
-
-        // If both are the same type, sort by distance (lower `distSquared` means closer)
-        return distA - distB;
+        if (aScore !== bScore) return aScore - bScore;
+        return a.distSquared - b.distSquared;
       })[0]?.unit ?? null;
 
-    if (this.warship.moveTarget()) {
-      this.goToMoveTarget(this.warship.moveTarget());
+    if (this.nuclearWarship.moveTarget()) {
+      this.goToMoveTarget(this.nuclearWarship.moveTarget());
       // If we have a "move target" then we cannot target trade ships as it
       // requires moving.
       if (this.target && this.target.type() == UnitType.TradeShip) {
@@ -212,14 +207,14 @@ export class WarshipExecution implements Execution {
     if (
       this.target == null ||
       !this.target.isActive() ||
-      this.target.owner() == this._owner
+      this.target.owner() == this.player
     ) {
       // In case another destroyer captured or destroyed target
       this.target = null;
       return;
     }
 
-    this.warship.setWarshipTarget(this.target);
+    this.nuclearWarship.setWarshipTarget(this.target);
 
     // If we have a move target we do not want to go after trading ships
     if (!this.target) {
@@ -234,17 +229,17 @@ export class WarshipExecution implements Execution {
     for (let i = 0; i < 2; i++) {
       // target is trade ship so capture it.
       const result = this.pathfinder.nextTile(
-        this.warship.tile(),
+        this.nuclearWarship.tile(),
         this.target.tile(),
         5,
       );
       switch (result.type) {
         case PathFindResultType.Completed:
-          this._owner.captureUnit(this.target);
+          this.player.captureUnit(this.target);
           this.target = null;
           return;
         case PathFindResultType.NextTile:
-          this.warship.move(result.tile);
+          this.nuclearWarship.move(result.tile);
           break;
         case PathFindResultType.Pending:
           break;
