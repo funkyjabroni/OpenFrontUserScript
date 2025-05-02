@@ -24,6 +24,7 @@ import { PublicLobby } from "./PublicLobby";
 import "./RandomNameButton";
 import { RandomNameButton } from "./RandomNameButton";
 import { SinglePlayerModal } from "./SinglePlayerModal";
+import { StatsMarquee } from "./StatsMarquee";
 import { UserSettingModal } from "./UserSettingModal";
 import "./UsernameInput";
 import { UsernameInput } from "./UsernameInput";
@@ -54,6 +55,7 @@ class Client {
 
   private joinModal: JoinPrivateLobbyModal;
   private publicLobby: PublicLobby;
+  private statsMarquee: StatsMarquee;
   private googleAds: NodeListOf<GoogleAdElement>;
   private userSettings: UserSettings = new UserSettings();
 
@@ -122,6 +124,9 @@ class Client {
     this.googleAds = document.querySelectorAll(
       "google-ad",
     ) as NodeListOf<GoogleAdElement>;
+
+    this.statsMarquee = document.querySelector("stats-marquee") as StatsMarquee;
+    this.statsMarquee instanceof StatsMarquee;
 
     window.addEventListener("beforeunload", () => {
       consolex.log("Browser is closing");
