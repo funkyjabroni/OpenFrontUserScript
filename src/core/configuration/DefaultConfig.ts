@@ -273,6 +273,9 @@ export class DefaultConfig implements Config {
   bots(): number {
     return this._gameConfig.bots;
   }
+  allianceBreakCooldown(): number {
+    return this._gameConfig.allianceBreakCooldown;
+  }
   instantBuild(): boolean {
     return this._gameConfig.instantBuild;
   }
