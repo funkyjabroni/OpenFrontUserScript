@@ -486,7 +486,7 @@ export class EventsDisplay extends LitElement implements Layer {
                   (attack) => html`
                     <button
                       translate="no"
-                      class="ml-2"
+                      class="ml-2 md:underline md:underline-offset-2 md:hover:underline-offset-4 decoration-1"
                       @click=${() => {
                         attack.attackerID &&
                           this.emitGoToPlayerEvent(attack.attackerID);
@@ -519,7 +519,7 @@ export class EventsDisplay extends LitElement implements Layer {
                   (attack) => html`
                     <button
                       translate="no"
-                      class="ml-2"
+                      class="ml-2 md:underline md:underline-offset-2 md:hover:underline-offset-4 decoration-1"
                       @click=${() => this.emitGoToPlayerEvent(attack.targetID)}
                     >
                       ${renderTroops(attack.troops)}
@@ -588,6 +588,7 @@ export class EventsDisplay extends LitElement implements Layer {
                   (boat) => html`
                     <button
                       translate="no"
+                      class="md:underline md:underline-offset-2 md:hover:underline-offset-4 decoration-1"
                       @click=${() => this.emitGoToUnitEvent(boat)}
                     >
                       Boat: ${renderTroops(boat.troops())}
@@ -679,6 +680,7 @@ export class EventsDisplay extends LitElement implements Layer {
                               event.focusID &&
                                 this.emitGoToPlayerEvent(event.focusID);
                             }}
+                            class="md:underline md:underline-offset-2 md:hover:underline-offset-4 decoration-1"
                           >
                             ${this.getEventDescription(event)}
                           </button>`
