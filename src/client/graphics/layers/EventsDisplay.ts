@@ -25,14 +25,18 @@ import {
   DisplayChatMessageUpdate,
   DisplayMessageUpdate,
   EmojiUpdate,
+  ExpireVoteForPeaceUpdate,
   GameUpdateType,
+  RequestVoteForPeaceUpdate,
   TargetPlayerUpdate,
   UnitIncomingUpdate,
+  VoteForPeaceReplyUpdate,
 } from "../../../core/game/GameUpdates";
 import {
   CancelAttackIntentEvent,
   CancelBoatIntentEvent,
   SendAllianceReplyIntentEvent,
+  SendAllianceWinVoteReplyIntentEvent,
 } from "../../Transport";
 import { Layer } from "./Layer";
 
@@ -152,6 +156,12 @@ export class EventsDisplay extends LitElement implements Layer {
     [GameUpdateType.TargetPlayer, (u) => this.onTargetPlayerEvent(u)],
     [GameUpdateType.Emoji, (u) => this.onEmojiMessageEvent(u)],
     [GameUpdateType.UnitIncoming, (u) => this.onUnitIncomingEvent(u)],
+    [GameUpdateType.VoteForPeace, (u) => this.onVoteForPeaceEvent(u)],
+    [GameUpdateType.VoteForPeaceReply, (u) => this.onVoteForPeaceReplyEvent(u)],
+    [
+      GameUpdateType.VoteForPeaceExpired,
+      (u) => this.onVoteForPeaceExpiredEvent(u),
+    ],
   ]);
 
   constructor() {
@@ -572,6 +582,84 @@ export class EventsDisplay extends LitElement implements Layer {
       highlight: true,
       createdAt: this.game.ticks(),
       unitView: unitView,
+    });
+  }
+
+  onVoteForPeaceEvent(event: RequestVoteForPeaceUpdate) {
+    const myPlayer = this.game.myPlayer();
+
+    if (!myPlayer || myPlayer.smallID() !== event.playerID) {
+      return;
+    }
+
+    const leader = this.game.playerBySmallID(event.leaderID) as PlayerView;
+    const coalitionMembers = event.participants;
+
+    const coalitionString = coalitionMembers.join(", ");
+    this.addEvent({
+      description: translateText("events_display.vote_for_peace", {
+        list: coalitionString,
+      }),
+      type: MessageType.VOTE_FOR_PEACE,
+      unsafeDescription: false,
+      highlight: true,
+      createdAt: this.game.ticks(),
+      buttons: [
+        {
+          text: translateText("player_panel.yes"),
+          className: "btn",
+          action: () =>
+            this.eventBus.emit(
+              new SendAllianceWinVoteReplyIntentEvent(myPlayer, true),
+            ),
+        },
+        {
+          text: translateText("player_panel.no"),
+          className: "btn-info",
+          action: () =>
+            this.eventBus.emit(
+              new SendAllianceWinVoteReplyIntentEvent(myPlayer, false),
+            ),
+        },
+      ],
+    });
+  }
+
+  onVoteForPeaceReplyEvent(event: VoteForPeaceReplyUpdate) {
+    const myPlayer = this.game.myPlayer();
+
+    if (!myPlayer || myPlayer.smallID() !== event.playerID) {
+      return;
+    }
+
+    this.addEvent({
+      description: `${translateText("events_display.player_vote_response")} ${event.accepted ? translateText("player_panel.yes") : translateText("player_panel.no")}`,
+      type: MessageType.VOTE_FOR_PEACE_REPLY,
+      unsafeDescription: false,
+      highlight: true,
+      createdAt: this.game.ticks(),
+    });
+  }
+
+  onVoteForPeaceExpiredEvent(event: ExpireVoteForPeaceUpdate) {
+    const voteData = event.vote;
+    const votedFor: string[] = [];
+    const votedAgainst: string[] = [];
+    for (const [voterID, accepted] of voteData.results.entries()) {
+      if (accepted) {
+        votedFor.push(voterID);
+      } else {
+        votedAgainst.push(voterID);
+      }
+    }
+    const votedForString = votedFor.join(", ");
+    const votedAgainstString = votedAgainst.join(", ");
+    this.addEvent({
+      description: `${translateText("events_display.vote_expired", { votedForString, votedAgainstString })}`,
+      type: MessageType.VOTE_FOR_PEACE_REPLY,
+      unsafeDescription: false,
+      highlight: true,
+      createdAt: this.game.ticks(),
     });
   }
 

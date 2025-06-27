@@ -617,7 +617,7 @@ export interface Game extends GameMap {
   ticks(): Tick;
   inSpawnPhase(): boolean;
   executeNextTick(): GameUpdates;
-  setWinner(winner: Player | Team, allPlayersStats: AllPlayersStats): void;
+  setWinner(winner: Player[] | Team, allPlayersStats: AllPlayersStats): void;
   config(): Config;
 
   // Units
@@ -729,6 +729,9 @@ export enum MessageType {
   SENT_TROOPS_TO_PLAYER,
   RECEIVED_TROOPS_FROM_PLAYER,
   CHAT,
+  VOTE_FOR_PEACE,
+  VOTE_FOR_PEACE_REPLY,
+  VOTE_FOR_PEACE_EXPIRED,
 }
 
 // Message categories used for filtering events in the EventsDisplay
@@ -759,6 +762,9 @@ export const MESSAGE_TYPE_CATEGORIES: Record<MessageType, MessageCategory> = {
   [MessageType.ALLIANCE_REQUEST]: MessageCategory.ALLIANCE,
   [MessageType.ALLIANCE_BROKEN]: MessageCategory.ALLIANCE,
   [MessageType.ALLIANCE_EXPIRED]: MessageCategory.ALLIANCE,
+  [MessageType.VOTE_FOR_PEACE]: MessageCategory.ALLIANCE,
+  [MessageType.VOTE_FOR_PEACE_REPLY]: MessageCategory.ALLIANCE,
+  [MessageType.VOTE_FOR_PEACE_EXPIRED]: MessageCategory.ALLIANCE,
   [MessageType.SENT_GOLD_TO_PLAYER]: MessageCategory.TRADE,
   [MessageType.RECEIVED_GOLD_FROM_PLAYER]: MessageCategory.TRADE,
   [MessageType.RECEIVED_GOLD_FROM_TRADE]: MessageCategory.TRADE,

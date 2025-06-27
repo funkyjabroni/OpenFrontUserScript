@@ -164,6 +164,7 @@ export class FakeHumanExecution implements Execution {
 
     this.updateRelationsFromEmbargos();
     this.behavior.handleAllianceRequests();
+    this.behavior.handleAllianceWinVotes();
     this.handleEnemies();
     this.handleUnits();
     this.handleEmbargoesToHostileNations();

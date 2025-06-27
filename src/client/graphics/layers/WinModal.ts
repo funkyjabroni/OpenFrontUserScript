@@ -3,9 +3,9 @@ import { customElement, state } from "lit/decorators.js";
 import { translateText } from "../../../client/Utils";
 import { EventBus } from "../../../core/EventBus";
 import { GameUpdateType } from "../../../core/game/GameUpdates";
-import { GameView } from "../../../core/game/GameView";
+import { GameView, PlayerView } from "../../../core/game/GameView";
+import { TerraNulliusImpl } from "../../../core/game/TerraNulliusImpl";
 import { SendWinnerEvent } from "../../Transport";
-import { GutterAdModalEvent } from "./GutterAdModal";
 import { Layer } from "./Layer";
 
 @customElement("win-modal")
@@ -18,10 +18,8 @@ export class WinModal extends LitElement implements Layer {
   @state()
   isVisible = false;
 
-  @state()
-  showButtons = false;
-
   private _title: string;
+  private _subtitle: string;
 
   // Override to prevent shadow DOM creation
   createRenderRoot() {
@@ -138,10 +136,9 @@ export class WinModal extends LitElement implements Layer {
     return html`
       <div class="win-modal ${this.isVisible ? "visible" : ""}">
         <h2>${this._title || ""}</h2>
+        <h3>${this._subtitle || ""}</h3>
         ${this.innerHtml()}
-        <div
-          class="button-container ${this.showButtons ? "visible" : "hidden"}"
-        >
+        <div class="button-container">
           <button @click=${this._handleExit}>
             ${translateText("win_modal.exit")}
           </button>
@@ -175,21 +172,12 @@ export class WinModal extends LitElement implements Layer {
   }
 
   show() {
-    this.eventBus.emit(new GutterAdModalEvent(true));
-    setTimeout(() => {
-      this.isVisible = true;
-      this.requestUpdate();
-    }, 1500);
-    setTimeout(() => {
-      this.showButtons = true;
-      this.requestUpdate();
-    }, 3000);
+    this.isVisible = true;
+    this.requestUpdate();
   }
 
   hide() {
-    this.eventBus.emit(new GutterAdModalEvent(false));
     this.isVisible = false;
-    this.showButtons = false;
     this.requestUpdate();
   }
 
@@ -226,15 +214,21 @@ export class WinModal extends LitElement implements Layer {
           });
         }
         this.show();
-      } else {
-        const winner = this.game.playerBySmallID(wu.winner[1]);
+      } else if (wu.winner.length === 2) {
+        // If the winners chosen are a group of players (but not in a team game mode), we need to handle this case as a Coalition win.
+        const winnerId = wu.winner[1];
+        // Grab the first in the list, this player is considered the "winner", and should get the winner event.
+        const winner = this.game.playerBySmallID(winnerId);
         if (!winner.isPlayer()) return;
+
         const winnerClient = winner.clientID();
+
         if (winnerClient !== null) {
           this.eventBus.emit(
             new SendWinnerEvent(["player", winnerClient], wu.allPlayersStats),
           );
         }
+
         if (
           winnerClient !== null &&
           winnerClient === this.game.myPlayer()?.clientID()
@@ -246,6 +240,60 @@ export class WinModal extends LitElement implements Layer {
           });
         }
         this.show();
+      } else if (wu.winner.length > 2) {
+        const winnerId = wu.winner[1];
+        const assistedByIds: any[] = wu.winner.slice(2);
+        const winner: PlayerView | TerraNulliusImpl =
+          this.game.playerBySmallID(winnerId);
+        if (winner instanceof TerraNulliusImpl) {
+          throw new Error(`small id ${winnerId} not found`);
+        }
+        const winnerClient = winner.clientID();
+        const assistedByClientIds: string[] = assistedByIds
+          // First, map to the values, which creates the array with undefineds
+          .map((id) => this.game.playerBySmallID(id)?.clientID())
+          // Then, filter out the null/undefined values
+          .filter((clientId) => clientId !== null);
+
+        const myPlayer = this.game.myPlayer();
+        const myPlayerName = myPlayer?.name();
+        const assistedByNames: string[] = this.determineNamesBySmallId(
+          assistedByIds,
+          myPlayerName,
+        );
+
+        const helpers = assistedByNames.join(", ");
+
+        if (winnerClient !== null) {
+          this.eventBus.emit(
+            new SendWinnerEvent(
+              ["player", winnerClient, ...assistedByClientIds],
+              wu.allPlayersStats,
+            ),
+          );
+        }
+
+        const myClientID = myPlayer?.clientID();
+        const isCurrentPlayerWinner =
+          winnerClient !== null && winnerClient === myPlayer?.clientID();
+        const isCurrentPlayerHelper =
+          typeof myClientID !== "undefined" &&
+          myClientID !== null &&
+          assistedByClientIds.includes(myClientID);
+
+        if (isCurrentPlayerWinner) {
+          this._title = translateText("win_modal.you_won");
+        } else {
+          this._title = translateText("win_modal.other_won", {
+            player: winner.name(),
+          });
+        }
+
+        this._subtitle = isCurrentPlayerHelper
+          ? translateText("win_modal.with_your_help", { players: helpers })
+          : translateText("win_modal.with_help", { players: helpers });
+
+        this.show();
       }
     });
   }
@@ -254,5 +302,26 @@ export class WinModal extends LitElement implements Layer {
 
   shouldTransform(): boolean {
     return false;
+  }
+
+  determineNamesBySmallId(
+    smallIds: number[],
+    nameToFilter: string | undefined | null,
+  ): string[] {
+    return (
+      smallIds
+        // First, map to the values, which creates the array with undefineds
+        .map((id) => this.game.playerBySmallID(id))
+        // Then, filter out the "null" players.
+        .filter((object) => object instanceof PlayerView)
+        .map((player) => player.name())
+        .filter((playerName) => {
+          if (nameToFilter !== null) {
+            return playerName !== nameToFilter;
+          } else {
+            return playerName;
+          }
+        })
+    );
   }
 }
