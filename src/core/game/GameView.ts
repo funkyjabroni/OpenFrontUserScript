@@ -35,8 +35,6 @@ import { TerraNulliusImpl } from "./TerraNulliusImpl";
 import { UnitGrid } from "./UnitGrid";
 import { UserSettings } from "./UserSettings";
 
-const userSettings: UserSettings = new UserSettings();
-
 interface PlayerCosmetics {
   pattern?: string | undefined;
   flag?: string | undefined;
@@ -147,6 +145,7 @@ export class PlayerView {
 
   constructor(
     private game: GameView,
+    private userSettings: UserSettings,
     public data: PlayerUpdate,
     public nameData: NameViewData,
     public cosmetics: PlayerCosmetics,
@@ -211,12 +210,12 @@ export class PlayerView {
   }
 
   name(): string {
-    return this.anonymousName !== null && userSettings.anonymousNames()
+    return this.anonymousName !== null && this.userSettings.anonymousNames()
       ? this.anonymousName
       : this.data.name;
   }
   displayName(): string {
-    return this.anonymousName !== null && userSettings.anonymousNames()
+    return this.anonymousName !== null && this.userSettings.anonymousNames()
       ? this.anonymousName
       : this.data.name;
   }
@@ -342,6 +341,7 @@ export class GameView implements GameMap {
 
   constructor(
     public worker: WorkerClient,
+    private _userSettings: UserSettings,
     private _config: Config,
     private _mapData: TerrainMapData,
     private _myClientID: ClientID,
@@ -398,6 +398,7 @@ export class GameView implements GameMap {
           pu.id,
           new PlayerView(
             this,
+            this._userSettings,
             pu,
             gu.playerNameViewData[pu.id],
             // First check human by clientID, then check nation by name.
@@ -654,5 +655,9 @@ export class GameView implements GameMap {
   }
   setFocusedPlayer(player: PlayerView | null): void {
     this._focusedPlayer = player;
+  }
+
+  get userSettings(): UserSettings {
+    return this._userSettings;
   }
 }

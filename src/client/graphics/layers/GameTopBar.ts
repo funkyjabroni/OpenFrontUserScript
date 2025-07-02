@@ -1,5 +1,5 @@
 import { html, LitElement } from "lit";
-import { customElement, query, state } from "lit/decorators.js";
+import { customElement, property, query, state } from "lit/decorators.js";
 import cityIcon from "../../../../resources/images/CityIconWhite.svg";
 import darkModeIcon from "../../../../resources/images/DarkModeIconWhite.svg";
 import emojiIcon from "../../../../resources/images/EmojiIconWhite.svg";
@@ -32,7 +32,6 @@ import { Layer } from "./Layer";
 export class GameTopBar extends LitElement implements Layer {
   public game: GameView;
   public eventBus: EventBus;
-  private _userSettings: UserSettings = new UserSettings();
   private _population = 0;
   private _troops = 0;
   private _cities = 0;
@@ -45,6 +44,9 @@ export class GameTopBar extends LitElement implements Layer {
   private _lastPopulationIncreaseRate = 0;
   private _popRateIsIncreasing = false;
   private hasWinner = false;
+
+  @property({ type: Object })
+  userSettings: UserSettings;
 
   @state()
   private showSettingsMenu = false;
@@ -125,26 +127,26 @@ export class GameTopBar extends LitElement implements Layer {
   }
 
   private onToggleEmojisButtonClick() {
-    this._userSettings.toggleEmojis();
+    this.userSettings.toggleEmojis();
     this.requestUpdate();
   }
 
   private onToggleSpecialEffectsButtonClick() {
-    this._userSettings.toggleFxLayer();
+    this.userSettings.toggleFxLayer();
     this.requestUpdate();
   }
 
   private onToggleDarkModeButtonClick() {
-    this._userSettings.toggleDarkMode();
+    this.userSettings.toggleDarkMode();
     this.requestUpdate();
     this.eventBus.emit(new RefreshGraphicsEvent());
   }
 
   private onToggleRandomNameModeButtonClick() {
-    this._userSettings.toggleRandomName();
+    this.userSettings.toggleRandomName();
   }
   private onToggleLeftClickOpensMenu() {
-    this._userSettings.toggleLeftClickOpenMenu();
+    this.userSettings.toggleLeftClickOpenMenu();
   }
 
   private toggleSettingsMenu() {
@@ -391,7 +393,7 @@ export class GameTopBar extends LitElement implements Layer {
                           height="20"
                         />
                         ${translateText("user_setting.emojis_label")}
-                        ${this._userSettings.emojis() ? "On" : "Off"}
+                        ${this.userSettings.emojis() ? "On" : "Off"}
                       </button>
                       <button
                         class="flex gap-1 items-center w-full text-left px-2 py-1 hover:bg-slate-600 text-white text-sm"
@@ -404,7 +406,7 @@ export class GameTopBar extends LitElement implements Layer {
                           height="20"
                         />
                         ${translateText("user_setting.dark_mode_label")}
-                        ${this._userSettings.darkMode() ? "On" : "Off"}
+                        ${this.userSettings.darkMode() ? "On" : "Off"}
                       </button>
                       <button
                         class="flex gap-1 items-center w-full text-left px-2 py-1 hover:bg-slate-600 text-white text-sm"
@@ -417,7 +419,7 @@ export class GameTopBar extends LitElement implements Layer {
                           height="20"
                         />
                         ${translateText("user_setting.special_effects_label")}
-                        ${this._userSettings.fxLayer() ? "On" : "Off"}
+                        ${this.userSettings.fxLayer() ? "On" : "Off"}
                       </button>
                       <button
                         class="flex gap-1 items-center w-full text-left px-2 py-1 hover:bg-slate-600 text-white text-sm"
@@ -430,7 +432,7 @@ export class GameTopBar extends LitElement implements Layer {
                           height="20"
                         />
                         ${translateText("user_setting.anonymous_names_label")}
-                        ${this._userSettings.anonymousNames() ? "On" : "Off"}
+                        ${this.userSettings.anonymousNames() ? "On" : "Off"}
                       </button>
                       <button
                         class="flex gap-1 items-center w-full text-left px-2 py-1 hover:bg-slate-600 text-white text-sm"
@@ -443,9 +445,7 @@ export class GameTopBar extends LitElement implements Layer {
                           height="20"
                         />
                         Left click
-                        ${this._userSettings.leftClickOpensMenu()
-                          ? "On"
-                          : "Off"}
+                        ${this.userSettings.leftClickOpensMenu() ? "On" : "Off"}
                       </button>
                       <button
                         class="flex gap-1 items-center w-full text-left px-2 py-1 hover:bg-slate-600 text-white text-sm"
