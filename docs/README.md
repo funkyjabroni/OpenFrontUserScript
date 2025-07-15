@@ -4,5 +4,5 @@ The purpose of this documentation is to give new contributors a way to learn abo
 
 ## Table of Contents
 
-[Setup](setup.md)
-[Directories](dirs.md)
+- [Setup](setup.md)
+- [Directories](dirs.md)
