@@ -1,4 +1,3 @@
-````markdown
 # Setup
 
 ## 📋 Prerequisites
@@ -19,7 +18,6 @@ Using Git:
 cd <directory-of-your-choice>
 git clone https://github.com/OpenFrontIO/OpenFrontIO.git
 cd OpenFrontIO
-````
 
 Or download the `.zip` from the GitHub repo and extract it, then `cd` into the extracted folder.
 
