@@ -1,4 +1,3 @@
-Here’s a clean, combined version of your installation and setup instructions for **OpenFrontIO**, consolidating all the details into a single, well-organized README section:
 
 ---
 
