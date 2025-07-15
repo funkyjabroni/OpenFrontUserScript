@@ -1,11 +1,5 @@
-
 ````markdown
 # Setup
-# OpenFrontIO
-
-OpenFrontIO is a real-time multiplayer strategy game focused on territorial control and alliance-building.
-
----
 
 ## 📋 Prerequisites
 
