@@ -4,6 +4,7 @@ import { EventBus } from "../../../core/EventBus";
 import { TransformHandler } from "../TransformHandler";
 import { Layer } from "./Layer";
 
+import airportIcon from "../../../../resources/images/buildings/airport.png";
 import cityIcon from "../../../../resources/non-commercial/images/buildings/cityAlt1.png";
 import factoryIcon from "../../../../resources/non-commercial/images/buildings/factoryAlt1.png";
 import shieldIcon from "../../../../resources/non-commercial/images/buildings/fortAlt3.png";
@@ -41,6 +42,11 @@ export class StructureLayer implements Layer {
   private readonly unitConfigs: Partial<Record<UnitType, UnitRenderConfig>> = {
     [UnitType.Port]: {
       icon: anchorIcon,
+      borderRadius: BASE_BORDER_RADIUS * RADIUS_SCALE_FACTOR,
+      territoryRadius: BASE_TERRITORY_RADIUS * RADIUS_SCALE_FACTOR,
+    },
+    [UnitType.Airport]: {
+      icon: airportIcon,
       borderRadius: BASE_BORDER_RADIUS * RADIUS_SCALE_FACTOR,
       territoryRadius: BASE_TERRITORY_RADIUS * RADIUS_SCALE_FACTOR,
     },
