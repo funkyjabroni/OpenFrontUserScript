@@ -7,6 +7,7 @@ import factoryIcon from "../../../../resources/images/FactoryUnit.png";
 import missileSiloIcon from "../../../../resources/images/MissileSiloUnit.png";
 import SAMMissileIcon from "../../../../resources/images/SamLauncherUnit.png";
 import shieldIcon from "../../../../resources/images/ShieldIcon.png";
+import trainingCampIcon from "../../../../resources/images/TrainingCampIcon.png";
 import { Theme } from "../../../core/configuration/Config";
 import { EventBus } from "../../../core/EventBus";
 import { Cell, PlayerID, UnitType } from "../../../core/game/Game";
@@ -38,6 +39,7 @@ const STRUCTURE_SHAPES: Partial<Record<UnitType, ShapeType>> = {
   [UnitType.DefensePost]: "octagon",
   [UnitType.SAMLauncher]: "square",
   [UnitType.MissileSilo]: "triangle",
+  [UnitType.TrainingCamp]: "circle",
 };
 const LEVEL_SCALE_FACTOR = 3;
 const ICON_SCALE_FACTOR_ZOOMED_IN = 3.5;
@@ -82,6 +84,10 @@ export class StructureIconsLayer implements Layer {
     [
       UnitType.SAMLauncher,
       { visible: true, iconPath: SAMMissileIcon, image: null },
+    ],
+    [
+      UnitType.TrainingCamp,
+      { visible: true, iconPath: trainingCampIcon, image: null },
     ],
   ]);
   private renderSprites = true;
@@ -351,6 +357,7 @@ export class StructureIconsLayer implements Layer {
     }
 
     const shape = STRUCTURE_SHAPES[structureType];
+
     const texture = shape
       ? this.createIcon(
           unit.owner(),
@@ -479,7 +486,9 @@ export class StructureIconsLayer implements Layer {
 
     const structureInfo = this.structures.get(structureType);
     if (!structureInfo?.image) {
-      console.warn(`Image not loaded for unit type: ${structureType}`);
+      if (structureInfo) {
+        this.loadIcon(structureInfo, structureType);
+      }
       return PIXI.Texture.from(structureCanvas);
     }
 
@@ -497,7 +506,6 @@ export class StructureIconsLayer implements Layer {
         offsetX,
         offsetY,
       );
-    }
     return PIXI.Texture.from(structureCanvas);
   }
 

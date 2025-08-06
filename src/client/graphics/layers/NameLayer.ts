@@ -333,6 +333,12 @@ export class NameLayer implements Layer {
     // Throttle updates
     const now = Date.now();
     if (now - render.lastRenderCalc <= this.renderRefreshRate) {
+      const troopsDiv = render.element.querySelector(
+        ".player-troops",
+      ) as HTMLDivElement;
+      if (troopsDiv) {
+        troopsDiv.textContent = renderTroops(render.player.troops());
+      }
       return;
     }
     render.lastRenderCalc = now + this.rand.nextInt(0, 100);
