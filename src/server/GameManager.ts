@@ -1,6 +1,6 @@
 import { Logger } from "winston";
 import { ServerConfig } from "../core/configuration/Config";
-import { Difficulty, GameMapType, GameMode, GameType } from "../core/game/Game";
+import { GameMapType, GameMode, GameType } from "../core/game/Game";
 import { GameConfig, GameID } from "../core/Schemas";
 import { Client } from "./Client";
 import { GamePhase, GameServer } from "./GameServer";
@@ -41,7 +41,7 @@ export class GameManager {
       {
         gameMap: GameMapType.World,
         gameType: GameType.Private,
-        difficulty: Difficulty.Medium,
+        difficulty: "Medium",
         disableNPCs: false,
         infiniteGold: false,
         infiniteTroops: false,

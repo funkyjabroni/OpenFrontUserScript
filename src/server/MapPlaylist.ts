@@ -1,6 +1,5 @@
 import { getServerConfigFromServer } from "../core/configuration/ConfigLoader";
 import {
-  Difficulty,
   Duos,
   GameMapName,
   GameMapType,
@@ -81,7 +80,7 @@ export class MapPlaylist {
       gameMap: map,
       maxPlayers: config.lobbyMaxPlayers(map, mode, playerTeams),
       gameType: GameType.Public,
-      difficulty: Difficulty.Medium,
+      difficulty: "Medium",
       infiniteGold: false,
       infiniteTroops: false,
       instantBuild: false,

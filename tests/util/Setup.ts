@@ -1,7 +1,6 @@
 import fs from "fs";
 import path from "path";
 import {
-  Difficulty,
   Game,
   GameMapType,
   GameMode,
@@ -60,7 +59,7 @@ export async function setup(
     gameMap: GameMapType.Asia,
     gameMode: GameMode.FFA,
     gameType: GameType.Singleplayer,
-    difficulty: Difficulty.Medium,
+    difficulty: "Medium",
     disableNPCs: false,
     bots: 0,
     infiniteGold: false,

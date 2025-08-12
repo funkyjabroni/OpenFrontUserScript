@@ -5,6 +5,7 @@ import { translateText } from "../client/Utils";
 import { getServerConfigFromClient } from "../core/configuration/ConfigLoader";
 import {
   Difficulty,
+  DifficultySchema,
   Duos,
   GameMapType,
   GameMode,
@@ -35,7 +36,7 @@ export class HostLobbyModal extends LitElement {
     close: () => void;
   };
   @state() private selectedMap: GameMapType = GameMapType.World;
-  @state() private selectedDifficulty: Difficulty = Difficulty.Medium;
+  @state() private selectedDifficulty: Difficulty = "Medium";
   @state() private disableNPCs = false;
   @state() private gameMode: GameMode = GameMode.FFA;
   @state() private teamCount: TeamCountConfig = 2;
@@ -224,27 +225,26 @@ export class HostLobbyModal extends LitElement {
           <div class="options-section">
             <div class="option-title">${translateText("difficulty.difficulty")}</div>
             <div class="option-cards">
-              ${Object.entries(Difficulty)
-                .filter(([key]) => isNaN(Number(key)))
-                .map(
-                  ([key, value]) => html`
-                    <div
-                      class="option-card ${this.selectedDifficulty === value
-                        ? "selected"
-                        : ""}"
-                      @click=${() => this.handleDifficultySelection(value)}
-                    >
-                      <difficulty-display
-                        .difficultyKey=${key}
-                      ></difficulty-display>
-                      <p class="option-card-title">
-                        ${translateText(
-                          `difficulty.${DifficultyDescription[key as keyof typeof DifficultyDescription]}`,
-                        )}
-                      </p>
-                    </div>
-                  `,
-                )}
+              ${DifficultySchema.options.map(
+                (value) => html`
+                  <div
+                    class="option-card ${this.selectedDifficulty === value
+                      ? "selected"
+                      : ""}"
+                    @click=${() => this.handleDifficultySelection(value)}
+                  >
+                    <difficulty-display
+                      .difficultyKey=${value}
+                    ></difficulty-display>
+                    <p class="option-card-title">
+                      ${translateText(
+                        `difficulty.${DifficultyDescription[value as keyof typeof DifficultyDescription]}`,
+                      )}
+                    </p>
+                  </div>
+                `,
+              )}
+
             </div>
           </div>
 

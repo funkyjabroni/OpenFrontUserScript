@@ -1,6 +1,5 @@
 import {
   Cell,
-  Difficulty,
   Execution,
   Game,
   Gold,
@@ -248,10 +247,7 @@ export class FakeHumanExecution implements Execution {
       return false;
     }
     const difficulty = this.mg.config().gameConfig().difficulty;
-    if (
-      difficulty === Difficulty.Hard ||
-      difficulty === Difficulty.Impossible
-    ) {
+    if (difficulty === "Hard" || difficulty === "Impossible") {
       return false;
     }
     if (other.type() !== PlayerType.Human) {

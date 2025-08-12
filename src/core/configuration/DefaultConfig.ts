@@ -263,14 +263,16 @@ export class DefaultConfig implements Config {
 
   difficultyModifier(difficulty: Difficulty): number {
     switch (difficulty) {
-      case Difficulty.Easy:
+      case "Easy":
         return 1;
-      case Difficulty.Medium:
+      case "Medium":
         return 3;
-      case Difficulty.Hard:
+      case "Hard":
         return 9;
-      case Difficulty.Impossible:
+      case "Impossible":
         return 18;
+      default:
+        return 1;
     }
   }
 
@@ -705,14 +707,16 @@ export class DefaultConfig implements Config {
     }
     if (playerInfo.playerType === PlayerType.FakeHuman) {
       switch (this._gameConfig.difficulty) {
-        case Difficulty.Easy:
+        case "Easy":
           return 2_500 * (playerInfo?.nation?.strength ?? 1);
-        case Difficulty.Medium:
+        case "Medium":
           return 5_000 * (playerInfo?.nation?.strength ?? 1);
-        case Difficulty.Hard:
+        case "Hard":
           return 20_000 * (playerInfo?.nation?.strength ?? 1);
-        case Difficulty.Impossible:
+        case "Impossible":
           return 50_000 * (playerInfo?.nation?.strength ?? 1);
+        default:
+          return 2_500 * (playerInfo?.nation?.strength ?? 1);
       }
     }
     return this.infiniteTroops() ? 1_000_000 : 25_000;
@@ -738,14 +742,16 @@ export class DefaultConfig implements Config {
     }
 
     switch (this._gameConfig.difficulty) {
-      case Difficulty.Easy:
+      case "Easy":
         return maxTroops * 0.5;
-      case Difficulty.Medium:
+      case "Medium":
         return maxTroops * 1;
-      case Difficulty.Hard:
+      case "Hard":
         return maxTroops * 1.5;
-      case Difficulty.Impossible:
+      case "Impossible":
         return maxTroops * 2;
+      default:
+        return maxTroops * 0.5;
     }
   }
 
@@ -763,17 +769,20 @@ export class DefaultConfig implements Config {
 
     if (player.type() === PlayerType.FakeHuman) {
       switch (this._gameConfig.difficulty) {
-        case Difficulty.Easy:
+        case "Easy":
           toAdd *= 0.9;
           break;
-        case Difficulty.Medium:
+        case "Medium":
           toAdd *= 1;
           break;
-        case Difficulty.Hard:
+        case "Hard":
           toAdd *= 1.1;
           break;
-        case Difficulty.Impossible:
+        case "Impossible":
           toAdd *= 1.2;
+          break;
+        default:
+          toAdd *= 0.9;
           break;
       }
     }

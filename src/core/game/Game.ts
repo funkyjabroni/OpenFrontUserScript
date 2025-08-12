@@ -1,3 +1,4 @@
+import { z } from "zod";
 import { Config } from "../configuration/Config";
 import { AllPlayersStats, ClientID } from "../Schemas";
 import { GameMap, TileRef } from "./GameMap";
@@ -31,12 +32,13 @@ export interface MapPos {
   y: number;
 }
 
-export enum Difficulty {
-  Easy = "Easy",
-  Medium = "Medium",
-  Hard = "Hard",
-  Impossible = "Impossible",
-}
+export const DifficultySchema = z.enum([
+  "Easy",
+  "Medium",
+  "Hard",
+  "Impossible",
+]);
+export type Difficulty = z.infer<typeof DifficultySchema>;
 
 export type Team = string;
 

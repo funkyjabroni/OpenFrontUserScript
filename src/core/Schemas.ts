@@ -4,7 +4,7 @@ import quickChatData from "../../resources/QuickChat.json" with { type: "json" }
 import countries from "../client/data/countries.json" with { type: "json" };
 import {
   AllPlayers,
-  Difficulty,
+  DifficultySchema,
   Duos,
   GameMapType,
   GameMode,
@@ -145,7 +145,7 @@ export type TeamCountConfig = z.infer<typeof TeamCountConfigSchema>;
 
 export const GameConfigSchema = z.object({
   gameMap: z.enum(GameMapType),
-  difficulty: z.enum(Difficulty),
+  difficulty: DifficultySchema,
   gameType: z.enum(GameType),
   gameMode: z.enum(GameMode),
   disableNPCs: z.boolean(),
