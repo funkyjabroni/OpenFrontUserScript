@@ -3,13 +3,17 @@ import { Theme } from "../../../core/configuration/Config";
 import { EventBus } from "../../../core/EventBus";
 import { TransformHandler } from "../TransformHandler";
 import { Layer } from "./Layer";
+import { UnitInfoModal } from "./UnitInfoModal";
 
-import cityIcon from "../../../../resources/non-commercial/images/buildings/cityAlt1.png";
+import cityIcon from "../../../../resources/images/buildings/cityAlt1.png";
+import shieldIcon from "../../../../resources/images/buildings/fortAlt2.png";
+import OilWellIcon from "../../../../resources/images/buildings/oilWell.png";
+import anchorIcon from "../../../../resources/images/buildings/port1.png";
+import MissileSiloReloadingIcon from "../../../../resources/images/buildings/silo1-reloading.png";
+import missileSiloIcon from "../../../../resources/images/buildings/silo1.png";
+import SAMMissileReloadingIcon from "../../../../resources/images/buildings/silo4-reloading.png";
+import SAMMissileIcon from "../../../../resources/images/buildings/silo4.png";
 import factoryIcon from "../../../../resources/non-commercial/images/buildings/factoryAlt1.png";
-import shieldIcon from "../../../../resources/non-commercial/images/buildings/fortAlt3.png";
-import anchorIcon from "../../../../resources/non-commercial/images/buildings/port1.png";
-import missileSiloIcon from "../../../../resources/non-commercial/images/buildings/silo1.png";
-import SAMMissileIcon from "../../../../resources/non-commercial/images/buildings/silo4.png";
 import { Cell, UnitType } from "../../../core/game/Game";
 import { euclDistFN, isometricDistFN } from "../../../core/game/GameMap";
 import { GameUpdateType } from "../../../core/game/GameUpdates";
@@ -53,6 +57,13 @@ export class StructureLayer implements Layer {
       icon: factoryIcon,
       borderRadius: BASE_BORDER_RADIUS * RADIUS_SCALE_FACTOR,
       territoryRadius: BASE_TERRITORY_RADIUS * RADIUS_SCALE_FACTOR,
+    },
+    // Add png
+    [UnitType.OilWell]: {
+      icon: OilWellIcon,
+      borderRadius: 8.525,
+      territoryRadius: 6.525,
+      borderType: UnitBorderType.Round,
     },
     [UnitType.MissileSilo]: {
       icon: missileSiloIcon,

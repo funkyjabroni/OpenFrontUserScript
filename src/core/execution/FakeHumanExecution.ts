@@ -297,6 +297,7 @@ export class FakeHumanExecution implements Execution {
 
     const structures = other.units(
       UnitType.City,
+      UnitType.OilWell,
       UnitType.DefensePost,
       UnitType.MissileSilo,
       UnitType.Port,
@@ -361,6 +362,8 @@ export class FakeHumanExecution implements Execution {
         switch (unit.type()) {
           case UnitType.City:
             return 25_000;
+          case UnitType.OilWell:
+            return 20_000;
           case UnitType.DefensePost:
             return 5_000;
           case UnitType.MissileSilo:
@@ -430,6 +433,7 @@ export class FakeHumanExecution implements Execution {
     return (
       this.maybeSpawnStructure(UnitType.Port, 1) ||
       this.maybeSpawnStructure(UnitType.City, 2) ||
+      this.maybeSpawnStructure(UnitType.OilWell, 3) ||
       this.maybeSpawnWarship() ||
       this.maybeSpawnStructure(UnitType.Factory, 1) ||
       this.maybeSpawnStructure(UnitType.MissileSilo, 1)

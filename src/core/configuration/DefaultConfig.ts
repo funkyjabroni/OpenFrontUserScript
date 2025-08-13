@@ -470,6 +470,24 @@ export class DefaultConfig implements Config {
           experimental: true,
           upgradable: true,
         };
+      case UnitType.OilWell:
+        return {
+          cost: (p: Player) =>
+            p.type() === PlayerType.Human && this.infiniteGold()
+              ? 0n
+              : BigInt(
+                  Math.min(
+                    1_000_000,
+                    Math.pow(
+                      2,
+                      p.unitsIncludingConstruction(UnitType.OilWell).length,
+                    ) * 125_000,
+                  ),
+                ),
+          territoryBound: true,
+          constructionDuration: this.instantBuild() ? 0 : 2 * 10,
+          upgradable: true,
+        };
       case UnitType.Construction:
         return {
           cost: () => 0n,
@@ -776,7 +794,13 @@ export class DefaultConfig implements Config {
   }
 
   goldAdditionRate(player: Player): Gold {
-    return BigInt(Math.floor(0.045 * player.workers() ** 0.7));
+    const baseGold = 0.045 * player.workers() ** 0.7;
+    const oilWellBonus =
+      player
+        .units(UnitType.OilWell)
+        .map((oilWell) => oilWell.level())
+        .reduce((a, b) => a + b, 0) * this.oilWellGoldIncrease();
+    return BigInt(Math.floor(baseGold + oilWellBonus));
   }
 
   troopAdjustmentRate(player: Player): number {
@@ -872,6 +896,8 @@ export class DefaultConfig implements Config {
   defensePostTargettingRange(): number {
     return 75;
   }
+  oilWellGoldIncrease(): number {
+    return 50;
 
   allianceExtensionPromptOffset(): number {
     return 300; // 30 seconds before expiration
