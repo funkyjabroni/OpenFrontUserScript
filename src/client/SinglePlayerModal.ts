@@ -7,6 +7,7 @@ import {
   DifficultySchema,
   Duos,
   GameMapType,
+  GameMapTypeSchema,
   GameMode,
   GameType,
   Quads,
@@ -34,7 +35,7 @@ export class SinglePlayerModal extends LitElement {
     open: () => void;
     close: () => void;
   };
-  @state() private selectedMap: GameMapType = GameMapType.World;
+  @state() private selectedMap: GameMapType = "World";
   @state() private selectedDifficulty: Difficulty = "Medium";
   @state() private disableNPCs: boolean = false;
   @state() private bots: number = 400;
@@ -85,10 +86,8 @@ export class SinglePlayerModal extends LitElement {
                     </h3>
                     <div class="flex flex-row flex-wrap justify-center gap-4">
                       ${maps.map((mapValue) => {
-                        const mapKey = Object.keys(GameMapType).find(
-                          (key) =>
-                            GameMapType[key as keyof typeof GameMapType] ===
-                            mapValue,
+                        const mapKey = GameMapTypeSchema.options.find(
+                          (option) => option === mapValue,
                         );
                         return html`
                           <div
@@ -99,7 +98,7 @@ export class SinglePlayerModal extends LitElement {
                               .selected=${!this.useRandomMap &&
                               this.selectedMap === mapValue}
                               .translation=${translateText(
-                                `map.${mapKey?.toLowerCase()}`,
+                                `map.${mapKey?.toLowerCase().replace(/\s+/g, "")}`,
                               )}
                             ></map-display>
                           </div>
@@ -389,7 +388,7 @@ export class SinglePlayerModal extends LitElement {
   }
 
   private getRandomMap(): GameMapType {
-    const maps = Object.values(GameMapType);
+    const maps = GameMapTypeSchema.options;
     const randIdx = Math.floor(Math.random() * maps.length);
     return maps[randIdx] as GameMapType;
   }
@@ -408,8 +407,9 @@ export class SinglePlayerModal extends LitElement {
     }
 
     console.log(
-      `Starting single player game with map: ${GameMapType[this.selectedMap as keyof typeof GameMapType]}${this.useRandomMap ? " (Randomly selected)" : ""}`,
+      `Starting single player game with map: ${this.selectedMap as GameMapType}${this.useRandomMap ? " (Randomly selected)" : ""}`,
     );
+
     const clientID = generateID();
     const gameID = generateID();
 

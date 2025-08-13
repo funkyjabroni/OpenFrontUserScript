@@ -6,7 +6,7 @@ import {
   AllPlayers,
   DifficultySchema,
   Duos,
-  GameMapType,
+  GameMapTypeSchema,
   GameMode,
   GameType,
   PlayerType,
@@ -144,7 +144,7 @@ const TeamCountConfigSchema = z.union([
 export type TeamCountConfig = z.infer<typeof TeamCountConfigSchema>;
 
 export const GameConfigSchema = z.object({
-  gameMap: z.enum(GameMapType),
+  gameMap: GameMapTypeSchema,
   difficulty: DifficultySchema,
   gameType: z.enum(GameType),
   gameMode: z.enum(GameMode),
@@ -437,7 +437,7 @@ export const ServerPingMessageSchema = z.object({
 
 export const ServerPrestartMessageSchema = z.object({
   type: z.literal("prestart"),
-  gameMap: z.nativeEnum(GameMapType),
+  gameMap: GameMapTypeSchema,
 });
 
 export const ServerStartGameMessageSchema = z.object({

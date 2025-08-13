@@ -1,6 +1,6 @@
 import { Logger } from "winston";
 import { ServerConfig } from "../core/configuration/Config";
-import { GameMapType, GameMode, GameType } from "../core/game/Game";
+import { GameMode, GameType } from "../core/game/Game";
 import { GameConfig, GameID } from "../core/Schemas";
 import { Client } from "./Client";
 import { GamePhase, GameServer } from "./GameServer";
@@ -39,7 +39,7 @@ export class GameManager {
       Date.now(),
       this.config,
       {
-        gameMap: GameMapType.World,
+        gameMap: "World",
         gameType: GameType.Private,
         difficulty: "Medium",
         disableNPCs: false,
