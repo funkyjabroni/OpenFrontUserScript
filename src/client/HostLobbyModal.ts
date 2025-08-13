@@ -238,7 +238,7 @@ export class HostLobbyModal extends LitElement {
                     ></difficulty-display>
                     <p class="option-card-title">
                       ${translateText(
-                        `difficulty.${DifficultyDescription[value as keyof typeof DifficultyDescription]}`,
+                        `difficulty.${DifficultyDescription[value]}`,
                       )}
                     </p>
                   </div>
