@@ -65,11 +65,7 @@ export class ConstructionExecution implements Execution {
         this.active = false;
         return;
       }
-      this.construction = this.player.buildUnit(
-        UnitType.Construction,
-        spawnTile,
-        {},
-      );
+      this.construction = this.player.buildUnit("Construction", spawnTile, {});
       this.cost = this.mg.unitInfo(this.constructionType).cost(this.player);
       this.player.removeGold(this.cost);
       this.construction.setConstructionType(this.constructionType);
@@ -101,36 +97,36 @@ export class ConstructionExecution implements Execution {
   private completeConstruction() {
     const player = this.player;
     switch (this.constructionType) {
-      case UnitType.AtomBomb:
-      case UnitType.HydrogenBomb:
+      case "Atom Bomb":
+      case "Hydrogen Bomb":
         this.mg.addExecution(
           new NukeExecution(this.constructionType, player, this.tile),
         );
         break;
-      case UnitType.MIRV:
+      case "MIRV":
         this.mg.addExecution(new MirvExecution(player, this.tile));
         break;
-      case UnitType.Warship:
+      case "Warship":
         this.mg.addExecution(
           new WarshipExecution({ owner: player, patrolTile: this.tile }),
         );
         break;
-      case UnitType.Port:
+      case "Port":
         this.mg.addExecution(new PortExecution(player, this.tile));
         break;
-      case UnitType.MissileSilo:
+      case "Missile Silo":
         this.mg.addExecution(new MissileSiloExecution(player, this.tile));
         break;
-      case UnitType.DefensePost:
+      case "Defense Post":
         this.mg.addExecution(new DefensePostExecution(player, this.tile));
         break;
-      case UnitType.SAMLauncher:
+      case "SAM Launcher":
         this.mg.addExecution(new SAMLauncherExecution(player, this.tile));
         break;
-      case UnitType.City:
+      case "City":
         this.mg.addExecution(new CityExecution(player, this.tile));
         break;
-      case UnitType.Factory:
+      case "Factory":
         this.mg.addExecution(new FactoryExecution(player, this.tile));
         break;
       default:

@@ -1,4 +1,4 @@
-import { Execution, Game, Player, Unit, UnitType } from "../game/Game";
+import { Execution, Game, Player, Unit } from "../game/Game";
 import { TileRef } from "../game/GameMap";
 
 export class MissileSiloExecution implements Execution {
@@ -17,7 +17,7 @@ export class MissileSiloExecution implements Execution {
 
   tick(ticks: number): void {
     if (this.silo === null) {
-      const spawn = this.player.canBuild(UnitType.MissileSilo, this.tile);
+      const spawn = this.player.canBuild("Missile Silo", this.tile);
       if (spawn === false) {
         console.warn(
           `player ${this.player} cannot build missile silo at ${this.tile}`,
@@ -25,7 +25,7 @@ export class MissileSiloExecution implements Execution {
         this.active = false;
         return;
       }
-      this.silo = this.player.buildUnit(UnitType.MissileSilo, spawn, {});
+      this.silo = this.player.buildUnit("Missile Silo", spawn, {});
 
       if (this.player !== this.silo.owner()) {
         this.player = this.silo.owner();

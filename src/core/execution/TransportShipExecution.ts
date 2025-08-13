@@ -6,7 +6,6 @@ import {
   PlayerID,
   TerraNullius,
   Unit,
-  UnitType,
 } from "../game/Game";
 import { TileRef } from "../game/GameMap";
 import { targetTransportTile } from "../game/TransportShipUtils";
@@ -67,8 +66,7 @@ export class TransportShipExecution implements Execution {
     this.pathFinder = PathFinder.Mini(mg, 10_000, true, 100);
 
     if (
-      this.attacker.unitCount(UnitType.TransportShip) >=
-      mg.config().boatMaxNumber()
+      this.attacker.unitCount("Transport Ship") >= mg.config().boatMaxNumber()
     ) {
       mg.displayMessage(
         `No boats available, max ${mg.config().boatMaxNumber()}`,
@@ -103,10 +101,7 @@ export class TransportShipExecution implements Execution {
       return;
     }
 
-    const closestTileSrc = this.attacker.canBuild(
-      UnitType.TransportShip,
-      this.dst,
-    );
+    const closestTileSrc = this.attacker.canBuild("Transport Ship", this.dst);
     if (closestTileSrc === false) {
       console.warn(`can't build transport ship`);
       this.active = false;
@@ -129,7 +124,7 @@ export class TransportShipExecution implements Execution {
       }
     }
 
-    this.boat = this.attacker.buildUnit(UnitType.TransportShip, this.src, {
+    this.boat = this.attacker.buildUnit("Transport Ship", this.src, {
       troops: this.startTroops,
     });
 

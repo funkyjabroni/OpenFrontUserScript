@@ -12,7 +12,7 @@ import {
   PlayerType,
   Quads,
   Trios,
-  UnitType,
+  UnitTypeSchema,
 } from "./game/Game";
 import { PatternDecoder } from "./PatternDecoder";
 import { PlayerStatsSchema } from "./StatsSchemas";
@@ -154,7 +154,7 @@ export const GameConfigSchema = z.object({
   infiniteTroops: z.boolean(),
   instantBuild: z.boolean(),
   maxPlayers: z.number().optional(),
-  disabledUnits: z.enum(UnitType).array().optional(),
+  disabledUnits: UnitTypeSchema.array().optional(),
   playerTeams: TeamCountConfigSchema.optional(),
 });
 
@@ -318,13 +318,13 @@ export const DonateTroopIntentSchema = BaseIntentSchema.extend({
 
 export const BuildUnitIntentSchema = BaseIntentSchema.extend({
   type: z.literal("build_unit"),
-  unit: z.enum(UnitType),
+  unit: UnitTypeSchema,
   tile: z.number(),
 });
 
 export const UpgradeStructureIntentSchema = BaseIntentSchema.extend({
   type: z.literal("upgrade_structure"),
-  unit: z.enum(UnitType),
+  unit: UnitTypeSchema,
   unitId: z.number(),
 });
 

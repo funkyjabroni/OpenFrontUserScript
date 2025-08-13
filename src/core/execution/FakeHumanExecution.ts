@@ -274,10 +274,10 @@ export class FakeHumanExecution implements Execution {
 
   private maybeSendNuke(other: Player) {
     if (this.player === null) throw new Error("not initialized");
-    const silos = this.player.units(UnitType.MissileSilo);
+    const silos = this.player.units("Missile Silo");
     if (
       silos.length === 0 ||
-      this.player.gold() < this.cost(UnitType.AtomBomb) ||
+      this.player.gold() < this.cost("Atom Bomb") ||
       other.type() === PlayerType.Bot ||
       this.player.isOnSameTeam(other)
     ) {
@@ -285,11 +285,11 @@ export class FakeHumanExecution implements Execution {
     }
 
     const structures = other.units(
-      UnitType.City,
-      UnitType.DefensePost,
-      UnitType.MissileSilo,
-      UnitType.Port,
-      UnitType.SAMLauncher,
+      "City",
+      "Defense Post",
+      "Missile Silo",
+      "Port",
+      "SAM Launcher",
     );
     const structureTiles = structures.map((u) => u.tile());
     const randomTiles: (TileRef | null)[] = new Array(10);
@@ -309,7 +309,7 @@ export class FakeHumanExecution implements Execution {
           continue outer;
         }
       }
-      if (!this.player.canBuild(UnitType.AtomBomb, tile)) continue;
+      if (!this.player.canBuild("Atom Bomb", tile)) continue;
       const value = this.nukeTileScore(tile, silos, structures);
       if (value > bestValue) {
         bestTile = tile;
@@ -336,9 +336,7 @@ export class FakeHumanExecution implements Execution {
     if (this.player === null) throw new Error("not initialized");
     const tick = this.mg.ticks();
     this.lastNukeSent.push([tick, tile]);
-    this.mg.addExecution(
-      new NukeExecution(UnitType.AtomBomb, this.player, tile),
-    );
+    this.mg.addExecution(new NukeExecution("Atom Bomb", this.player, tile));
   }
 
   private nukeTileScore(tile: TileRef, silos: Unit[], targets: Unit[]): number {
@@ -348,13 +346,13 @@ export class FakeHumanExecution implements Execution {
       .filter((unit) => dist(this.mg, unit.tile()))
       .map((unit): number => {
         switch (unit.type()) {
-          case UnitType.City:
+          case "City":
             return 25_000;
-          case UnitType.DefensePost:
+          case "Defense Post":
             return 5_000;
-          case UnitType.MissileSilo:
+          case "Missile Silo":
             return 50_000;
-          case UnitType.Port:
+          case "Port":
             return 10_000;
           default:
             return 0;
@@ -368,7 +366,7 @@ export class FakeHumanExecution implements Execution {
       50_000 *
       targets.filter(
         (unit) =>
-          unit.type() === UnitType.SAMLauncher && dist50(this.mg, unit.tile()),
+          unit.type() === "SAM Launcher" && dist50(this.mg, unit.tile()),
       ).length;
 
     // Prefer tiles that are closer to a silo
@@ -417,11 +415,11 @@ export class FakeHumanExecution implements Execution {
     const player = this.player;
     if (player === null) return;
     return (
-      this.maybeSpawnStructure(UnitType.Port, 1) ||
-      this.maybeSpawnStructure(UnitType.City, 2) ||
+      this.maybeSpawnStructure("Port", 1) ||
+      this.maybeSpawnStructure("City", 2) ||
       this.maybeSpawnWarship() ||
-      this.maybeSpawnStructure(UnitType.Factory, 1) ||
-      this.maybeSpawnStructure(UnitType.MissileSilo, 1)
+      this.maybeSpawnStructure("Factory", 1) ||
+      this.maybeSpawnStructure("Missile Silo", 1)
     );
   }
 
@@ -448,7 +446,7 @@ export class FakeHumanExecution implements Execution {
   private structureSpawnTile(type: UnitType): TileRef | null {
     if (this.player === null) throw new Error("not initialized");
     const tiles =
-      type === UnitType.Port
+      type === "Port"
         ? Array.from(this.player.borderTiles()).filter((t) =>
             this.mg.isOceanShore(t),
           )
@@ -462,25 +460,25 @@ export class FakeHumanExecution implements Execution {
     if (!this.random.chance(50)) {
       return false;
     }
-    const ports = this.player.units(UnitType.Port);
-    const ships = this.player.units(UnitType.Warship);
+    const ports = this.player.units("Port");
+    const ships = this.player.units("Warship");
     if (
       ports.length > 0 &&
       ships.length === 0 &&
-      this.player.gold() > this.cost(UnitType.Warship)
+      this.player.gold() > this.cost("Warship")
     ) {
       const port = this.random.randElement(ports);
       const targetTile = this.warshipSpawnTile(port.tile());
       if (targetTile === null) {
         return false;
       }
-      const canBuild = this.player.canBuild(UnitType.Warship, targetTile);
+      const canBuild = this.player.canBuild("Warship", targetTile);
       if (canBuild === false) {
         console.warn("cannot spawn destroyer");
         return false;
       }
       this.mg.addExecution(
-        new ConstructionExecution(this.player, UnitType.Warship, targetTile),
+        new ConstructionExecution(this.player, "Warship", targetTile),
       );
       return true;
     }

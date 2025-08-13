@@ -1,4 +1,4 @@
-import { Execution, Game, Player, Unit, UnitType } from "../game/Game";
+import { Execution, Game, Player, Unit } from "../game/Game";
 import { TileRef } from "../game/GameMap";
 import { PseudoRandom } from "../PseudoRandom";
 import { TradeShipExecution } from "./TradeShipExecution";
@@ -28,7 +28,7 @@ export class PortExecution implements Execution {
     }
     if (this.port === null) {
       const tile = this.tile;
-      const spawn = this.player.canBuild(UnitType.Port, tile);
+      const spawn = this.player.canBuild("Port", tile);
       if (spawn === false) {
         console.warn(
           `player ${this.player.id()} cannot build port at ${this.tile}`,
@@ -36,7 +36,7 @@ export class PortExecution implements Execution {
         this.active = false;
         return;
       }
-      this.port = this.player.buildUnit(UnitType.Port, spawn, {});
+      this.port = this.player.buildUnit("Port", spawn, {});
       this.createStation();
     }
 
@@ -77,7 +77,7 @@ export class PortExecution implements Execution {
   }
 
   shouldSpawnTradeShip(): boolean {
-    const numTradeShips = this.mg.unitCount(UnitType.TradeShip);
+    const numTradeShips = this.mg.unitCount("Trade Ship");
     const spawnRate = this.mg.config().tradeShipSpawnRate(numTradeShips);
     for (let i = 0; i < this.port!.level(); i++) {
       if (this.random.chance(spawnRate)) {
@@ -92,7 +92,7 @@ export class PortExecution implements Execution {
       const nearbyFactory = this.mg.hasUnitNearby(
         this.port.tile()!,
         this.mg.config().trainStationMaxRange(),
-        UnitType.Factory,
+        "Factory",
         this.player.id(),
       );
       if (nearbyFactory) {

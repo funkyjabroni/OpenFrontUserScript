@@ -1,4 +1,4 @@
-import { Execution, Game, Player, Unit, UnitType } from "../game/Game";
+import { Execution, Game, Player, Unit } from "../game/Game";
 import { TileRef } from "../game/GameMap";
 import { TrainStationExecution } from "./TrainStationExecution";
 
@@ -17,13 +17,13 @@ export class FactoryExecution implements Execution {
 
   tick(ticks: number): void {
     if (!this.factory) {
-      const spawnTile = this.player.canBuild(UnitType.Factory, this.tile);
+      const spawnTile = this.player.canBuild("Factory", this.tile);
       if (spawnTile === false) {
         console.warn("cannot build factory");
         this.active = false;
         return;
       }
-      this.factory = this.player.buildUnit(UnitType.Factory, spawnTile, {});
+      this.factory = this.player.buildUnit("Factory", spawnTile, {});
       this.createStation();
     }
     if (!this.factory.isActive()) {
@@ -49,7 +49,7 @@ export class FactoryExecution implements Execution {
       const structures = this.game.nearbyUnits(
         this.factory.tile()!,
         this.game.config().trainStationMaxRange(),
-        [UnitType.City, UnitType.Port, UnitType.Factory],
+        ["City", "Port", "Factory"],
       );
 
       this.game.addExecution(new TrainStationExecution(this.factory, true));

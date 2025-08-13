@@ -14,7 +14,6 @@ import {
   MessageType,
   PlayerType,
   Tick,
-  UnitType,
 } from "../../../core/game/Game";
 import {
   AllianceExpiredUpdate,
@@ -227,7 +226,7 @@ export class EventsDisplay extends LitElement implements Layer {
 
     this.outgoingBoats = myPlayer
       .units()
-      .filter((u) => u.type() === UnitType.TransportShip);
+      .filter((u) => u.type() === "Transport Ship");
 
     this.requestUpdate();
   }

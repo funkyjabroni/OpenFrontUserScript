@@ -112,7 +112,7 @@ export class PlayerInfoOverlay extends LitElement implements Layer {
       this.setVisible(true);
     } else if (!this.game.isLand(tile)) {
       const units = this.game
-        .units(UnitType.Warship, UnitType.TradeShip, UnitType.TransportShip)
+        .units("Warship", "Trade Ship", "Transport Ship")
         .filter((u) => euclideanDistWorld(worldCoord, u.tile(), this.game) < 50)
         .sort(distSortUnitWorld(worldCoord, this.game));
 
@@ -267,34 +267,26 @@ export class PlayerInfoOverlay extends LitElement implements Layer {
           ${translateText("player_info_overlay.gold")}:
           ${renderNumber(player.gold())}
         </div>
+        ${this.displayUnitCount(player, "Port", "player_info_overlay.ports")}
+        ${this.displayUnitCount(player, "City", "player_info_overlay.cities")}
         ${this.displayUnitCount(
           player,
-          UnitType.Port,
-          "player_info_overlay.ports",
-        )}
-        ${this.displayUnitCount(
-          player,
-          UnitType.City,
-          "player_info_overlay.cities",
-        )}
-        ${this.displayUnitCount(
-          player,
-          UnitType.Factory,
+          "Factory",
           "player_info_overlay.factories",
         )}
         ${this.displayUnitCount(
           player,
-          UnitType.MissileSilo,
+          "Missile Silo",
           "player_info_overlay.missile_launchers",
         )}
         ${this.displayUnitCount(
           player,
-          UnitType.SAMLauncher,
+          "SAM Launcher",
           "player_info_overlay.sams",
         )}
         ${this.displayUnitCount(
           player,
-          UnitType.Warship,
+          "Warship",
           "player_info_overlay.warships",
         )}
         ${relationHtml}

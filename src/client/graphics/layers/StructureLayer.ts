@@ -39,32 +39,32 @@ export class StructureLayer implements Layer {
 
   // Configuration for supported unit types only
   private readonly unitConfigs: Partial<Record<UnitType, UnitRenderConfig>> = {
-    [UnitType.Port]: {
+    ["Port"]: {
       icon: anchorIcon,
       borderRadius: BASE_BORDER_RADIUS * RADIUS_SCALE_FACTOR,
       territoryRadius: BASE_TERRITORY_RADIUS * RADIUS_SCALE_FACTOR,
     },
-    [UnitType.City]: {
+    ["City"]: {
       icon: cityIcon,
       borderRadius: BASE_BORDER_RADIUS * RADIUS_SCALE_FACTOR,
       territoryRadius: BASE_TERRITORY_RADIUS * RADIUS_SCALE_FACTOR,
     },
-    [UnitType.Factory]: {
+    ["Factory"]: {
       icon: factoryIcon,
       borderRadius: BASE_BORDER_RADIUS * RADIUS_SCALE_FACTOR,
       territoryRadius: BASE_TERRITORY_RADIUS * RADIUS_SCALE_FACTOR,
     },
-    [UnitType.MissileSilo]: {
+    ["Missile Silo"]: {
       icon: missileSiloIcon,
       borderRadius: BASE_BORDER_RADIUS * RADIUS_SCALE_FACTOR,
       territoryRadius: BASE_TERRITORY_RADIUS * RADIUS_SCALE_FACTOR,
     },
-    [UnitType.DefensePost]: {
+    ["Defense Post"]: {
       icon: shieldIcon,
       borderRadius: BASE_BORDER_RADIUS * RADIUS_SCALE_FACTOR,
       territoryRadius: BASE_TERRITORY_RADIUS * RADIUS_SCALE_FACTOR,
     },
-    [UnitType.SAMLauncher]: {
+    ["SAM Launcher"]: {
       icon: SAMMissileIcon,
       borderRadius: BASE_BORDER_RADIUS * RADIUS_SCALE_FACTOR,
       territoryRadius: BASE_TERRITORY_RADIUS * RADIUS_SCALE_FACTOR,
@@ -188,7 +188,7 @@ export class StructureLayer implements Layer {
     )) {
       this.paintCell(
         new Cell(this.game.x(tile), this.game.y(tile)),
-        unit.type() === UnitType.Construction
+        unit.type() === "Construction"
           ? underConstructionColor
           : this.theme.territoryColor(unit.owner()),
         130,
@@ -206,7 +206,7 @@ export class StructureLayer implements Layer {
     let borderColor = this.theme.borderColor(unit.owner());
 
     // Handle cooldown states and special icons
-    if (unit.type() === UnitType.Construction) {
+    if (unit.type() === "Construction") {
       icon = this.unitIcons.get(iconType);
       borderColor = underConstructionColor;
     } else {
@@ -245,7 +245,7 @@ export class StructureLayer implements Layer {
     unit: UnitView,
   ) {
     let color = this.theme.borderColor(unit.owner());
-    if (unit.type() === UnitType.Construction) {
+    if (unit.type() === "Construction") {
       color = underConstructionColor;
     }
 

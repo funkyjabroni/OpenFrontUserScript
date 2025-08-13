@@ -33,24 +33,24 @@ export class UnitDisplay extends LitElement implements Layer {
   init() {
     const config = this.game.config();
     this.allDisabled =
-      config.isUnitDisabled(UnitType.City) &&
-      config.isUnitDisabled(UnitType.Factory) &&
-      config.isUnitDisabled(UnitType.Port) &&
-      config.isUnitDisabled(UnitType.DefensePost) &&
-      config.isUnitDisabled(UnitType.MissileSilo) &&
-      config.isUnitDisabled(UnitType.SAMLauncher);
+      config.isUnitDisabled("City") &&
+      config.isUnitDisabled("Factory") &&
+      config.isUnitDisabled("Port") &&
+      config.isUnitDisabled("Defense Post") &&
+      config.isUnitDisabled("Missile Silo") &&
+      config.isUnitDisabled("SAM Launcher");
     this.requestUpdate();
   }
 
   tick() {
     const player = this.game?.myPlayer();
     if (!player) return;
-    this._cities = player.totalUnitLevels(UnitType.City);
-    this._missileSilo = player.totalUnitLevels(UnitType.MissileSilo);
-    this._port = player.totalUnitLevels(UnitType.Port);
-    this._defensePost = player.totalUnitLevels(UnitType.DefensePost);
-    this._samLauncher = player.totalUnitLevels(UnitType.SAMLauncher);
-    this._factories = player.totalUnitLevels(UnitType.Factory);
+    this._cities = player.totalUnitLevels("City");
+    this._missileSilo = player.totalUnitLevels("Missile Silo");
+    this._port = player.totalUnitLevels("Port");
+    this._defensePost = player.totalUnitLevels("Defense Post");
+    this._samLauncher = player.totalUnitLevels("SAM Launcher");
+    this._factories = player.totalUnitLevels("Factory");
     this.requestUpdate();
   }
 
@@ -107,30 +107,30 @@ export class UnitDisplay extends LitElement implements Layer {
         class="fixed bottom-4 left-1/2 transform -translate-x-1/2 z-[1100] bg-gray-800/70 backdrop-blur-sm border border-slate-400 rounded-lg p-2 hidden lg:block"
       >
         <div class="grid grid-rows-1 auto-cols-max grid-flow-col gap-1">
-          ${this.renderUnitItem(cityIcon, this._cities, UnitType.City, "city")}
+          ${this.renderUnitItem(cityIcon, this._cities, "City", "city")}
           ${this.renderUnitItem(
             factoryIcon,
             this._factories,
-            UnitType.Factory,
+            "Factory",
             "factory",
           )}
-          ${this.renderUnitItem(portIcon, this._port, UnitType.Port, "port")}
+          ${this.renderUnitItem(portIcon, this._port, "Port", "port")}
           ${this.renderUnitItem(
             defensePostIcon,
             this._defensePost,
-            UnitType.DefensePost,
+            "Defense Post",
             "defense post",
           )}
           ${this.renderUnitItem(
             missileSiloIcon,
             this._missileSilo,
-            UnitType.MissileSilo,
+            "Missile Silo",
             "missile silo",
           )}
           ${this.renderUnitItem(
             samLauncherIcon,
             this._samLauncher,
-            UnitType.SAMLauncher,
+            "SAM Launcher",
             "SAM launcher",
           )}
         </div>

@@ -1,4 +1,4 @@
-import { Execution, Game, Player, Unit, UnitType } from "../game/Game";
+import { Execution, Game, Player, Unit } from "../game/Game";
 import { TileRef } from "../game/GameMap";
 import { ShellExecution } from "./ShellExecution";
 
@@ -46,13 +46,13 @@ export class DefensePostExecution implements Execution {
 
   tick(ticks: number): void {
     if (this.post === null) {
-      const spawnTile = this.player.canBuild(UnitType.DefensePost, this.tile);
+      const spawnTile = this.player.canBuild("Defense Post", this.tile);
       if (spawnTile === false) {
         console.warn("cannot build Defense Post");
         this.active = false;
         return;
       }
-      this.post = this.player.buildUnit(UnitType.DefensePost, spawnTile, {});
+      this.post = this.player.buildUnit("Defense Post", spawnTile, {});
     }
     if (!this.post.isActive()) {
       this.active = false;
@@ -72,7 +72,7 @@ export class DefensePostExecution implements Execution {
     //   .nearbyUnits(
     //     this.post.tile(),
     //     this.mg.config().defensePostTargettingRange(),
-    //     [UnitType.TransportShip, UnitType.Warship],
+    //     ["Transport Ship", "Warship"],
     //   )
     //   .filter(
     //     ({ unit }) =>
@@ -89,13 +89,13 @@ export class DefensePostExecution implements Execution {
     //
     //     // Prioritize TransportShip
     //     if (
-    //       unitA.type() === UnitType.TransportShip &&
-    //       unitB.type() !== UnitType.TransportShip
+    //       unitA.type() === "Transport Ship" &&
+    //       unitB.type() !== "Transport Ship"
     //     )
     //       return -1;
     //     if (
-    //       unitA.type() !== UnitType.TransportShip &&
-    //       unitB.type() === UnitType.TransportShip
+    //       unitA.type() !== "Transport Ship" &&
+    //       unitB.type() === "Transport Ship"
     //     )
     //       return 1;
     //

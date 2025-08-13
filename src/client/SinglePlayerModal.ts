@@ -12,6 +12,7 @@ import {
   Quads,
   Trios,
   UnitType,
+  UnitTypeSchema,
   mapCategories,
 } from "../core/game/Game";
 import { UserSettings } from "../core/game/UserSettings";
@@ -44,7 +45,7 @@ export class SinglePlayerModal extends LitElement {
   @state() private gameMode: GameMode = GameMode.FFA;
   @state() private teamCount: TeamCountConfig = 2;
 
-  @state() private disabledUnits: UnitType[] = [UnitType.Factory];
+  @state() private disabledUnits: UnitType[] = ["Factory"];
 
   private userSettings: UserSettings = new UserSettings();
 
@@ -453,7 +454,7 @@ export class SinglePlayerModal extends LitElement {
               infiniteTroops: this.infiniteTroops,
               instantBuild: this.instantBuild,
               disabledUnits: this.disabledUnits
-                .map((u) => Object.values(UnitType).find((ut) => ut === u))
+                .map((u) => UnitTypeSchema.options.find((ut) => ut === u))
                 .filter((ut): ut is UnitType => ut !== undefined),
             },
           },

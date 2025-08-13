@@ -32,12 +32,12 @@ class StructureRenderInfo {
 }
 
 const STRUCTURE_SHAPES: Partial<Record<UnitType, ShapeType>> = {
-  [UnitType.City]: "circle",
-  [UnitType.Port]: "pentagon",
-  [UnitType.Factory]: "circle",
-  [UnitType.DefensePost]: "octagon",
-  [UnitType.SAMLauncher]: "square",
-  [UnitType.MissileSilo]: "triangle",
+  ["City"]: "circle",
+  ["Port"]: "pentagon",
+  ["Factory"]: "circle",
+  ["Defense Post"]: "octagon",
+  ["SAM Launcher"]: "square",
+  ["Missile Silo"]: "triangle",
 };
 const LEVEL_SCALE_FACTOR = 3;
 const ICON_SCALE_FACTOR_ZOOMED_IN = 3.5;
@@ -68,21 +68,12 @@ export class StructureIconsLayer implements Layer {
     UnitType,
     { visible: boolean; iconPath: string; image: HTMLImageElement | null }
   > = new Map([
-    [UnitType.City, { visible: true, iconPath: cityIcon, image: null }],
-    [UnitType.Factory, { visible: true, iconPath: factoryIcon, image: null }],
-    [
-      UnitType.DefensePost,
-      { visible: true, iconPath: shieldIcon, image: null },
-    ],
-    [UnitType.Port, { visible: true, iconPath: anchorIcon, image: null }],
-    [
-      UnitType.MissileSilo,
-      { visible: true, iconPath: missileSiloIcon, image: null },
-    ],
-    [
-      UnitType.SAMLauncher,
-      { visible: true, iconPath: SAMMissileIcon, image: null },
-    ],
+    ["City", { visible: true, iconPath: cityIcon, image: null }],
+    ["Factory", { visible: true, iconPath: factoryIcon, image: null }],
+    ["Defense Post", { visible: true, iconPath: shieldIcon, image: null }],
+    ["Port", { visible: true, iconPath: anchorIcon, image: null }],
+    ["Missile Silo", { visible: true, iconPath: missileSiloIcon, image: null }],
+    ["SAM Launcher", { visible: true, iconPath: SAMMissileIcon, image: null }],
   ]);
   private renderSprites = true;
 
@@ -215,7 +206,7 @@ export class StructureIconsLayer implements Layer {
       }
     } else if (
       this.structures.has(unitView.type()) ||
-      unitView.type() === UnitType.Construction
+      unitView.type() === "Construction"
     ) {
       this.addNewStructure(unitView);
     }
@@ -231,7 +222,7 @@ export class StructureIconsLayer implements Layer {
 
   private modifyVisibility(render: StructureRenderInfo) {
     const structureType =
-      render.unit.type() === UnitType.Construction
+      render.unit.type() === "Construction"
         ? render.unit.constructionType()!
         : render.unit.type();
     const structureInfos = this.structures.get(structureType);
@@ -264,10 +255,7 @@ export class StructureIconsLayer implements Layer {
     render: StructureRenderInfo,
     unit: UnitView,
   ) {
-    if (
-      render.underConstruction &&
-      render.unit.type() !== UnitType.Construction
-    ) {
+    if (render.underConstruction && render.unit.type() !== "Construction") {
       render.underConstruction = false;
       render.iconContainer?.destroy();
       render.dotContainer?.destroy();
@@ -333,7 +321,7 @@ export class StructureIconsLayer implements Layer {
   }
 
   private createTexture(unit: UnitView, renderIcon: boolean): PIXI.Texture {
-    const isConstruction = unit.type() === UnitType.Construction;
+    const isConstruction = unit.type() === "Construction";
     const constructionType = unit.constructionType();
     if (isConstruction && constructionType === undefined) {
       console.warn(
@@ -558,9 +546,7 @@ export class StructureIconsLayer implements Layer {
       text.anchor.set(0.5);
 
       const unitType =
-        unit.type() === UnitType.Construction
-          ? unit.constructionType()
-          : unit.type();
+        unit.type() === "Construction" ? unit.constructionType() : unit.type();
       const shape = STRUCTURE_SHAPES[unitType!];
       if (shape !== undefined) {
         text.position.y = Math.round(-ICON_SIZE[shape] / 2 - 2);
@@ -621,7 +607,7 @@ export class StructureIconsLayer implements Layer {
     );
 
     const type =
-      render.unit.type() === UnitType.Construction
+      render.unit.type() === "Construction"
         ? render.unit.constructionType()
         : render.unit.type();
     const margin =
@@ -677,7 +663,7 @@ export class StructureIconsLayer implements Layer {
       this.createLevelSprite(unitView),
       this.createDotSprite(unitView),
       unitView.level(),
-      unitView.type() === UnitType.Construction,
+      unitView.type() === "Construction",
     );
     this.renders.push(render);
     this.computeNewLocation(render);

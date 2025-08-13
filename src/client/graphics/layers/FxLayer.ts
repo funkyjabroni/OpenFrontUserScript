@@ -1,5 +1,4 @@
 import { Theme } from "../../../core/configuration/Config";
-import { UnitType } from "../../../core/game/Game";
 import {
   BonusEventUpdate,
   ConquestUpdate,
@@ -96,20 +95,20 @@ export class FxLayer implements Layer {
 
   onUnitEvent(unit: UnitView) {
     switch (unit.type()) {
-      case UnitType.AtomBomb:
-      case UnitType.MIRVWarhead:
+      case "Atom Bomb":
+      case "MIRV Warhead":
         this.onNukeEvent(unit, 70);
         break;
-      case UnitType.HydrogenBomb:
+      case "Hydrogen Bomb":
         this.onNukeEvent(unit, 160);
         break;
-      case UnitType.Warship:
+      case "Warship":
         this.onWarshipEvent(unit);
         break;
-      case UnitType.Shell:
+      case "Shell":
         this.onShellEvent(unit);
         break;
-      case UnitType.Train:
+      case "Train":
         this.onTrainEvent(unit);
         break;
     }

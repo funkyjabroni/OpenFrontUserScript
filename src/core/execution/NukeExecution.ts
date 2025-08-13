@@ -7,7 +7,6 @@ import {
   TerraNullius,
   TrajectoryTile,
   Unit,
-  UnitType,
 } from "../game/Game";
 import { TileRef } from "../game/GameMap";
 import { ParabolaPathFinder } from "../pathfinding/PathFinding";
@@ -77,10 +76,7 @@ export class NukeExecution implements Execution {
 
     const threshold = this.mg.config().nukeAllianceBreakThreshold();
     for (const [other, tilesDestroyed] of attacked) {
-      if (
-        tilesDestroyed > threshold &&
-        this.nuke.type() !== UnitType.MIRVWarhead
-      ) {
+      if (tilesDestroyed > threshold && this.nuke.type() !== "MIRV Warhead") {
         // Mirv warheads shouldn't break alliances
         const alliance = this.player.allianceWith(other);
         if (alliance !== null) {
@@ -106,7 +102,7 @@ export class NukeExecution implements Execution {
         spawn,
         this.dst,
         this.speed,
-        this.nukeType !== UnitType.MIRVWarhead,
+        this.nukeType !== "MIRV Warhead",
       );
       this.nuke = this.player.buildUnit(this.nukeType, spawn, {
         targetTile: this.dst,
@@ -117,7 +113,7 @@ export class NukeExecution implements Execution {
         const target = this.mg.owner(this.dst);
         if (!target.isPlayer()) {
           // Ignore terra nullius
-        } else if (this.nukeType === UnitType.AtomBomb) {
+        } else if (this.nukeType === "Atom Bomb") {
           this.mg.displayIncomingUnit(
             this.nuke.id(),
             // TODO TranslateText
@@ -125,7 +121,7 @@ export class NukeExecution implements Execution {
             MessageType.NUKE_INBOUND,
             target.id(),
           );
-        } else if (this.nukeType === UnitType.HydrogenBomb) {
+        } else if (this.nukeType === "Hydrogen Bomb") {
           this.mg.displayIncomingUnit(
             this.nuke.id(),
             // TODO TranslateText
@@ -141,7 +137,7 @@ export class NukeExecution implements Execution {
 
       // after sending a nuke set the missilesilo on cooldown
       const silo = this.player
-        .units(UnitType.MissileSilo)
+        .units("Missile Silo")
         .find((silo) => silo.tile() === spawn);
       if (silo) {
         silo.launch();
@@ -257,7 +253,7 @@ export class NukeExecution implements Execution {
               ) ?? 0;
           attack.setTroops(attack.troops() - deaths);
         });
-        owner.units(UnitType.TransportShip).forEach((attack) => {
+        owner.units("Transport Ship").forEach((attack) => {
           const deaths =
             this.mg
               ?.config()
@@ -279,10 +275,10 @@ export class NukeExecution implements Execution {
     const outer2 = magnitude.outer * magnitude.outer;
     for (const unit of this.mg.units()) {
       if (
-        unit.type() !== UnitType.AtomBomb &&
-        unit.type() !== UnitType.HydrogenBomb &&
-        unit.type() !== UnitType.MIRVWarhead &&
-        unit.type() !== UnitType.MIRV
+        unit.type() !== "Atom Bomb" &&
+        unit.type() !== "Hydrogen Bomb" &&
+        unit.type() !== "MIRV Warhead" &&
+        unit.type() !== "MIRV"
       ) {
         if (this.mg.euclideanDistSquared(this.dst, unit.tile()) < outer2) {
           unit.delete(true, this.player);

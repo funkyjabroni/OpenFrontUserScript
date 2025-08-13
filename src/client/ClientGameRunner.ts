@@ -560,7 +560,7 @@ export class ClientGameRunner {
 
   private canBoatAttack(actions: PlayerActions, tile: TileRef): boolean {
     const bu = actions.buildableUnits.find(
-      (bu) => bu.type === UnitType.TransportShip,
+      (bu) => bu.type === "Transport Ship",
     );
     if (bu === undefined) {
       console.warn(`no transport ship buildable units`);
@@ -629,11 +629,7 @@ export class ClientGameRunner {
       }
     } else {
       const units = this.gameView
-        .nearbyUnits(tile, 50, [
-          UnitType.Warship,
-          UnitType.TradeShip,
-          UnitType.TransportShip,
-        ])
+        .nearbyUnits(tile, 50, ["Warship", "Trade Ship", "Transport Ship"])
         .sort((a, b) => a.distSquared - b.distSquared);
 
       if (units.length > 0) {

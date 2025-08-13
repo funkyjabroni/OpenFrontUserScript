@@ -81,9 +81,9 @@ export function createTrainStopHandlers(
   random: PseudoRandom,
 ): Partial<Record<UnitType, TrainStopHandler>> {
   return {
-    [UnitType.City]: new CityStopHandler(),
-    [UnitType.Port]: new PortStopHandler(random),
-    [UnitType.Factory]: new FactoryStopHandler(),
+    ["City"]: new CityStopHandler(),
+    ["Port"]: new PortStopHandler(random),
+    ["Factory"]: new FactoryStopHandler(),
   };
 }
 

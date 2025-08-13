@@ -1,7 +1,6 @@
 import { Colord } from "colord";
 import { EventBus } from "../../../core/EventBus";
 import { Theme } from "../../../core/configuration/Config";
-import { UnitType } from "../../../core/game/Game";
 import { GameUpdateType } from "../../../core/game/GameUpdates";
 import { GameView, UnitView } from "../../../core/game/GameView";
 import { UserSettings } from "../../../core/game/UserSettings";
@@ -65,7 +64,7 @@ export class UILayer implements Layer {
     this.selectionAnimTime = (this.selectionAnimTime + 1) % 60;
 
     // If there's a selected warship, redraw to update the selection box animation
-    if (this.selectedUnit && this.selectedUnit.type() === UnitType.Warship) {
+    if (this.selectedUnit && this.selectedUnit.type() === "Warship") {
       this.drawSelectionBox(this.selectedUnit);
     }
 
@@ -104,7 +103,7 @@ export class UILayer implements Layer {
 
   onUnitEvent(unit: UnitView) {
     switch (unit.type()) {
-      case UnitType.Construction: {
+      case "Construction": {
         const constructionType = unit.constructionType();
         if (constructionType === undefined) {
           // Skip units without construction type
@@ -113,14 +112,14 @@ export class UILayer implements Layer {
         this.createLoadingBar(unit);
         break;
       }
-      case UnitType.Warship: {
+      case "Warship": {
         this.drawHealthBar(unit);
         break;
       }
-      case UnitType.MissileSilo:
+      case "Missile Silo":
         this.createLoadingBar(unit);
         break;
-      case UnitType.SAMLauncher:
+      case "SAM Launcher":
         this.createLoadingBar(unit);
         break;
       default:
@@ -155,7 +154,7 @@ export class UILayer implements Layer {
   private onUnitSelection(event: UnitSelectionEvent) {
     if (event.isSelected) {
       this.selectedUnit = event.unit;
-      if (event.unit && event.unit.type() === UnitType.Warship) {
+      if (event.unit && event.unit.type() === "Warship") {
         this.drawSelectionBox(event.unit);
       }
     } else {
@@ -312,7 +311,7 @@ export class UILayer implements Layer {
       return 1;
     }
     switch (unit.type()) {
-      case UnitType.Construction:
+      case "Construction":
         const constructionType = unit.constructionType();
         if (constructionType === undefined) {
           return 1;
@@ -327,8 +326,8 @@ export class UILayer implements Layer {
           (constDuration === 0 ? 1 : constDuration)
         );
 
-      case UnitType.MissileSilo:
-      case UnitType.SAMLauncher:
+      case "Missile Silo":
+      case "SAM Launcher":
         return unit.missileReadinesss();
       default:
         return 1;
