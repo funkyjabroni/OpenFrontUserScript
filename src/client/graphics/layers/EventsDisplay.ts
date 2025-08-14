@@ -87,10 +87,10 @@ export class EventsDisplay extends LitElement implements Layer {
   @state() private goldAmountAnimating: boolean = false;
   private goldAmountTimeoutId: ReturnType<typeof setTimeout> | null = null;
   @state() private eventsFilters: Map<MessageCategory, boolean> = new Map([
-    [MessageCategory.ATTACK, false],
-    [MessageCategory.TRADE, false],
-    [MessageCategory.ALLIANCE, false],
-    [MessageCategory.CHAT, false],
+    ["ATTACK", false],
+    ["TRADE", false],
+    ["ALLIANCE", false],
+    ["CHAT", false],
   ]);
 
   private renderButton(options: {
@@ -916,56 +916,44 @@ export class EventsDisplay extends LitElement implements Layer {
                       content: html`<img
                         src="${swordIcon}"
                         class="w-5 h-5"
-                        style="filter: ${this.eventsFilters.get(
-                          MessageCategory.ATTACK,
-                        )
+                        style="filter: ${this.eventsFilters.get("ATTACK")
                           ? "grayscale(1) opacity(0.5)"
                           : "none"}"
                       />`,
-                      onClick: () =>
-                        this.toggleEventFilter(MessageCategory.ATTACK),
+                      onClick: () => this.toggleEventFilter("ATTACK"),
                       className: "cursor-pointer pointer-events-auto",
                     })}
                     ${this.renderButton({
                       content: html`<img
                         src="${donateGoldIcon}"
                         class="w-5 h-5"
-                        style="filter: ${this.eventsFilters.get(
-                          MessageCategory.TRADE,
-                        )
+                        style="filter: ${this.eventsFilters.get("TRADE")
                           ? "grayscale(1) opacity(0.5)"
                           : "none"}"
                       />`,
-                      onClick: () =>
-                        this.toggleEventFilter(MessageCategory.TRADE),
+                      onClick: () => this.toggleEventFilter("TRADE"),
                       className: "cursor-pointer pointer-events-auto",
                     })}
                     ${this.renderButton({
                       content: html`<img
                         src="${allianceIcon}"
                         class="w-5 h-5"
-                        style="filter: ${this.eventsFilters.get(
-                          MessageCategory.ALLIANCE,
-                        )
+                        style="filter: ${this.eventsFilters.get("ALLIANCE")
                           ? "grayscale(1) opacity(0.5)"
                           : "none"}"
                       />`,
-                      onClick: () =>
-                        this.toggleEventFilter(MessageCategory.ALLIANCE),
+                      onClick: () => this.toggleEventFilter("ALLIANCE"),
                       className: "cursor-pointer pointer-events-auto",
                     })}
                     ${this.renderButton({
                       content: html`<img
                         src="${chatIcon}"
                         class="w-5 h-5"
-                        style="filter: ${this.eventsFilters.get(
-                          MessageCategory.CHAT,
-                        )
+                        style="filter: ${this.eventsFilters.get("CHAT")
                           ? "grayscale(1) opacity(0.5)"
                           : "none"}"
                       />`,
-                      onClick: () =>
-                        this.toggleEventFilter(MessageCategory.CHAT),
+                      onClick: () => this.toggleEventFilter("CHAT"),
                       className: "cursor-pointer pointer-events-auto",
                     })}
                   </div>
