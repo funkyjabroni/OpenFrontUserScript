@@ -3,7 +3,6 @@ import {
   Game,
   Player,
   PlayerType,
-  Relation,
   TerraNullius,
   Tick,
 } from "../../game/Game";
@@ -89,7 +88,7 @@ export class BotBehavior {
   assistAllies() {
     outer: for (const ally of this.player.allies()) {
       if (ally.targets().length === 0) continue;
-      if (this.player.relation(ally) < Relation.Friendly) {
+      if (this.player.relation(ally) < "Friendly") {
         // this.emoji(ally, "🤦");
         continue;
       }
@@ -148,10 +147,7 @@ export class BotBehavior {
       // Select the most hated player
       if (this.enemy === null) {
         const mostHated = this.player.allRelationsSorted()[0];
-        if (
-          mostHated !== undefined &&
-          mostHated.relation === Relation.Hostile
-        ) {
+        if (mostHated !== undefined && mostHated.relation === "Hostile") {
           this.setNewEnemy(mostHated.player);
         }
       }
@@ -226,7 +222,7 @@ export class BotBehavior {
 }
 
 function shouldAcceptAllianceRequest(player: Player, request: AllianceRequest) {
-  if (player.relation(request.requestor()) < Relation.Neutral) {
+  if (player.relation(request.requestor()) < "Neutral") {
     return false; // Reject if hasMalice
   }
   if (request.requestor().isTraitor()) {

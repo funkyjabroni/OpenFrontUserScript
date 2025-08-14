@@ -7,7 +7,6 @@ import {
   Player,
   PlayerID,
   PlayerType,
-  Relation,
   TerrainType,
   Tick,
   Unit,
@@ -96,12 +95,12 @@ export class FakeHumanExecution implements Execution {
     others.forEach((other: Player) => {
       /* When player is hostile starts embargo. Do not stop until neutral again */
       if (
-        player.relation(other) <= Relation.Hostile &&
+        player.relation(other) <= "Hostile" &&
         !player.hasEmbargoAgainst(other)
       ) {
         player.addEmbargo(other.id(), false);
       } else if (
-        player.relation(other) >= Relation.Neutral &&
+        player.relation(other) >= "Neutral" &&
         player.hasEmbargoAgainst(other)
       ) {
         player.stopEmbargo(other.id());
