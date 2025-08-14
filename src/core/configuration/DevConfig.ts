@@ -55,7 +55,7 @@ export class DevConfig extends DefaultConfig {
   }
 
   // numSpawnPhaseTurns(): number {
-  //   return this.gameConfig().gameType == GameType.Singleplayer ? 70 : 100;
+  //   return this.gameConfig().gameType == "Singleplayer" ? 70 : 100;
   //   // return 100
   // }
 

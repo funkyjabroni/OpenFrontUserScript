@@ -21,7 +21,6 @@ import {
 } from "../core/Schemas";
 import { createGameRecord } from "../core/Util";
 import { GameEnv, ServerConfig } from "../core/configuration/Config";
-import { GameType } from "../core/game/Game";
 import { archive } from "./Archive";
 import { Client } from "./Client";
 import { gatekeeper } from "./Gatekeeper";
@@ -135,7 +134,7 @@ export class GameServer {
     });
 
     if (
-      this.gameConfig.gameType === GameType.Public &&
+      this.gameConfig.gameType === "Public" &&
       this.activeClients.filter(
         (c) => c.ip === client.ip && c.clientID !== client.clientID,
       ).length >= 3
@@ -548,7 +547,7 @@ export class GameServer {
     const noRecentPings = now > this.lastPingUpdate + 20 * 1000;
     const noActive = this.activeClients.length === 0;
 
-    if (this.gameConfig.gameType !== GameType.Public) {
+    if (this.gameConfig.gameType !== "Public") {
       if (this._hasStarted) {
         if (noActive && noRecentPings) {
           this.log.info("private game complete", {
@@ -566,7 +565,7 @@ export class GameServer {
     const msSinceCreation = now - this.createdAt;
     const lessThanLifetime = msSinceCreation < this.config.gameCreationRate();
     const notEnoughPlayers =
-      this.gameConfig.gameType === GameType.Public &&
+      this.gameConfig.gameType === "Public" &&
       this.gameConfig.maxPlayers &&
       this.activeClients.length < this.gameConfig.maxPlayers;
     if (lessThanLifetime && notEnoughPlayers) {
@@ -600,7 +599,7 @@ export class GameServer {
   }
 
   public isPublic(): boolean {
-    return this.gameConfig.gameType === GameType.Public;
+    return this.gameConfig.gameType === "Public";
   }
 
   public kickClient(clientID: ClientID): void {

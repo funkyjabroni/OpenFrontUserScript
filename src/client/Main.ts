@@ -4,7 +4,6 @@ import { EventBus } from "../core/EventBus";
 import { GameRecord, GameStartInfo, ID } from "../core/Schemas";
 import { ServerConfig } from "../core/configuration/Config";
 import { getServerConfigFromClient } from "../core/configuration/ConfigLoader";
-import { GameType } from "../core/game/Game";
 import { UserSettings } from "../core/game/UserSettings";
 import { joinLobby } from "./ClientGameRunner";
 import "./DarkModeButton";
@@ -513,7 +512,7 @@ class Client {
           (ad as HTMLElement).style.display = "none";
         });
 
-        if (lobby.gameStartInfo?.config.gameType !== GameType.Singleplayer) {
+        if (lobby.gameStartInfo?.config.gameType !== "Singleplayer") {
           history.pushState(null, "", `#join=${lobby.gameID}`);
         }
       },

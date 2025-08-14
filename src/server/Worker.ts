@@ -8,7 +8,6 @@ import { WebSocket, WebSocketServer } from "ws";
 import { z } from "zod";
 import { GameEnv } from "../core/configuration/Config";
 import { getServerConfigFromServer } from "../core/configuration/ConfigLoader";
-import { GameType } from "../core/game/Game";
 import {
   ClientMessageSchema,
   GameRecord,
@@ -115,7 +114,7 @@ export async function startWorker() {
 
       const gc = result.data;
       if (
-        gc?.gameType === GameType.Public &&
+        gc?.gameType === "Public" &&
         req.headers[config.adminHeader()] !== config.adminToken()
       ) {
         log.warn(
@@ -176,7 +175,7 @@ export async function startWorker() {
       const config = result.data;
       // TODO: only update public game if from local host
       const lobbyID = req.params.id;
-      if (config.gameType === GameType.Public) {
+      if (config.gameType === "Public") {
         log.info(`cannot update game ${lobbyID} to public`);
         return res.status(400).json({ error: "Cannot update public game" });
       }

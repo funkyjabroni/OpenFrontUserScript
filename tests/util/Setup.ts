@@ -1,11 +1,6 @@
 import fs from "fs";
 import path from "path";
-import {
-  Game,
-  GameType,
-  PlayerInfo,
-  PlayerType,
-} from "../../src/core/game/Game";
+import { Game, PlayerInfo, PlayerType } from "../../src/core/game/Game";
 import { createGame } from "../../src/core/game/GameImpl";
 import {
   genTerrainFromBin,
@@ -56,7 +51,7 @@ export async function setup(
   const gameConfig: GameConfig = {
     gameMap: "Asia",
     gameMode: "Free For All",
-    gameType: GameType.Singleplayer,
+    gameType: "Singleplayer",
     difficulty: "Medium",
     disableNPCs: false,
     bots: 0,

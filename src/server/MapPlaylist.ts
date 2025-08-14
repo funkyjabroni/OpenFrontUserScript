@@ -4,7 +4,6 @@ import {
   GameMapType,
   GameMapTypeSchema,
   GameMode,
-  GameType,
   Quads,
   Trios,
 } from "../core/game/Game";
@@ -77,7 +76,7 @@ export class MapPlaylist {
     return {
       gameMap: map,
       maxPlayers: config.lobbyMaxPlayers(map, mode, playerTeams),
-      gameType: GameType.Public,
+      gameType: "Public",
       difficulty: "Medium",
       infiniteGold: false,
       infiniteTroops: false,

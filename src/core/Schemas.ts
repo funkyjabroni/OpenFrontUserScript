@@ -8,7 +8,7 @@ import {
   Duos,
   GameMapTypeSchema,
   GameModeSchema,
-  GameType,
+  GameTypeSchema,
   PlayerType,
   Quads,
   Trios,
@@ -146,7 +146,7 @@ export type TeamCountConfig = z.infer<typeof TeamCountConfigSchema>;
 export const GameConfigSchema = z.object({
   gameMap: GameMapTypeSchema,
   difficulty: DifficultySchema,
-  gameType: z.enum(GameType),
+  gameType: GameTypeSchema,
   gameMode: GameModeSchema,
   disableNPCs: z.boolean(),
   bots: z.number().int().min(0).max(400),

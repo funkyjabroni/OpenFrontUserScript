@@ -1,7 +1,6 @@
 import { html, LitElement } from "lit";
 import { customElement, state } from "lit/decorators.js";
 import { EventBus } from "../../../core/EventBus";
-import { GameType } from "../../../core/game/Game";
 import { GameUpdateType } from "../../../core/game/GameUpdates";
 import { GameView } from "../../../core/game/GameView";
 import { UserSettings } from "../../../core/game/UserSettings";
@@ -145,7 +144,7 @@ export class OptionsMenu extends LitElement implements Layer {
   init() {
     console.log("init called from OptionsMenu");
     this.showPauseButton =
-      this.game.config().gameConfig().gameType === GameType.Singleplayer ||
+      this.game.config().gameConfig().gameType === "Singleplayer" ||
       this.game.config().isReplay();
     this.isVisible = true;
     this.requestUpdate();

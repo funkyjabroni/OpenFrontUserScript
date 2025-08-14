@@ -6,7 +6,6 @@ import {
   Game,
   GameMapType,
   GameMode,
-  GameType,
   Gold,
   Player,
   PlayerInfo,
@@ -545,7 +544,7 @@ export class DefaultConfig implements Config {
     return 3;
   }
   numSpawnPhaseTurns(): number {
-    return this._gameConfig.gameType === GameType.Singleplayer ? 100 : 300;
+    return this._gameConfig.gameType === "Singleplayer" ? 100 : 300;
   }
   numBots(): number {
     return this.bots();

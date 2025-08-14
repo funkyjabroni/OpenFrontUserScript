@@ -9,7 +9,6 @@ import {
   GameMapType,
   GameMapTypeSchema,
   GameMode,
-  GameType,
   Quads,
   Trios,
   UnitType,
@@ -444,7 +443,7 @@ export class SinglePlayerModal extends LitElement {
             ],
             config: {
               gameMap: this.selectedMap,
-              gameType: GameType.Singleplayer,
+              gameType: "Singleplayer",
               gameMode: this.gameMode,
               playerTeams: this.teamCount,
               difficulty: this.selectedDifficulty,
