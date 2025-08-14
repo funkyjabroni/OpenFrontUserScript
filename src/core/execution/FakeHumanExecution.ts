@@ -7,7 +7,6 @@ import {
   Player,
   PlayerID,
   PlayerType,
-  TerrainType,
   Tick,
   Unit,
   UnitType,
@@ -571,10 +570,7 @@ export class FakeHumanExecution implements Execution {
       }
       const tile = this.mg.ref(x, y);
       if (this.mg.isLand(tile) && !this.mg.hasOwner(tile)) {
-        if (
-          this.mg.terrainType(tile) === TerrainType.Mountain &&
-          this.random.chance(2)
-        ) {
+        if (this.mg.terrainType(tile) === "Mountain" && this.random.chance(2)) {
           continue;
         }
         return tile;

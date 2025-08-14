@@ -1,6 +1,6 @@
 import { Colord, colord } from "colord";
 import { PseudoRandom } from "../PseudoRandom";
-import { PlayerType, Team, TerrainType } from "../game/Game";
+import { PlayerType, Team } from "../game/Game";
 import { GameMap, TileRef } from "../game/GameMap";
 import { PlayerView } from "../game/GameView";
 import { ColorAllocator } from "./ColorAllocator";
@@ -108,8 +108,8 @@ export class PastelThemeDark implements Theme {
       return this.shore;
     }
     switch (gm.terrainType(tile)) {
-      case TerrainType.Ocean:
-      case TerrainType.Lake:
+      case "Ocean":
+      case "Lake":
         const w = this.water.rgba;
         if (gm.isShoreline(tile) && gm.isWater(tile)) {
           return this.shorelineWater;
@@ -122,19 +122,19 @@ export class PastelThemeDark implements Theme {
           });
         }
         return this.water;
-      case TerrainType.Plains:
+      case "Plains":
         return colord({
           r: 140,
           g: 170 - 2 * mag,
           b: 88,
         });
-      case TerrainType.Highland:
+      case "Highland":
         return colord({
           r: 150 + 2 * mag,
           g: 133 + 2 * mag,
           b: 88 + 2 * mag,
         });
-      case TerrainType.Mountain:
+      case "Mountain":
         return colord({
           r: 180 + mag / 2,
           g: 180 + mag / 2,
