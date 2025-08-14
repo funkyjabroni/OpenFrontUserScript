@@ -1,6 +1,6 @@
 import { Colord, colord } from "colord";
 import { PseudoRandom } from "../PseudoRandom";
-import { PlayerType, Team } from "../game/Game";
+import { Team } from "../game/Game";
 import { GameMap, TileRef } from "../game/GameMap";
 import { PlayerView } from "../game/GameView";
 import { ColorAllocator } from "./ColorAllocator";
@@ -44,17 +44,17 @@ export class PastelThemeDark implements Theme {
     if (team !== null) {
       return this.teamColorAllocator.assignTeamPlayerColor(team, player.id());
     }
-    if (player.type() === PlayerType.Human) {
+    if (player.type() === "HUMAN") {
       return this.humanColorAllocator.assignColor(player.id());
     }
-    if (player.type() === PlayerType.Bot) {
+    if (player.type() === "BOT") {
       return this.botColorAllocator.assignColor(player.id());
     }
     return this.nationColorAllocator.assignColor(player.id());
   }
 
   textColor(player: PlayerView): string {
-    return player.type() === PlayerType.Human ? "#ffffff" : "#e6e6e6";
+    return player.type() === "HUMAN" ? "#ffffff" : "#e6e6e6";
   }
 
   specialBuildingColor(player: PlayerView): Colord {

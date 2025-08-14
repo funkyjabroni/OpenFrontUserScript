@@ -1,4 +1,4 @@
-import { Execution, Game, MessageType, Player } from "../game/Game";
+import { Execution, Game, Player } from "../game/Game";
 
 export class DeleteUnitExecution implements Execution {
   private active: boolean = true;
@@ -66,7 +66,7 @@ export class DeleteUnitExecution implements Execution {
 
     this.mg.displayMessage(
       `events_display.unit_voluntarily_deleted`,
-      MessageType.UNIT_DESTROYED,
+      "UNIT_DESTROYED",
       this.player.id(),
     );
 

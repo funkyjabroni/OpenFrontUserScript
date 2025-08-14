@@ -9,7 +9,7 @@ import {
   GameMapTypeSchema,
   GameModeSchema,
   GameTypeSchema,
-  PlayerType,
+  PlayerTypeSchema,
   Quads,
   Trios,
   UnitTypeSchema,
@@ -110,7 +110,6 @@ export type ClientHashMessage = z.infer<typeof ClientHashSchema>;
 export type AllPlayersStats = z.infer<typeof AllPlayersStatsSchema>;
 export type Player = z.infer<typeof PlayerSchema>;
 export type GameStartInfo = z.infer<typeof GameStartInfoSchema>;
-const PlayerTypeSchema = z.enum(PlayerType);
 
 export interface GameInfo {
   gameID: GameID;

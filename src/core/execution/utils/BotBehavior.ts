@@ -2,7 +2,6 @@ import {
   AllianceRequest,
   Game,
   Player,
-  PlayerType,
   TerraNullius,
   Tick,
 } from "../../game/Game";
@@ -37,7 +36,7 @@ export class BotBehavior {
   }
 
   private emoji(player: Player, emoji: number) {
-    if (player.type() !== PlayerType.Human) return;
+    if (player.type() !== "HUMAN") return;
     this.game.addExecution(new EmojiExecution(this.player, player.id(), emoji));
   }
 
@@ -118,9 +117,7 @@ export class BotBehavior {
       // Prefer neighboring bots
       const bots = this.player
         .neighbors()
-        .filter(
-          (n): n is Player => n.isPlayer() && n.type() === PlayerType.Bot,
-        );
+        .filter((n): n is Player => n.isPlayer() && n.type() === "BOT");
       if (bots.length > 0) {
         const density = (p: Player) => p.troops() / p.numTilesOwned();
         let lowestDensityBot: Player | undefined;
@@ -167,7 +164,7 @@ export class BotBehavior {
       for (const neighbor of this.random.shuffleArray(neighbors)) {
         if (!neighbor.isPlayer()) continue;
         if (this.player.isFriendly(neighbor)) continue;
-        if (neighbor.type() === PlayerType.FakeHuman) {
+        if (neighbor.type() === "FAKEHUMAN") {
           if (this.random.chance(2)) {
             continue;
           }

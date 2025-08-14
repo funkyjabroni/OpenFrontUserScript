@@ -1,7 +1,7 @@
 import { AttackExecution } from "../src/core/execution/AttackExecution";
 import { SpawnExecution } from "../src/core/execution/SpawnExecution";
 import { TransportShipExecution } from "../src/core/execution/TransportShipExecution";
-import { Game, Player, PlayerInfo, PlayerType } from "../src/core/game/Game";
+import { Game, Player, PlayerInfo } from "../src/core/game/Game";
 import { TileRef } from "../src/core/game/GameMap";
 import { setup } from "./util/Setup";
 import { TestConfig } from "./util/TestConfig";
@@ -28,14 +28,14 @@ describe("Attack", () => {
     });
     const attackerInfo = new PlayerInfo(
       "attacker dude",
-      PlayerType.Human,
+      "HUMAN",
       null,
       "attacker_id",
     );
     game.addPlayer(attackerInfo);
     const defenderInfo = new PlayerInfo(
       "defender dude",
-      PlayerType.Human,
+      "HUMAN",
       null,
       "defender_id",
     );
@@ -115,18 +115,8 @@ describe("Attack race condition with alliance requests", () => {
       infiniteTroops: true,
     });
 
-    const playerAInfo = new PlayerInfo(
-      "playerA",
-      PlayerType.Human,
-      null,
-      "playerA_id",
-    );
-    const playerBInfo = new PlayerInfo(
-      "playerB",
-      PlayerType.Human,
-      null,
-      "playerB_id",
-    );
+    const playerAInfo = new PlayerInfo("playerA", "HUMAN", null, "playerA_id");
+    const playerBInfo = new PlayerInfo("playerB", "HUMAN", null, "playerB_id");
 
     game.addPlayer(playerAInfo);
     game.addPlayer(playerBInfo);
@@ -194,18 +184,8 @@ describe("Attack race condition with alliance requests", () => {
       infiniteTroops: true,
     });
 
-    const playerAInfo = new PlayerInfo(
-      "playerA",
-      PlayerType.Human,
-      null,
-      "playerA_id",
-    );
-    const playerBInfo = new PlayerInfo(
-      "playerB",
-      PlayerType.Human,
-      null,
-      "playerB_id",
-    );
+    const playerAInfo = new PlayerInfo("playerA", "HUMAN", null, "playerA_id");
+    const playerBInfo = new PlayerInfo("playerB", "HUMAN", null, "playerB_id");
 
     game.addPlayer(playerAInfo);
     game.addPlayer(playerBInfo);

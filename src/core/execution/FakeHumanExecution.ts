@@ -6,7 +6,6 @@ import {
   Nation,
   Player,
   PlayerID,
-  PlayerType,
   Tick,
   Unit,
   UnitType,
@@ -248,7 +247,7 @@ export class FakeHumanExecution implements Execution {
     if (difficulty === "Hard" || difficulty === "Impossible") {
       return false;
     }
-    if (other.type() !== PlayerType.Human) {
+    if (other.type() !== "HUMAN") {
       return false;
     }
     // Only discourage attacks on Humans who are not traitors on easy or medium difficulty.
@@ -257,7 +256,7 @@ export class FakeHumanExecution implements Execution {
 
   private maybeSendEmoji(enemy: Player) {
     if (this.player === null) throw new Error("not initialized");
-    if (enemy.type() !== PlayerType.Human) return;
+    if (enemy.type() !== "HUMAN") return;
     const lastSent = this.lastEmojiSent.get(enemy) ?? -300;
     if (this.mg.ticks() - lastSent <= 300) return;
     this.lastEmojiSent.set(enemy, this.mg.ticks());
@@ -276,7 +275,7 @@ export class FakeHumanExecution implements Execution {
     if (
       silos.length === 0 ||
       this.player.gold() < this.cost("Atom Bomb") ||
-      other.type() === PlayerType.Bot ||
+      other.type() === "BOT" ||
       this.player.isOnSameTeam(other)
     ) {
       return;

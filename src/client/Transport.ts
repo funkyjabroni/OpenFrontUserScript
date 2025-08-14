@@ -1,13 +1,6 @@
 import { z } from "zod";
 import { EventBus, GameEvent } from "../core/EventBus";
-import {
-  AllPlayers,
-  Gold,
-  PlayerID,
-  PlayerType,
-  Tick,
-  UnitType,
-} from "../core/game/Game";
+import { AllPlayers, Gold, PlayerID, Tick, UnitType } from "../core/game/Game";
 import { TileRef } from "../core/game/GameMap";
 import { PlayerView } from "../core/game/GameView";
 import {
@@ -444,7 +437,7 @@ export class Transport {
       flag: this.lobbyConfig.flag,
       pattern: this.lobbyConfig.pattern,
       name: this.lobbyConfig.playerName,
-      playerType: PlayerType.Human,
+      playerType: "HUMAN",
       tile: event.tile,
     });
   }

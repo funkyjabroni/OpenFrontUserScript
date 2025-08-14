@@ -1,6 +1,6 @@
 import { MarkDisconnectedExecution } from "../src/core/execution/MarkDisconnectedExecution";
 import { SpawnExecution } from "../src/core/execution/SpawnExecution";
-import { Game, Player, PlayerInfo, PlayerType } from "../src/core/game/Game";
+import { Game, Player, PlayerInfo } from "../src/core/game/Game";
 import { setup } from "./util/Setup";
 import { executeTicks } from "./util/utils";
 
@@ -17,14 +17,14 @@ describe("Disconnected", () => {
 
     const player1Info = new PlayerInfo(
       "Active Player",
-      PlayerType.Human,
+      "HUMAN",
       null,
       "player1_id",
     );
 
     const player2Info = new PlayerInfo(
       "Disconnected Player",
-      PlayerType.Human,
+      "HUMAN",
       null,
       "player2_id",
     );
