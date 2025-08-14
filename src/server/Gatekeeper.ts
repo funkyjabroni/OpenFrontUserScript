@@ -4,13 +4,10 @@ import fs from "fs";
 import http from "http";
 import path from "path";
 import { fileURLToPath } from "url";
+import { z } from "zod";
 
-export enum LimiterType {
-  Get = "get",
-  Post = "post",
-  Put = "put",
-  WebSocket = "websocket",
-}
+export const LimiterTypeSchema = z.enum(["get", "post", "put", "websocket"]);
+export type LimiterType = z.infer<typeof LimiterTypeSchema>;
 
 export interface Gatekeeper {
   // The wrapper for request handlers with optional rate limiting

@@ -19,7 +19,7 @@ import { CreateGameInputSchema, GameInputSchema } from "../core/WorkerSchemas";
 import { archive, readGameRecord } from "./Archive";
 import { Client } from "./Client";
 import { GameManager } from "./GameManager";
-import { gatekeeper, LimiterType } from "./Gatekeeper";
+import { gatekeeper } from "./Gatekeeper";
 import { getUserMe, verifyClientToken } from "./jwt";
 import { logger } from "./Logger";
 
@@ -91,7 +91,7 @@ export async function startWorker() {
 
   app.post(
     "/api/create_game/:id",
-    gatekeeper.httpHandler(LimiterType.Post, async (req, res) => {
+    gatekeeper.httpHandler("post", async (req, res) => {
       const id = req.params.id;
       const creatorClientID = (() => {
         if (typeof req.query.creatorClientID !== "string") return undefined;
@@ -145,7 +145,7 @@ export async function startWorker() {
   // Add other endpoints from your original server
   app.post(
     "/api/start_game/:id",
-    gatekeeper.httpHandler(LimiterType.Post, async (req, res) => {
+    gatekeeper.httpHandler("post", async (req, res) => {
       log.info(`starting private lobby with id ${req.params.id}`);
       const game = gm.game(req.params.id);
       if (!game) {
@@ -166,7 +166,7 @@ export async function startWorker() {
 
   app.put(
     "/api/game/:id",
-    gatekeeper.httpHandler(LimiterType.Put, async (req, res) => {
+    gatekeeper.httpHandler("put", async (req, res) => {
       const result = GameInputSchema.safeParse(req.body);
       if (!result.success) {
         const error = z.prettifyError(result.error);
@@ -204,7 +204,7 @@ export async function startWorker() {
 
   app.get(
     "/api/game/:id/exists",
-    gatekeeper.httpHandler(LimiterType.Get, async (req, res) => {
+    gatekeeper.httpHandler("get", async (req, res) => {
       const lobbyId = req.params.id;
       res.json({
         exists: gm.game(lobbyId) !== null,
@@ -214,7 +214,7 @@ export async function startWorker() {
 
   app.get(
     "/api/game/:id",
-    gatekeeper.httpHandler(LimiterType.Get, async (req, res) => {
+    gatekeeper.httpHandler("get", async (req, res) => {
       const game = gm.game(req.params.id);
       if (game === null) {
         log.info(`lobby ${req.params.id} not found`);
@@ -226,7 +226,7 @@ export async function startWorker() {
 
   app.get(
     "/api/archived_game/:id",
-    gatekeeper.httpHandler(LimiterType.Get, async (req, res) => {
+    gatekeeper.httpHandler("get", async (req, res) => {
       const gameRecord = await readGameRecord(req.params.id);
 
       if (!gameRecord) {
@@ -265,7 +265,7 @@ export async function startWorker() {
 
   app.post(
     "/api/archive_singleplayer_game",
-    gatekeeper.httpHandler(LimiterType.Post, async (req, res) => {
+    gatekeeper.httpHandler("post", async (req, res) => {
       const result = GameRecordSchema.safeParse(req.body);
       if (!result.success) {
         const error = z.prettifyError(result.error);
@@ -283,7 +283,7 @@ export async function startWorker() {
 
   app.post(
     "/api/kick_player/:gameID/:clientID",
-    gatekeeper.httpHandler(LimiterType.Post, async (req, res) => {
+    gatekeeper.httpHandler("post", async (req, res) => {
       if (req.headers[config.adminHeader()] !== config.adminToken()) {
         res.status(401).send("Unauthorized");
         return;

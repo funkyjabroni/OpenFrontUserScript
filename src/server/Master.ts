@@ -7,7 +7,7 @@ import { fileURLToPath } from "url";
 import { getServerConfigFromServer } from "../core/configuration/ConfigLoader";
 import { GameInfo, ID } from "../core/Schemas";
 import { generateID } from "../core/Util";
-import { gatekeeper, LimiterType } from "./Gatekeeper";
+import { gatekeeper } from "./Gatekeeper";
 import { logger } from "./Logger";
 import { MapPlaylist } from "./MapPlaylist";
 
@@ -144,7 +144,7 @@ export async function startMaster() {
 
 app.get(
   "/api/env",
-  gatekeeper.httpHandler(LimiterType.Get, async (req, res) => {
+  gatekeeper.httpHandler("get", async (req, res) => {
     const envConfig = {
       game_env: process.env.GAME_ENV,
     };
@@ -156,14 +156,14 @@ app.get(
 // Add lobbies endpoint to list public games for this worker
 app.get(
   "/api/public_lobbies",
-  gatekeeper.httpHandler(LimiterType.Get, async (req, res) => {
+  gatekeeper.httpHandler("get", async (req, res) => {
     res.send(publicLobbiesJsonStr);
   }),
 );
 
 app.post(
   "/api/kick_player/:gameID/:clientID",
-  gatekeeper.httpHandler(LimiterType.Post, async (req, res) => {
+  gatekeeper.httpHandler("post", async (req, res) => {
     if (req.headers[config.adminHeader()] !== config.adminToken()) {
       res.status(401).send("Unauthorized");
       return;
