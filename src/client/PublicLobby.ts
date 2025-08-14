@@ -1,7 +1,7 @@
 import { LitElement, html } from "lit";
 import { customElement, state } from "lit/decorators.js";
 import { translateText } from "../client/Utils";
-import { GameMapType, GameMode } from "../core/game/Game";
+import { GameMapType } from "../core/game/Game";
 import { GameID, GameInfo } from "../core/Schemas";
 import { generateID } from "../core/Util";
 import { JoinLobbyEvent } from "./Main";
@@ -109,7 +109,7 @@ export class PublicLobby extends LitElement {
     const timeDisplay = minutes > 0 ? `${minutes}m ${seconds}s` : `${seconds}s`;
 
     const teamCount =
-      lobby.gameConfig.gameMode === GameMode.Team
+      lobby.gameConfig.gameMode === "Team"
         ? (lobby.gameConfig.playerTeams ?? 0)
         : null;
 
@@ -150,7 +150,7 @@ export class PublicLobby extends LitElement {
                   ? "text-green-600"
                   : "text-blue-600"} bg-white rounded-sm px-1"
               >
-                ${lobby.gameConfig.gameMode === GameMode.Team
+                ${lobby.gameConfig.gameMode === "Team"
                   ? typeof teamCount === "string"
                     ? translateText(`public_lobby.teams_${teamCount}`)
                     : translateText("public_lobby.teams", {

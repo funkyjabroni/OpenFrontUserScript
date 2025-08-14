@@ -21,7 +21,6 @@ import {
   ColoredTeams,
   Embargo,
   EmojiMessage,
-  GameMode,
   GameType,
   Gold,
   MessageType,
@@ -576,7 +575,7 @@ export class PlayerImpl implements Player {
     }
     if (
       recipient.type() === PlayerType.Human &&
-      this.mg.config().gameConfig().gameMode === GameMode.FFA &&
+      this.mg.config().gameConfig().gameMode === "Free For All" &&
       this.mg.config().gameConfig().gameType === GameType.Public
     ) {
       return false;

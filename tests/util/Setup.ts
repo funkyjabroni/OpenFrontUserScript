@@ -2,7 +2,6 @@ import fs from "fs";
 import path from "path";
 import {
   Game,
-  GameMode,
   GameType,
   PlayerInfo,
   PlayerType,
@@ -56,7 +55,7 @@ export async function setup(
   const serverConfig = new TestServerConfig();
   const gameConfig: GameConfig = {
     gameMap: "Asia",
-    gameMode: GameMode.FFA,
+    gameMode: "Free For All",
     gameType: GameType.Singleplayer,
     difficulty: "Medium",
     disableNPCs: false,

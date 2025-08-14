@@ -1,6 +1,6 @@
 import { Logger } from "winston";
 import { ServerConfig } from "../core/configuration/Config";
-import { GameMode, GameType } from "../core/game/Game";
+import { GameType } from "../core/game/Game";
 import { GameConfig, GameID } from "../core/Schemas";
 import { Client } from "./Client";
 import { GamePhase, GameServer } from "./GameServer";
@@ -46,7 +46,7 @@ export class GameManager {
         infiniteGold: false,
         infiniteTroops: false,
         instantBuild: false,
-        gameMode: GameMode.FFA,
+        gameMode: "Free For All",
         bots: 400,
         disabledUnits: [],
         ...gameConfig,

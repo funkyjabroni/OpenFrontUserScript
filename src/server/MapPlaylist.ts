@@ -71,8 +71,7 @@ export class MapPlaylist {
   public gameConfig(): GameConfig {
     const { map, mode } = this.getNextMap();
 
-    const playerTeams =
-      mode === GameMode.Team ? this.getTeamCount() : undefined;
+    const playerTeams = mode === "Team" ? this.getTeamCount() : undefined;
 
     // Create the default public game config (from your GameManager)
     return {
@@ -83,7 +82,7 @@ export class MapPlaylist {
       infiniteGold: false,
       infiniteTroops: false,
       instantBuild: false,
-      disableNPCs: mode === GameMode.Team,
+      disableNPCs: mode === "Team",
       gameMode: mode,
       playerTeams,
       bots: 400,
@@ -126,13 +125,13 @@ export class MapPlaylist {
 
     this.mapsPlaylist = [];
     for (let i = 0; i < maps.length; i++) {
-      if (!this.addNextMap(this.mapsPlaylist, ffa1, GameMode.FFA)) {
+      if (!this.addNextMap(this.mapsPlaylist, ffa1, "Free For All")) {
         return false;
       }
-      if (!this.addNextMap(this.mapsPlaylist, ffa2, GameMode.FFA)) {
+      if (!this.addNextMap(this.mapsPlaylist, ffa2, "Free For All")) {
         return false;
       }
-      if (!this.addNextMap(this.mapsPlaylist, team, GameMode.Team)) {
+      if (!this.addNextMap(this.mapsPlaylist, team, "Team")) {
         return false;
       }
     }

@@ -134,10 +134,8 @@ export enum GameType {
   Private = "Private",
 }
 
-export enum GameMode {
-  FFA = "Free For All",
-  Team = "Team",
-}
+export const GameModeSchema = z.enum(["Free For All", "Team"]);
+export type GameMode = z.infer<typeof GameModeSchema>;
 
 export interface UnitInfo {
   cost: (player: Player) => Gold;
