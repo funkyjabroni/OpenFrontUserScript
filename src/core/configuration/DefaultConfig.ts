@@ -120,7 +120,7 @@ export abstract class DefaultServerConfig implements ServerConfig {
   }
   otelEnabled(): boolean {
     return (
-      this.env() !== GameEnv.Dev &&
+      this.env() !== "Dev" &&
       Boolean(this.otelEndpoint()) &&
       Boolean(this.otelAuthHeader())
     );

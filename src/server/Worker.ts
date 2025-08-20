@@ -6,7 +6,6 @@ import path from "path";
 import { fileURLToPath } from "url";
 import { WebSocket, WebSocketServer } from "ws";
 import { z } from "zod";
-import { GameEnv } from "../core/configuration/Config";
 import { getServerConfigFromServer } from "../core/configuration/ConfigLoader";
 import {
   ClientMessageSchema,
@@ -238,7 +237,7 @@ export async function startWorker() {
       }
 
       if (
-        config.env() !== GameEnv.Dev &&
+        config.env() !== "Dev" &&
         gameRecord.gitCommit !== config.gitCommit()
       ) {
         log.warn(

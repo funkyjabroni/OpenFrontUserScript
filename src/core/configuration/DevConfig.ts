@@ -10,7 +10,7 @@ export class DevServerConfig extends DefaultServerConfig {
   }
 
   env(): GameEnv {
-    return GameEnv.Dev;
+    return "Dev";
   }
 
   gameCreationRate(): number {

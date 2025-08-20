@@ -20,7 +20,7 @@ import {
   Turn,
 } from "../core/Schemas";
 import { createGameRecord } from "../core/Util";
-import { GameEnv, ServerConfig } from "../core/configuration/Config";
+import { ServerConfig } from "../core/configuration/Config";
 import { archive } from "./Archive";
 import { Client } from "./Client";
 import { gatekeeper } from "./Gatekeeper";
@@ -144,7 +144,7 @@ export class GameServer {
       return;
     }
 
-    if (this.config.env() === GameEnv.Prod) {
+    if (this.config.env() === "Prod") {
       // Prevent multiple clients from using the same account in prod
       const conflicting = this.activeClients.find(
         (c) =>
