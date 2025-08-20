@@ -15,7 +15,10 @@ import { createGameRecord, decompressGameRecord, replacer } from "../core/Util";
 import { LobbyConfig } from "./ClientGameRunner";
 import { ReplaySpeedChangeEvent } from "./InputHandler";
 import { getPersistentID } from "./Main";
-import { defaultReplaySpeedMultiplier } from "./utilities/ReplaySpeedMultiplier";
+import {
+  defaultReplaySpeedMultiplier,
+  ReplaySpeedValues,
+} from "./utilities/ReplaySpeedMultiplier";
 
 export class LocalServer {
   // All turns from the game record on replay.
@@ -62,7 +65,8 @@ export class LocalServer {
     }, 5);
 
     this.eventBus.on(ReplaySpeedChangeEvent, (event) => {
-      this.replaySpeedMultiplier = event.replaySpeedMultiplier;
+      this.replaySpeedMultiplier =
+        ReplaySpeedValues[event.replaySpeedMultiplier];
     });
 
     this.startedAt = Date.now();

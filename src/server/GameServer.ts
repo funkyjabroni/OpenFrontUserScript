@@ -24,11 +24,9 @@ import { GameEnv, ServerConfig } from "../core/configuration/Config";
 import { archive } from "./Archive";
 import { Client } from "./Client";
 import { gatekeeper } from "./Gatekeeper";
-export enum GamePhase {
-  Lobby = "LOBBY",
-  Active = "ACTIVE",
-  Finished = "FINISHED",
-}
+
+export const GamePhaseSchema = z.enum(["LOBBY", "ACTIVE", "FINISHED"]);
+export type GamePhase = z.infer<typeof GamePhaseSchema>;
 
 export class GameServer {
   private sentDesyncMessageClients = new Set<ClientID>();
@@ -541,7 +539,7 @@ export class GameServer {
       this.log.warn("game past max duration", {
         gameID: this.id,
       });
-      return GamePhase.Finished;
+      return "FINISHED";
     }
 
     const noRecentPings = now > this.lastPingUpdate + 20 * 1000;
@@ -553,12 +551,12 @@ export class GameServer {
           this.log.info("private game complete", {
             gameID: this.id,
           });
-          return GamePhase.Finished;
+          return "FINISHED";
         } else {
-          return GamePhase.Active;
+          return "ACTIVE";
         }
       } else {
-        return GamePhase.Lobby;
+        return "LOBBY";
       }
     }
 
@@ -569,15 +567,15 @@ export class GameServer {
       this.gameConfig.maxPlayers &&
       this.activeClients.length < this.gameConfig.maxPlayers;
     if (lessThanLifetime && notEnoughPlayers) {
-      return GamePhase.Lobby;
+      return "LOBBY";
     }
     const warmupOver =
       now > this.createdAt + this.config.gameCreationRate() + 30 * 1000;
     if (noActive && warmupOver && noRecentPings) {
-      return GamePhase.Finished;
+      return "FINISHED";
     }
 
-    return GamePhase.Active;
+    return "ACTIVE";
   }
 
   hasStarted(): boolean {

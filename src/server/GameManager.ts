@@ -2,7 +2,7 @@ import { Logger } from "winston";
 import { ServerConfig } from "../core/configuration/Config";
 import { GameConfig, GameID } from "../core/Schemas";
 import { Client } from "./Client";
-import { GamePhase, GameServer } from "./GameServer";
+import { GameServer } from "./GameServer";
 
 export class GameManager {
   private games: Map<GameID, GameServer> = new Map();
@@ -72,7 +72,7 @@ export class GameManager {
     const active = new Map<GameID, GameServer>();
     for (const [id, game] of this.games) {
       const phase = game.phase();
-      if (phase === GamePhase.Active) {
+      if (phase === "ACTIVE") {
         if (!game.hasStarted()) {
           // Prestart tells clients to start loading the game.
           game.prestart();
@@ -87,7 +87,7 @@ export class GameManager {
         }
       }
 
-      if (phase === GamePhase.Finished) {
+      if (phase === "FINISHED") {
         try {
           game.end();
         } catch (error) {
