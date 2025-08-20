@@ -1,8 +1,7 @@
-export enum SearchMapTileType {
-  Land,
-  Shore,
-  Water,
-}
+import { z } from "zod";
+
+export const SearchMapTileTypeSchema = z.enum(["Land", "Shore", "Water"]);
+export type SearchMapTileType = z.infer<typeof SearchMapTileTypeSchema>;
 
 export class TerrainSearchMap {
   private width: number;
@@ -22,12 +21,12 @@ export class TerrainSearchMap {
     const ocean = !!(packedByte & 0b00100000);
     const magnitude = packedByte & 0b00011111;
     if (isLand) {
-      return SearchMapTileType.Land;
+      return "Land";
     }
     if (magnitude < 10) {
-      return SearchMapTileType.Shore;
+      return "Shore";
     }
-    return SearchMapTileType.Water;
+    return "Water";
   }
 
   neighbors(x: number, y: number): Array<{ x: number; y: number }> {
