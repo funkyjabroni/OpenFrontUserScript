@@ -2,7 +2,7 @@ import { Game } from "../game/Game";
 import { GameMap, TileRef } from "../game/GameMap";
 import { PseudoRandom } from "../PseudoRandom";
 import { DistanceBasedBezierCurve } from "../utilities/Line";
-import { AStar, AStarResult, PathFindResultType } from "./AStar";
+import { AStar, AStarResult } from "./AStar";
 import { MiniAStar } from "./MiniAStar";
 
 const parabolaMinHeight = 50;
@@ -140,15 +140,15 @@ export class PathFinder {
   ): AStarResult<TileRef> {
     if (curr === null) {
       console.error("curr is null");
-      return { type: PathFindResultType.PathNotFound };
+      return { type: "PathNotFound" };
     }
     if (dst === null) {
       console.error("dst is null");
-      return { type: PathFindResultType.PathNotFound };
+      return { type: "PathNotFound" };
     }
 
     if (this.game.manhattanDist(curr, dst) < dist) {
-      return { type: PathFindResultType.Completed, node: curr };
+      return { type: "Completed", node: curr };
     }
 
     if (this.computeFinished) {
@@ -164,22 +164,22 @@ export class PathFinder {
         if (tile === undefined) {
           throw new Error("missing tile");
         }
-        return { type: PathFindResultType.NextTile, node: tile };
+        return { type: "NextTile", node: tile };
       }
     }
 
     switch (this.aStar.compute()) {
-      case PathFindResultType.Completed:
+      case "Completed":
         this.computeFinished = true;
         this.path = this.aStar.reconstructPath();
         // Remove the start tile
         this.path.shift();
 
         return this.nextTile(curr, dst);
-      case PathFindResultType.Pending:
-        return { type: PathFindResultType.Pending };
-      case PathFindResultType.PathNotFound:
-        return { type: PathFindResultType.PathNotFound };
+      case "Pending":
+        return { type: "Pending" };
+      case "PathNotFound":
+        return { type: "PathNotFound" };
       default:
         throw new Error("unexpected compute result");
     }

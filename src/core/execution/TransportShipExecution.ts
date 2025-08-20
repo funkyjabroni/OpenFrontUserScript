@@ -8,7 +8,6 @@ import {
 } from "../game/Game";
 import { TileRef } from "../game/GameMap";
 import { targetTransportTile } from "../game/TransportShipUtils";
-import { PathFindResultType } from "../pathfinding/AStar";
 import { PathFinder } from "../pathfinding/PathFinding";
 import { AttackExecution } from "./AttackExecution";
 
@@ -167,7 +166,7 @@ export class TransportShipExecution implements Execution {
 
     const result = this.pathFinder.nextTile(this.boat.tile(), this.dst);
     switch (result.type) {
-      case PathFindResultType.Completed:
+      case "Completed":
         if (this.mg.owner(this.dst) === this.attacker) {
           this.attacker.addTroops(this.boat.troops());
           this.boat.delete(false);
@@ -201,12 +200,12 @@ export class TransportShipExecution implements Execution {
           .stats()
           .boatArriveTroops(this.attacker, this.target, this.boat.troops());
         return;
-      case PathFindResultType.NextTile:
+      case "NextTile":
         this.boat.move(result.node);
         break;
-      case PathFindResultType.Pending:
+      case "Pending":
         break;
-      case PathFindResultType.PathNotFound:
+      case "PathNotFound":
         // TODO: add to poisoned port list
         console.warn(`path not found to dst`);
         this.attacker.addTroops(this.boat.troops());

@@ -1,4 +1,3 @@
-import { PathFindResultType } from "../pathfinding/AStar";
 import { MiniAStar } from "../pathfinding/MiniAStar";
 import { Game, Player } from "./Game";
 import { andFN, GameMap, manhattanDistFN, TileRef } from "./GameMap";
@@ -148,7 +147,7 @@ export function bestShoreDeploymentSource(
   const candidates = candidateShoreTiles(gm, player, t);
   const aStar = new MiniAStar(gm, gm.miniMap(), candidates, t, 1_000_000, 1);
   const result = aStar.compute();
-  if (result !== PathFindResultType.Completed) {
+  if (result !== "Completed") {
     console.warn(`bestShoreDeploymentSource: path not found: ${result}`);
     return false;
   }
