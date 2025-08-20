@@ -11,6 +11,7 @@ import { PlayerActionHandler } from "./PlayerActionHandler";
 import { PlayerPanel } from "./PlayerPanel";
 import { TooltipItem } from "./RadialMenu";
 
+import { z } from "zod";
 import allianceIcon from "../../../../resources/images/AllianceIconWhite.svg";
 import boatIcon from "../../../../resources/images/BoatIconWhite.svg";
 import buildIcon from "../../../../resources/images/BuildIconWhite.svg";
@@ -96,15 +97,16 @@ export const COLORS = {
   },
 };
 
-export enum Slot {
-  Info = "info",
-  Boat = "boat",
-  Build = "build",
-  Attack = "attack",
-  Ally = "ally",
-  Back = "back",
-  Delete = "delete",
-}
+export const SlotSchema = z.enum([
+  "info",
+  "boat",
+  "build",
+  "attack",
+  "ally",
+  "back",
+  "delete",
+]);
+export type Slot = z.infer<typeof SlotSchema>;
 
 const infoChatElement: MenuElement = {
   id: "info_chat",
@@ -295,7 +297,7 @@ const infoEmojiElement: MenuElement = {
 };
 
 export const infoMenuElement: MenuElement = {
-  id: Slot.Info,
+  id: "info",
   name: "info",
   disabled: (params: MenuElementParams) =>
     !params.selected || params.game.inSpawnPhase(),
@@ -402,7 +404,7 @@ function createMenuElements(
 }
 
 export const attackMenuElement: MenuElement = {
-  id: Slot.Attack,
+  id: "attack",
   name: "radial_attack",
   disabled: (params: MenuElementParams) => params.game.inSpawnPhase(),
   icon: swordIcon,
@@ -415,7 +417,7 @@ export const attackMenuElement: MenuElement = {
 };
 
 export const deleteUnitElement: MenuElement = {
-  id: Slot.Delete,
+  id: "delete",
   name: "delete",
   disabled: (params: MenuElementParams) => {
     const tileOwner = params.game.owner(params.tile);
@@ -485,7 +487,7 @@ export const deleteUnitElement: MenuElement = {
 };
 
 export const buildMenuElement: MenuElement = {
-  id: Slot.Build,
+  id: "build",
   name: "build",
   disabled: (params: MenuElementParams) => params.game.inSpawnPhase(),
   icon: buildIcon,
@@ -498,7 +500,7 @@ export const buildMenuElement: MenuElement = {
 };
 
 export const boatMenuElement: MenuElement = {
-  id: Slot.Boat,
+  id: "boat",
   name: "boat",
   disabled: (params: MenuElementParams) =>
     !params.playerActions.buildableUnits.some(
