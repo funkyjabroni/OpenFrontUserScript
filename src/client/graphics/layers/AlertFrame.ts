@@ -1,9 +1,6 @@
 import { LitElement, css, html } from "lit";
 import { customElement, state } from "lit/decorators.js";
-import {
-  BrokeAllianceUpdate,
-  GameUpdateType,
-} from "../../../core/game/GameUpdates";
+import { BrokeAllianceUpdate } from "../../../core/game/GameUpdates";
 import { GameView } from "../../../core/game/GameView";
 import { UserSettings } from "../../../core/game/UserSettings";
 import { Layer } from "./Layer";
@@ -77,11 +74,9 @@ export class AlertFrame extends LitElement implements Layer {
     }
 
     // Check for BrokeAllianceUpdate events
-    this.game
-      .updatesSinceLastTick()
-      ?.[GameUpdateType.BrokeAlliance]?.forEach((update) => {
-        this.onBrokeAllianceUpdate(update as BrokeAllianceUpdate);
-      });
+    this.game.updatesSinceLastTick()?.["BrokeAlliance"]?.forEach((update) => {
+      this.onBrokeAllianceUpdate(update as BrokeAllianceUpdate);
+    });
   }
 
   // The alert frame is not affected by the camera transform

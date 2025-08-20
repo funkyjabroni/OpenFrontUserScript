@@ -10,7 +10,6 @@ import shieldIcon from "../../../../resources/images/ShieldIcon.png";
 import { Theme } from "../../../core/configuration/Config";
 import { EventBus } from "../../../core/EventBus";
 import { Cell, PlayerID, UnitType } from "../../../core/game/Game";
-import { GameUpdateType } from "../../../core/game/GameUpdates";
 import { GameView, PlayerView, UnitView } from "../../../core/game/GameView";
 import { ToggleStructureEvent } from "../../InputHandler";
 import { TransformHandler } from "../TransformHandler";
@@ -165,7 +164,7 @@ export class StructureIconsLayer implements Layer {
   public tick() {
     this.game
       .updatesSinceLastTick()
-      ?.[GameUpdateType.Unit]?.map((unit) => this.game.unit(unit.id))
+      ?.["Unit"]?.map((unit) => this.game.unit(unit.id))
       ?.forEach((unitView) => {
         if (unitView === undefined) return;
 

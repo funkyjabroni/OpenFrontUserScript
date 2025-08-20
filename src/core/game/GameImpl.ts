@@ -30,7 +30,7 @@ import {
   UnitType,
 } from "./Game";
 import { GameMap, TileRef, TileUpdate } from "./GameMap";
-import { GameUpdate, GameUpdateType } from "./GameUpdates";
+import { GameUpdate, GameUpdateTypeSchema } from "./GameUpdates";
 import { PlayerImpl } from "./PlayerImpl";
 import { RailNetwork } from "./RailNetwork";
 import { createRailNetwork } from "./RailNetworkImpl";
@@ -200,7 +200,7 @@ export class GameImpl implements Game {
     }
     this._map.setFallout(tile, value);
     this.addUpdate({
-      type: GameUpdateType.Tile,
+      type: "Tile",
       update: this.toTileUpdate(tile),
     });
   }
@@ -290,7 +290,7 @@ export class GameImpl implements Game {
       recipient.endTemporaryEmbargo(requestor.id());
 
     this.addUpdate({
-      type: GameUpdateType.AllianceRequestReply,
+      type: "AllianceRequestReply",
       request: request.toUpdate(),
       accepted: true,
     });
@@ -304,7 +304,7 @@ export class GameImpl implements Game {
       request,
     );
     this.addUpdate({
-      type: GameUpdateType.AllianceRequestReply,
+      type: "AllianceRequestReply",
       request: request.toUpdate(),
       accepted: false,
     });
@@ -356,7 +356,7 @@ export class GameImpl implements Game {
     }
     if (this.ticks() % 10 === 0) {
       this.addUpdate({
-        type: GameUpdateType.Hash,
+        type: "Hash",
         tick: this.ticks(),
         hash: this.hash(),
       });
@@ -513,7 +513,7 @@ export class GameImpl implements Game {
     this.updateBorders(tile);
     this._map.setFallout(tile, false);
     this.addUpdate({
-      type: GameUpdateType.Tile,
+      type: "Tile",
       update: this.toTileUpdate(tile),
     });
   }
@@ -534,7 +534,7 @@ export class GameImpl implements Game {
     this._map.setOwnerID(tile, 0);
     this.updateBorders(tile);
     this.addUpdate({
-      type: GameUpdateType.Tile,
+      type: "Tile",
       update: this.toTileUpdate(tile),
     });
   }
@@ -571,7 +571,7 @@ export class GameImpl implements Game {
 
   target(targeter: Player, target: Player) {
     this.addUpdate({
-      type: GameUpdateType.TargetPlayer,
+      type: "TargetPlayer",
       playerID: targeter.smallID(),
       targetID: target.smallID(),
     });
@@ -602,7 +602,7 @@ export class GameImpl implements Game {
     }
     this.alliances_ = this.alliances_.filter((a) => a !== alliances[0]);
     this.addUpdate({
-      type: GameUpdateType.BrokeAlliance,
+      type: "BrokeAlliance",
       traitorID: breaker.smallID(),
       betrayedID: other.smallID(),
     });
@@ -621,7 +621,7 @@ export class GameImpl implements Game {
     }
     this.alliances_ = this.alliances_.filter((a) => a !== alliances[0]);
     this.addUpdate({
-      type: GameUpdateType.AllianceExpired,
+      type: "AllianceExpired",
       player1ID: alliance.requestor().smallID(),
       player2ID: alliance.recipient().smallID(),
     });
@@ -629,14 +629,14 @@ export class GameImpl implements Game {
 
   sendEmojiUpdate(msg: EmojiMessage): void {
     this.addUpdate({
-      type: GameUpdateType.Emoji,
+      type: "Emoji",
       emoji: msg,
     });
   }
 
   setWinner(winner: Player | Team, allPlayersStats: AllPlayersStats): void {
     this.addUpdate({
-      type: GameUpdateType.Win,
+      type: "Win",
       winner: this.makeWinner(winner),
       allPlayersStats,
     });
@@ -681,7 +681,7 @@ export class GameImpl implements Game {
       id = this.player(playerID).smallID();
     }
     this.addUpdate({
-      type: GameUpdateType.DisplayEvent,
+      type: "DisplayEvent",
       messageType: type,
       message: message,
       playerID: id,
@@ -703,7 +703,7 @@ export class GameImpl implements Game {
       id = this.player(playerID).smallID();
     }
     this.addUpdate({
-      type: GameUpdateType.DisplayChatEvent,
+      type: "DisplayChatEvent",
       key: message,
       category: category,
       target: target,
@@ -722,7 +722,7 @@ export class GameImpl implements Game {
     const id = this.player(playerID).smallID();
 
     this.addUpdate({
-      type: GameUpdateType.UnitIncoming,
+      type: "UnitIncoming",
       unitID: unitID,
       message: message,
       messageType: type,
@@ -887,7 +887,7 @@ export class GameImpl implements Game {
     conqueror.addGold(gold);
     conquered.removeGold(gold);
     this.addUpdate({
-      type: GameUpdateType.ConquestEvent,
+      type: "ConquestEvent",
       conquerorId: conqueror.id(),
       conqueredId: conquered.id(),
       gold,
@@ -901,10 +901,8 @@ export class GameImpl implements Game {
 // Or a more dynamic approach that will catch new enum values:
 const createGameUpdatesMap = (): GameUpdates => {
   const map = {} as GameUpdates;
-  Object.values(GameUpdateType)
-    .filter((key) => !isNaN(Number(key))) // Filter out reverse mappings
-    .forEach((key) => {
-      map[key as GameUpdateType] = [];
-    });
+  GameUpdateTypeSchema.options.forEach((type) => {
+    map[type] = [];
+  });
   return map;
 };

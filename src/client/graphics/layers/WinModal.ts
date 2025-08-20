@@ -2,7 +2,6 @@ import { LitElement, css, html } from "lit";
 import { customElement, state } from "lit/decorators.js";
 import { translateText } from "../../../client/Utils";
 import { EventBus } from "../../../core/EventBus";
-import { GameUpdateType } from "../../../core/game/GameUpdates";
 import { GameView } from "../../../core/game/GameView";
 import { SendWinnerEvent } from "../../Transport";
 import { GutterAdModalEvent } from "./GutterAdModal";
@@ -214,7 +213,7 @@ export class WinModal extends LitElement implements Layer {
       this.show();
     }
     const updates = this.game.updatesSinceLastTick();
-    const winUpdates = updates !== null ? updates[GameUpdateType.Win] : [];
+    const winUpdates = updates !== null ? updates["Win"] : [];
     winUpdates.forEach((wu) => {
       if (wu.winner === undefined) {
         // ...

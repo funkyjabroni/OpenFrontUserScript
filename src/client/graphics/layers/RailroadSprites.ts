@@ -1,12 +1,12 @@
 import { RailType } from "../../../core/game/GameUpdates";
 
 const railTypeToFunctionMap: Record<RailType, () => number[][]> = {
-  [RailType.TOP_RIGHT]: topRightRailroadCornerRects,
-  [RailType.BOTTOM_LEFT]: bottomLeftRailroadCornerRects,
-  [RailType.TOP_LEFT]: topLeftRailroadCornerRects,
-  [RailType.BOTTOM_RIGHT]: bottomRightRailroadCornerRects,
-  [RailType.HORIZONTAL]: horizontalRailroadRects,
-  [RailType.VERTICAL]: verticalRailroadRects,
+  ["TOP_RIGHT"]: topRightRailroadCornerRects,
+  ["BOTTOM_LEFT"]: bottomLeftRailroadCornerRects,
+  ["TOP_LEFT"]: topLeftRailroadCornerRects,
+  ["BOTTOM_RIGHT"]: bottomRightRailroadCornerRects,
+  ["HORIZONTAL"]: horizontalRailroadRects,
+  ["VERTICAL"]: verticalRailroadRects,
 };
 
 export function getRailroadRects(type: RailType): number[][] {

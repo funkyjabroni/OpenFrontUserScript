@@ -1,7 +1,6 @@
 import { html, LitElement } from "lit";
 import { customElement, state } from "lit/decorators.js";
 import { EventBus } from "../../../core/EventBus";
-import { GameUpdateType } from "../../../core/game/GameUpdates";
 import { GameView } from "../../../core/game/GameView";
 import { UserSettings } from "../../../core/game/UserSettings";
 import { AlternateViewEvent, RefreshGraphicsEvent } from "../../InputHandler";
@@ -153,7 +152,7 @@ export class OptionsMenu extends LitElement implements Layer {
   tick() {
     const updates = this.game.updatesSinceLastTick();
     if (updates) {
-      this.hasWinner = this.hasWinner || updates[GameUpdateType.Win].length > 0;
+      this.hasWinner = this.hasWinner || updates["Win"].length > 0;
     }
     if (this.game.inSpawnPhase()) {
       this.timer = 0;

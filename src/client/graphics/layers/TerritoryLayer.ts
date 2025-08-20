@@ -4,7 +4,6 @@ import { Theme } from "../../../core/configuration/Config";
 import { EventBus } from "../../../core/EventBus";
 import { Cell } from "../../../core/game/Game";
 import { euclDistFN, TileRef } from "../../../core/game/GameMap";
-import { GameUpdateType } from "../../../core/game/GameUpdates";
 import { GameView, PlayerView } from "../../../core/game/GameView";
 import { UserSettings } from "../../../core/game/UserSettings";
 import { PseudoRandom } from "../../../core/PseudoRandom";
@@ -81,7 +80,7 @@ export class TerritoryLayer implements Layer {
     }
     this.game.recentlyUpdatedTiles().forEach((t) => this.enqueueTile(t));
     const updates = this.game.updatesSinceLastTick();
-    const unitUpdates = updates !== null ? updates[GameUpdateType.Unit] : [];
+    const unitUpdates = updates !== null ? updates["Unit"] : [];
     unitUpdates.forEach((update) => {
       if (update.unitType === "Defense Post") {
         const tile = update.pos;
@@ -102,7 +101,7 @@ export class TerritoryLayer implements Layer {
     // Detect alliance mutations
     const myPlayer = this.game.myPlayer();
     if (myPlayer) {
-      updates?.[GameUpdateType.BrokeAlliance]?.forEach((update) => {
+      updates?.["BrokeAlliance"]?.forEach((update) => {
         const territory = this.game.playerBySmallID(update.betrayedID);
         console.log("betrayedID", update.betrayedID);
         console.log("territory", territory);
@@ -111,7 +110,7 @@ export class TerritoryLayer implements Layer {
         }
       });
 
-      updates?.[GameUpdateType.AllianceRequestReply]?.forEach((update) => {
+      updates?.["AllianceRequestReply"]?.forEach((update) => {
         if (
           update.accepted &&
           (update.request.requestorID === myPlayer.smallID() ||

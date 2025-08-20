@@ -39,12 +39,7 @@ import {
 } from "./Game";
 import { GameImpl } from "./GameImpl";
 import { andFN, manhattanDistFN, TileRef } from "./GameMap";
-import {
-  AllianceView,
-  AttackUpdate,
-  GameUpdateType,
-  PlayerUpdate,
-} from "./GameUpdates";
+import { AllianceView, AttackUpdate, PlayerUpdate } from "./GameUpdates";
 import {
   bestShoreDeploymentSource,
   canBuildTransportShip,
@@ -125,7 +120,7 @@ export class PlayerImpl implements Player {
     const stats = this.mg.stats().getPlayerStats(this);
 
     return {
-      type: GameUpdateType.Player,
+      type: "Player",
       clientID: this.clientID(),
       name: this.name(),
       displayName: this.displayName(),
@@ -714,7 +709,7 @@ export class PlayerImpl implements Player {
     this._gold += toAdd;
     if (tile) {
       this.mg.addUpdate({
-        type: GameUpdateType.BonusEvent,
+        type: "BonusEvent",
         player: this.id(),
         tile,
         gold: Number(toAdd),

@@ -1,6 +1,6 @@
 import { AllianceRequest, Player, Tick } from "./Game";
 import { GameImpl } from "./GameImpl";
-import { AllianceRequestUpdate, GameUpdateType } from "./GameUpdates";
+import { AllianceRequestUpdate } from "./GameUpdates";
 
 export class AllianceRequestImpl implements AllianceRequest {
   constructor(
@@ -31,7 +31,7 @@ export class AllianceRequestImpl implements AllianceRequest {
 
   toUpdate(): AllianceRequestUpdate {
     return {
-      type: GameUpdateType.AllianceRequest,
+      type: "AllianceRequest",
       requestorID: this.requestor_.smallID(),
       recipientID: this.recipient_.smallID(),
       createdAt: this.tickCreated,

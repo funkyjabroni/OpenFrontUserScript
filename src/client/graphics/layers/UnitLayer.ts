@@ -13,7 +13,6 @@ import { MoveWarshipIntentEvent } from "../../Transport";
 import { TransformHandler } from "../TransformHandler";
 import { Layer } from "./Layer";
 
-import { GameUpdateType } from "../../../core/game/GameUpdates";
 import {
   getColoredSprite,
   isSpriteReady,
@@ -64,7 +63,7 @@ export class UnitLayer implements Layer {
   tick() {
     const unitIds = this.game
       .updatesSinceLastTick()
-      ?.[GameUpdateType.Unit]?.map((unit) => unit.id);
+      ?.["Unit"]?.map((unit) => unit.id);
 
     this.updateUnitsSprites(unitIds ?? []);
   }
