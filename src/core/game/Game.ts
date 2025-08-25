@@ -1,3 +1,4 @@
+import { Config } from "../configuration/Config";
 import { AllPlayersStats, ClientID } from "../Schemas";
 import { GameMap, TileRef } from "./GameMap";
 import {
@@ -6,7 +7,6 @@ import {
   PlayerUpdate,
   UnitUpdate,
 } from "./GameUpdates";
-import { Config } from "../configuration/Config";
 import { RailNetwork } from "./RailNetwork";
 import { Stats } from "./Stats";
 import { UnitPredicate } from "./UnitGrid";
@@ -44,18 +44,16 @@ export const Duos = "Duos" as const;
 export const Trios = "Trios" as const;
 export const Quads = "Quads" as const;
 
-/* eslint-disable sort-keys */
 export const ColoredTeams: Record<string, Team> = {
-  Red: "Red",
   Blue: "Blue",
-  Teal: "Teal",
-  Purple: "Purple",
-  Yellow: "Yellow",
-  Orange: "Orange",
-  Green: "Green",
   Bot: "Bot",
+  Green: "Green",
+  Orange: "Orange",
+  Purple: "Purple",
+  Red: "Red",
+  Teal: "Teal",
+  Yellow: "Yellow",
 } as const;
-/* eslint-enable sort-keys */
 
 export enum GameMapType {
   World = "World",
@@ -103,6 +101,14 @@ export const mapCategories: Record<string, GameMapType[]> = {
     GameMapType.Africa,
     GameMapType.Oceania,
   ],
+
+  fantasy: [
+    GameMapType.Pangaea,
+    GameMapType.Pluto,
+    GameMapType.MarsRevised,
+    GameMapType.Mars,
+    GameMapType.DeglaciatedAntarctica,
+  ],
   regional: [
     GameMapType.BlackSea,
     GameMapType.Britannia,
@@ -119,14 +125,6 @@ export const mapCategories: Record<string, GameMapType[]> = {
     GameMapType.StraitOfGibraltar,
     GameMapType.Italia,
     GameMapType.Yenisei,
-  ],
-  // eslint-disable-next-line sort-keys
-  fantasy: [
-    GameMapType.Pangaea,
-    GameMapType.Pluto,
-    GameMapType.MarsRevised,
-    GameMapType.Mars,
-    GameMapType.DeglaciatedAntarctica,
   ],
 };
 

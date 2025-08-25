@@ -1,3 +1,4 @@
+import { getServerConfigFromServer } from "../core/configuration/ConfigLoader";
 import {
   Difficulty,
   Duos,
@@ -8,9 +9,8 @@ import {
   Quads,
   Trios,
 } from "../core/game/Game";
-import { GameConfig, TeamCountConfig } from "../core/Schemas";
 import { PseudoRandom } from "../core/PseudoRandom";
-import { getServerConfigFromServer } from "../core/configuration/ConfigLoader";
+import { GameConfig, TeamCountConfig } from "../core/Schemas";
 import { logger } from "./Logger";
 
 const log = logger.child({});
@@ -78,8 +78,8 @@ export class MapPlaylist {
     return {
       bots: 400,
       difficulty: Difficulty.Medium,
-      disableNPCs: mode === GameMode.Team,
       disabledUnits: [],
+      disableNPCs: mode === GameMode.Team,
       donateGold: true,
       donateTroops: true,
       gameMap: map,
@@ -105,7 +105,9 @@ export class MapPlaylist {
           log.info(`Generated map playlist in ${i + 1} attempts`);
           const next = this.mapsPlaylist.shift();
           if (next !== undefined) return next;
-          log.error("Playlist unexpectedly empty after successful shuffle; using fallback.");
+          log.error(
+            "Playlist unexpectedly empty after successful shuffle; using fallback.",
+          );
           return { map: GameMapType.World, mode: GameMode.FFA };
         }
       }

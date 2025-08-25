@@ -1,14 +1,15 @@
-import * as dotenv from "dotenv";
 import * as logsAPI from "@opentelemetry/api-logs";
+import { OTLPLogExporter } from "@opentelemetry/exporter-logs-otlp-http";
 import {
   LoggerProvider,
   SimpleLogRecordProcessor,
 } from "@opentelemetry/sdk-logs";
-import { OTLPLogExporter } from "@opentelemetry/exporter-logs-otlp-http";
 import { OpenTelemetryTransportV3 } from "@opentelemetry/winston-transport";
-import { getOtelResource } from "./OtelResource";
-import { getServerConfigFromServer } from "../core/configuration/ConfigLoader";
+import * as dotenv from "dotenv";
 import winston from "winston";
+import { getServerConfigFromServer } from "../core/configuration/ConfigLoader";
+import { getOtelResource } from "./OtelResource";
+
 dotenv.config();
 
 const config = getServerConfigFromServer();
@@ -28,9 +29,8 @@ if (config.otelEnabled()) {
 
   // Add OTLP exporter for logs
   const logExporter = new OTLPLogExporter({
-    url: `${config.otelEndpoint()}/v1/logs`,
-    // eslint-disable-next-line sort-keys
     headers,
+    url: `${config.otelEndpoint()}/v1/logs`,
   });
 
   // Add a log processor with the exporter
@@ -56,18 +56,18 @@ const addSeverityFormat = winston.format((info) => {
 
 // Define your base/parent logger
 const logger = winston.createLogger({
-  level: "info",
-  /* eslint-disable sort-keys */
+  defaultMeta: {
+    environment: process.env.GAME_ENV ?? "prod",
+    service: "openfront",
+  },
+
   format: winston.format.combine(
     winston.format.timestamp(),
     addSeverityFormat(),
     winston.format.json(),
   ),
-  defaultMeta: {
-    service: "openfront",
-    environment: process.env.GAME_ENV ?? "prod",
-  },
-  /* eslint-enable sort-keys */
+  level: "info",
+
   transports: [
     new winston.transports.Console(),
     new OpenTelemetryTransportV3(),

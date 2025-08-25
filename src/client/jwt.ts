@@ -1,3 +1,5 @@
+import { decodeJwt } from "jose";
+import { z } from "zod";
 import {
   RefreshResponseSchema,
   TokenPayload,
@@ -5,9 +7,7 @@ import {
   UserMeResponse,
   UserMeResponseSchema,
 } from "../core/ApiSchemas";
-import { decodeJwt } from "jose";
 import { getServerConfigFromClient } from "../core/configuration/ConfigLoader";
-import { z } from "zod";
 
 function getAudience() {
   const { hostname } = new URL(window.location.href);
@@ -85,10 +85,10 @@ export async function logOut(allSessions = false) {
   const response = await fetch(
     getApiBase() + (allSessions ? "/revoke" : "/logout"),
     {
-      method: "POST",
       headers: {
         authorization: `Bearer ${token}`,
       },
+      method: "POST",
     },
   );
 
@@ -179,7 +179,7 @@ function _isLoggedIn(): IsLoggedInResponse {
     }
 
     const claims = result.data;
-    return { token, claims };
+    return { claims, token };
   } catch (e) {
     console.log(e);
     return false;
@@ -193,10 +193,10 @@ export async function postRefresh(): Promise<boolean> {
 
     // Refresh the JWT
     const response = await fetch(getApiBase() + "/refresh", {
-      method: "POST",
       headers: {
         authorization: `Bearer ${token}`,
       },
+      method: "POST",
     });
     if (response.status === 401) {
       clearToken();

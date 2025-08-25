@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import "./LanguageModal";
-import { LitElement, html } from "lit";
+import { html, LitElement } from "lit";
 import { customElement, state } from "lit/decorators.js";
 
 import ar from "../../resources/lang/ar.json";
@@ -51,32 +51,32 @@ export class LangSelector extends LitElement {
     ar,
     bg,
     bn,
+    cs,
+    da,
     de,
     en,
-    es,
     eo,
+    es,
+    fi,
     fr,
-    it,
+    gl,
+    he,
     hi,
+    it,
     ja,
+    ko,
     nl,
     pl,
     "pt-BR": pt_BR,
     ru,
     sh,
-    tr,
-    tp,
-    uk,
-    cs,
-    he,
-    da,
-    fi,
-    "sv-SE": sv_SE,
-    "zh-CN": zh_CN,
-    ko,
-    gl,
-    sl,
     sk,
+    sl,
+    "sv-SE": sv_SE,
+    tp,
+    tr,
+    uk,
+    "zh-CN": zh_CN,
   };
 
   createRenderRoot() {
@@ -148,8 +148,8 @@ export class LangSelector extends LitElement {
 
         list.push({
           code: langData.lang_code ?? langCode,
-          native: langData.native ?? langCode,
           en: langData.en ?? langCode,
+          native: langData.native ?? langCode,
           svg: langData.svg ?? langCode,
         });
       }
@@ -159,8 +159,8 @@ export class LangSelector extends LitElement {
       if (this.debugKeyPressed) {
         debugLang = {
           code: "debug",
-          native: "Debug",
           en: "Debug",
+          native: "Debug",
           svg: "xx",
         };
         this.debugMode = true;
@@ -289,16 +289,16 @@ export class LangSelector extends LitElement {
       this.languageList.find((l) => l.code === this.currentLang) ??
       (this.currentLang === "debug"
         ? {
-          code: "debug",
-          native: "Debug",
-          en: "Debug",
-          svg: "xx",
-        }
+            code: "debug",
+            en: "Debug",
+            native: "Debug",
+            svg: "xx",
+          }
         : {
-          native: "English",
-          en: "English",
-          svg: "uk_us_flag",
-        });
+            en: "English",
+            native: "English",
+            svg: "uk_us_flag",
+          });
 
     return html`
       <div class="container__row">
@@ -327,7 +327,7 @@ export class LangSelector extends LitElement {
         .languageList=${this.languageList}
         .currentLang=${this.currentLang}
         @language-selected=${(e: CustomEvent) =>
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
           this.changeLanguage(e.detail.lang)}
         @close-modal=${() => (this.showModal = false)}
       ></language-modal>
@@ -348,7 +348,7 @@ function flattenTranslations(
     if (typeof value === "string") {
       result[fullKey] = value;
     } else if (value && typeof value === "object" && !Array.isArray(value)) {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       flattenTranslations(value, fullKey, result);
     } else {
       console.warn("Unknown type", typeof value, value);

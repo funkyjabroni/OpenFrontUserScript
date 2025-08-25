@@ -1,8 +1,8 @@
-import { EventBus, GameEvent } from "../../../core/EventBus";
-import { LitElement, css, html } from "lit";
+import { css, html, LitElement } from "lit";
 import { customElement, state } from "lit/decorators.js";
-import { Layer } from "./Layer";
+import { EventBus, GameEvent } from "../../../core/EventBus";
 import { getGamesPlayed } from "../../Utils";
+import { Layer } from "./Layer";
 
 export class GutterAdModalEvent implements GameEvent {
   constructor(public readonly isVisible: boolean) {}
@@ -96,12 +96,12 @@ export class GutterAdModal extends LitElement implements Layer {
       window.ramp.que.push(() => {
         window.ramp.spaAddAds([
           {
-            type: this.leftAdType,
             selectorId: this.leftContainerId,
+            type: this.leftAdType,
           },
           {
-            type: this.rightAdType,
             selectorId: this.rightContainerId,
+            type: this.rightAdType,
           },
         ]);
         this.adLoaded = true;

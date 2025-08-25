@@ -1,3 +1,5 @@
+import { z } from "zod";
+import { EventBus } from "../core/EventBus";
 import {
   AllPlayersStats,
   ClientMessage,
@@ -10,12 +12,10 @@ import {
   Turn,
 } from "../core/Schemas";
 import { createGameRecord, decompressGameRecord, replacer } from "../core/Util";
-import { EventBus } from "../core/EventBus";
 import { LobbyConfig } from "./ClientGameRunner";
 import { ReplaySpeedChangeEvent } from "./InputHandler";
-import { defaultReplaySpeedMultiplier } from "./utilities/ReplaySpeedMultiplier";
 import { getPersistentID } from "./Main";
-import { z } from "zod";
+import { defaultReplaySpeedMultiplier } from "./utilities/ReplaySpeedMultiplier";
 
 export class LocalServer {
   // All turns from the game record on replay.
@@ -76,9 +76,9 @@ export class LocalServer {
       throw new Error("missing gameStartInfo");
     }
     this.clientMessage({
-      type: "start",
       gameStartInfo: this.lobbyConfig.gameStartInfo,
       turns: [],
+      type: "start",
     } satisfies ServerStartGameMessage);
   }
 
@@ -117,17 +117,16 @@ export class LocalServer {
       }
       if (archivedHash !== clientMsg.hash) {
         console.error(
-          `desync detected on turn ${
-            clientMsg.turnNumber}, client hash: ${
-            clientMsg.hash}, server hash: ${
-            archivedHash}`,
+          `desync detected on turn ${clientMsg.turnNumber}, client hash: ${
+            clientMsg.hash
+          }, server hash: ${archivedHash}`,
         );
         this.clientMessage({
-          type: "desync",
-          turn: clientMsg.turnNumber,
-          correctHash: archivedHash,
           clientsWithCorrectHash: 0,
+          correctHash: archivedHash,
           totalActiveClients: 1,
+          turn: clientMsg.turnNumber,
+          type: "desync",
           yourHash: clientMsg.hash,
         });
       } else {
@@ -161,14 +160,14 @@ export class LocalServer {
       this.intents = this.replayTurns[this.turns.length].intents;
     }
     const pastTurn: Turn = {
-      turnNumber: this.turns.length,
       intents: this.intents,
+      turnNumber: this.turns.length,
     };
     this.turns.push(pastTurn);
     this.intents = [];
     this.clientMessage({
-      type: "turn",
       turn: pastTurn,
+      type: "turn",
     });
   }
 
@@ -180,10 +179,10 @@ export class LocalServer {
     }
     const players: PlayerRecord[] = [
       {
-        persistentID: getPersistentID(),
-        username: this.lobbyConfig.playerName,
         clientID: this.lobbyConfig.clientID,
+        persistentID: getPersistentID(),
         stats: this.allPlayersStats[this.lobbyConfig.clientID],
+        username: this.lobbyConfig.playerName,
       },
     ];
     if (this.lobbyConfig.gameStartInfo === undefined) {

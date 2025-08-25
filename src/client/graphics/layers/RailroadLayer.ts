@@ -1,15 +1,15 @@
+import { Colord } from "colord";
+import { Theme } from "../../../core/configuration/Config";
+import { PlayerID } from "../../../core/game/Game";
+import { TileRef } from "../../../core/game/GameMap";
 import {
   GameUpdateType,
+  RailroadUpdate,
   RailTile,
   RailType,
-  RailroadUpdate,
 } from "../../../core/game/GameUpdates";
-import { Colord } from "colord";
 import { GameView } from "../../../core/game/GameView";
 import { Layer } from "./Layer";
-import { PlayerID } from "../../../core/game/Game";
-import { Theme } from "../../../core/configuration/Config";
-import { TileRef } from "../../../core/game/GameMap";
 import { getRailroadRects } from "./RailroadSprites";
 
 type RailRef = {
@@ -123,9 +123,9 @@ export class RailroadLayer implements Layer {
       railTile.lastOwnerId = currentOwner;
     } else {
       this.existingRailroads.set(railRoad.tile, {
-        tile: railRoad,
-        numOccurence: 1,
         lastOwnerId: currentOwner,
+        numOccurence: 1,
+        tile: railRoad,
       });
       this.railTileList.push(railRoad.tile);
       this.paintRail(railRoad);
@@ -156,7 +156,7 @@ export class RailroadLayer implements Layer {
     const recipient = owner.isPlayer() ? owner : null;
     const color = recipient
       ? this.theme.railroadColor(recipient)
-      : new Colord({ r: 255, g: 255, b: 255, a: 1 });
+      : new Colord({ a: 1, b: 255, g: 255, r: 255 });
     if (this.context === undefined) throw new Error("Not initialized");
     this.context.fillStyle = color.toRgbString();
     this.paintRailRects(x, y, railRoad.railType);

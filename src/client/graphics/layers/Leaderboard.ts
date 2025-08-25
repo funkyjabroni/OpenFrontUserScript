@@ -1,11 +1,11 @@
-import { EventBus, GameEvent } from "../../../core/EventBus";
-import { GameView, PlayerView, UnitView } from "../../../core/game/GameView";
-import { LitElement, html } from "lit";
+import { html, LitElement } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
-import { Layer } from "./Layer";
-import { renderNumber } from "../../Utils";
 import { repeat } from "lit/directives/repeat.js";
 import { translateText } from "../../../client/Utils";
+import { EventBus, GameEvent } from "../../../core/EventBus";
+import { GameView, PlayerView, UnitView } from "../../../core/game/GameView";
+import { renderNumber } from "../../Utils";
+import { Layer } from "./Layer";
 
 type Entry = {
   name: string;
@@ -107,15 +107,15 @@ export class Leaderboard extends LitElement implements Layer {
         troops = 0;
       }
       return {
+        gold: renderNumber(player.gold()),
+        isMyPlayer: player === myPlayer,
         name: player.displayName(),
+        player,
         position: index + 1,
         score: formatPercentage(
           player.numTilesOwned() / numTilesWithoutFallout,
         ),
-        gold: renderNumber(player.gold()),
         troops: renderNumber(troops),
-        isMyPlayer: player === myPlayer,
-        player,
       };
     });
 
@@ -137,15 +137,15 @@ export class Leaderboard extends LitElement implements Layer {
       }
       this.players.pop();
       this.players.push({
+        gold: renderNumber(myPlayer.gold()),
+        isMyPlayer: true,
         name: myPlayer.displayName(),
+        player: myPlayer,
         position: place,
         score: formatPercentage(
           myPlayer.numTilesOwned() / this.game.numLandTiles(),
         ),
-        gold: renderNumber(myPlayer.gold()),
         troops: renderNumber(myPlayerTroops),
-        isMyPlayer: true,
-        player: myPlayer,
       });
     }
 
@@ -169,10 +169,9 @@ export class Leaderboard extends LitElement implements Layer {
     }
     return html`
       <div
-        class="max-h-[35vh] overflow-y-auto text-white text-xs md:text-xs lg:text-sm md:max-h-[50vh]  ${this
-          .visible
-          ? ""
-          : "hidden"}"
+        class="max-h-[35vh] overflow-y-auto text-white text-xs md:text-xs lg:text-sm md:max-h-[50vh]  ${
+          this.visible ? "" : "hidden"
+        }"
         @contextmenu=${(e: Event) => e.preventDefault()}
       >
         <div
@@ -191,33 +190,39 @@ export class Leaderboard extends LitElement implements Layer {
               @click=${() => this.setSort("tiles")}
             >
               ${translateText("leaderboard.owned")}
-              ${this._sortKey === "tiles"
-                ? this._sortOrder === "asc"
-                  ? "⬆️"
-                  : "⬇️"
-                : ""}
+              ${
+                this._sortKey === "tiles"
+                  ? this._sortOrder === "asc"
+                    ? "⬆️"
+                    : "⬇️"
+                  : ""
+              }
             </div>
             <div
               class="py-1 md:py-2 text-center border-b border-slate-500 cursor-pointer whitespace-nowrap"
               @click=${() => this.setSort("gold")}
             >
               ${translateText("leaderboard.gold")}
-              ${this._sortKey === "gold"
-                ? this._sortOrder === "asc"
-                  ? "⬆️"
-                  : "⬇️"
-                : ""}
+              ${
+                this._sortKey === "gold"
+                  ? this._sortOrder === "asc"
+                    ? "⬆️"
+                    : "⬇️"
+                  : ""
+              }
             </div>
             <div
               class="py-1 md:py-2 text-center border-b border-slate-500 cursor-pointer whitespace-nowrap"
               @click=${() => this.setSort("troops")}
             >
               ${translateText("leaderboard.troops")}
-              ${this._sortKey === "troops"
-                ? this._sortOrder === "asc"
-                  ? "⬆️"
-                  : "⬇️"
-                : ""}
+              ${
+                this._sortKey === "troops"
+                  ? this._sortOrder === "asc"
+                    ? "⬆️"
+                    : "⬇️"
+                  : ""
+              }
             </div>
           </div>
 
@@ -226,9 +231,9 @@ export class Leaderboard extends LitElement implements Layer {
             (p) => p.player.id(),
             (player) => html`
               <div
-                class="contents hover:bg-slate-600/60 ${player.isMyPlayer
-                  ? "font-bold"
-                  : ""} cursor-pointer"
+                class="contents hover:bg-slate-600/60 ${
+                  player.isMyPlayer ? "font-bold" : ""
+                } cursor-pointer"
                 @click=${() => this.handleRowClickPlayer(player.player)}
               >
                 <div class="py-1 md:py-2 text-center border-b border-slate-500">

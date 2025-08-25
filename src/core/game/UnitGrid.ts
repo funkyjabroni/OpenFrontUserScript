@@ -1,5 +1,5 @@
-import { GameMap, TileRef } from "./GameMap";
 import { PlayerID, Unit, UnitType } from "./Game";
+import { GameMap, TileRef } from "./GameMap";
 import { UnitView } from "./GameView";
 
 export type UnitPredicate = (value: {
@@ -159,8 +159,8 @@ export class UnitGrid {
             if (!unit.isActive()) continue;
             const distSquared = this.squaredDistanceFromTile(unit, tile);
             if (distSquared > rangeSquared) continue;
-            // eslint-disable-next-line sort-keys
-            const value = { unit, distSquared };
+
+            const value = { distSquared, unit };
             if (predicate !== undefined && !predicate(value)) continue;
             nearby.push(value);
           }

@@ -1,5 +1,5 @@
-import { AStar, PathFindResultType } from "./AStar";
 import FastPriorityQueue from "fastpriorityqueue";
+import { AStar, PathFindResultType } from "./AStar";
 
 /**
  * Implement this interface with your graph to find paths with A*
@@ -48,18 +48,16 @@ export class SerialAStar<NodeType> implements AStar<NodeType> {
     this.sources.forEach((startPoint) => {
       this.fwdGScore.set(startPoint, 0);
       this.fwdOpenSet.add({
-        tile: startPoint,
-        // eslint-disable-next-line sort-keys
         fScore: this.heuristic(startPoint, dst),
+        tile: startPoint,
       });
     });
 
     // Initialize backward search from destination
     this.bwdGScore.set(dst, 0);
     this.bwdOpenSet.add({
-      tile: dst,
-      // eslint-disable-next-line sort-keys
       fScore: this.heuristic(dst, this.findClosestSource(dst)),
+      tile: dst,
     });
   }
 
@@ -128,7 +126,8 @@ export class SerialAStar<NodeType> implements AStar<NodeType> {
       const openSet = isForward ? this.fwdOpenSet : this.bwdOpenSet;
       const cameFrom = isForward ? this.fwdCameFrom : this.bwdCameFrom;
 
-      const tentativeGScore = (gScore.get(current) ?? 0) + this.graph.cost(neighbor);
+      const tentativeGScore =
+        (gScore.get(current) ?? 0) + this.graph.cost(neighbor);
       let penalty = 0;
       // With a direction change penalty, the path will get as straight as possible
       if (this.directionChangePenalty > 0) {
@@ -150,8 +149,8 @@ export class SerialAStar<NodeType> implements AStar<NodeType> {
         const fScore =
           totalG +
           this.heuristic(neighbor, isForward ? this.dst : this.closestSource);
-        // eslint-disable-next-line sort-keys
-        openSet.add({ tile: neighbor, fScore });
+
+        openSet.add({ fScore, tile: neighbor });
       }
     }
   }

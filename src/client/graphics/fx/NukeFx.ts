@@ -1,7 +1,7 @@
-import { FadeFx, SpriteFx } from "./SpriteFx";
-import { Fx, FxType } from "./Fx";
-import { AnimatedSpriteLoader } from "../AnimatedSpriteLoader";
 import { GameView } from "../../../core/game/GameView";
+import { AnimatedSpriteLoader } from "../AnimatedSpriteLoader";
+import { Fx, FxType } from "./Fx";
+import { FadeFx, SpriteFx } from "./SpriteFx";
 
 /**
  * Shockwave effect: draw a growing 1px white circle
@@ -88,10 +88,10 @@ export function nukeFxFactory(
     radiusFactor: number;
     density: number;
   }> = [
-    { type: FxType.MiniFire, radiusFactor: 1.0, density: 1 / 25 },
-    { type: FxType.MiniSmoke, radiusFactor: 1.0, density: 1 / 28 },
-    { type: FxType.MiniBigSmoke, radiusFactor: 0.9, density: 1 / 70 },
-    { type: FxType.MiniSmokeAndFire, radiusFactor: 0.9, density: 1 / 70 },
+    { density: 1 / 25, radiusFactor: 1.0, type: FxType.MiniFire },
+    { density: 1 / 28, radiusFactor: 1.0, type: FxType.MiniSmoke },
+    { density: 1 / 70, radiusFactor: 0.9, type: FxType.MiniBigSmoke },
+    { density: 1 / 70, radiusFactor: 0.9, type: FxType.MiniSmokeAndFire },
   ];
 
   for (const { type, radiusFactor, density } of debrisPlan) {

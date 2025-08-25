@@ -1,9 +1,12 @@
-import * as dotenv from "dotenv";
-import { MeterProvider, PeriodicExportingMetricReader } from "@opentelemetry/sdk-metrics";
-import { getOtelResource, getPromLabels } from "./OtelResource";
-import { GameManager } from "./GameManager";
 import { OTLPMetricExporter } from "@opentelemetry/exporter-metrics-otlp-http";
+import {
+  MeterProvider,
+  PeriodicExportingMetricReader,
+} from "@opentelemetry/sdk-metrics";
+import * as dotenv from "dotenv";
 import { getServerConfigFromServer } from "../core/configuration/ConfigLoader";
+import { GameManager } from "./GameManager";
+import { getOtelResource, getPromLabels } from "./OtelResource";
 
 dotenv.config();
 
@@ -28,8 +31,8 @@ export function initWorkerMetrics(gameManager: GameManager): void {
 
   // Configure the metric reader
   const metricReader = new PeriodicExportingMetricReader({
-    exportIntervalMillis: 15000, // Export metrics every 15 seconds
     exporter: metricExporter,
+    exportIntervalMillis: 15000, // Export metrics every 15 seconds
   });
 
   // Create a meter provider

@@ -1,9 +1,9 @@
-import { COLORS, MenuElement, MenuElementParams } from "./RadialMenuElements";
-import { ChatModal, QuickChatPhrase, quickChatPhrases } from "./ChatModal";
-import { GameView, PlayerView } from "../../../core/game/GameView";
 import { EventBus } from "../../../core/EventBus";
+import { GameView, PlayerView } from "../../../core/game/GameView";
 import { SendQuickChatEvent } from "../../Transport";
 import { translateText } from "../../Utils";
+import { ChatModal, QuickChatPhrase, quickChatPhrases } from "./ChatModal";
+import { COLORS, MenuElement, MenuElementParams } from "./RadialMenuElements";
 
 export class ChatIntegration {
   private readonly ctModal: ChatModal;
@@ -49,18 +49,6 @@ export class ChatIntegration {
           const phraseText = translateText(`chat.${category.id}.${phrase.key}`);
 
           return {
-            id: `phrase-${category.id}-${phrase.key}`,
-            name: phraseText,
-            disabled: () => false,
-            text: this.shortenText(phraseText),
-            fontSize: "10px",
-            color: categoryColor,
-            tooltipItems: [
-              {
-                text: phraseText,
-                className: "description",
-              },
-            ],
             action: (params: MenuElementParams) => {
               if (phrase.requiresPlayer) {
                 this.ctModal.openWithSelection(
@@ -79,18 +67,30 @@ export class ChatIntegration {
                 );
               }
             },
+            color: categoryColor,
+            disabled: () => false,
+            fontSize: "10px",
+            id: `phrase-${category.id}-${phrase.key}`,
+            name: phraseText,
+            text: this.shortenText(phraseText),
+            tooltipItems: [
+              {
+                className: "description",
+                text: phraseText,
+              },
+            ],
           };
         },
       );
 
       return {
+        _action: () => {}, // Empty action placeholder for RadialMenu
+        color: categoryColor,
+        disabled: () => false,
         id: `chat-category-${category.id}`,
         name: categoryTranslation,
-        disabled: () => false,
-        text: categoryTranslation,
-        color: categoryColor,
-        _action: () => {}, // Empty action placeholder for RadialMenu
         subMenu: () => phraseItems,
+        text: categoryTranslation,
       };
     });
   }

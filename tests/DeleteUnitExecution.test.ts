@@ -1,3 +1,5 @@
+import { DeleteUnitExecution } from "../src/core/execution/DeleteUnitExecution";
+import { SpawnExecution } from "../src/core/execution/SpawnExecution";
 import {
   Game,
   Player,
@@ -6,8 +8,6 @@ import {
   Unit,
   UnitType,
 } from "../src/core/game/Game";
-import { DeleteUnitExecution } from "../src/core/execution/DeleteUnitExecution";
-import { SpawnExecution } from "../src/core/execution/SpawnExecution";
 import { TileRef } from "../src/core/game/GameMap";
 import { setup } from "./util/Setup";
 
@@ -20,8 +20,8 @@ describe("DeleteUnitExecution Security Tests", () => {
   beforeEach(async () => {
     game = await setup("plains", {
       infiniteGold: true,
-      instantBuild: true,
       infiniteTroops: true,
+      instantBuild: true,
     });
 
     const player1Info = new PlayerInfo(

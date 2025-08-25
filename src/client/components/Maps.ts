@@ -1,4 +1,4 @@
-import { LitElement, css, html } from "lit";
+import { css, html, LitElement } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
 import { GameMapType } from "../../core/game/Game";
 import { terrainMapFileLoader } from "../TerrainMapFileLoader";
@@ -6,35 +6,35 @@ import { translateText } from "../Utils";
 
 // Add map descriptions
 export const MapDescription: Record<keyof typeof GameMapType, string> = {
-  World: "World",
-  GiantWorldMap: "Giant World Map",
+  Africa: "Africa",
+  Asia: "Asia",
+  Australia: "Australia",
+  Baikal: "Baikal",
+  BetweenTwoSeas: "Between Two Seas",
+  BlackSea: "Black Sea",
+  Britannia: "Britannia",
+  DeglaciatedAntarctica: "Deglaciated Antarctica",
+  EastAsia: "East Asia",
   Europe: "Europe",
   EuropeClassic: "Europe Classic",
+  FalklandIslands: "Falkland Islands",
+  FaroeIslands: "Faroe Islands",
+  GatewayToTheAtlantic: "Gateway to the Atlantic",
+  GiantWorldMap: "Giant World Map",
+  Halkidiki: "Halkidiki",
+  Iceland: "Iceland",
+  Italia: "Italia",
+  Mars: "Mars",
+  MarsRevised: "Mars Revised",
   Mena: "MENA",
   NorthAmerica: "North America",
   Oceania: "Oceania",
-  BlackSea: "Black Sea",
-  Africa: "Africa",
   Pangaea: "Pangaea",
-  Asia: "Asia",
-  Mars: "Mars",
-  MarsRevised: "Mars Revised",
-  SouthAmerica: "South America",
-  Britannia: "Britannia",
-  GatewayToTheAtlantic: "Gateway to the Atlantic",
-  Australia: "Australia",
-  Iceland: "Iceland",
-  EastAsia: "East Asia",
-  BetweenTwoSeas: "Between Two Seas",
-  FaroeIslands: "Faroe Islands",
-  DeglaciatedAntarctica: "Deglaciated Antarctica",
-  FalklandIslands: "Falkland Islands",
-  Baikal: "Baikal",
-  Halkidiki: "Halkidiki",
-  StraitOfGibraltar: "Strait of Gibraltar",
-  Italia: "Italia",
-  Yenisei: "Yenisei",
   Pluto: "Pluto",
+  SouthAmerica: "South America",
+  StraitOfGibraltar: "Strait of Gibraltar",
+  World: "World",
+  Yenisei: "Yenisei",
 };
 
 @customElement("map-display")
@@ -119,17 +119,19 @@ export class MapDisplay extends LitElement {
   render() {
     return html`
       <div class="option-card ${this.selected ? "selected" : ""}">
-        ${this.isLoading
-          ? html`<div class="option-image">
+        ${
+          this.isLoading
+            ? html`<div class="option-image">
               ${translateText("map_component.loading")}
             </div>`
-          : this.mapWebpPath
-            ? html`<img
+            : this.mapWebpPath
+              ? html`<img
                 src="${this.mapWebpPath}"
                 alt="${this.mapKey}"
                 class="option-image"
               />`
-            : html`<div class="option-image">Error</div>`}
+              : html`<div class="option-image">Error</div>`
+        }
         <div class="option-card-title">${this.translation || this.mapName}</div>
       </div>
     `;

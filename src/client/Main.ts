@@ -8,37 +8,41 @@ import "./components/NewsButton";
 import "./components/baseComponents/Button";
 import "./components/baseComponents/Modal";
 import "./styles.css";
-import { GameRecord, GameStartInfo } from "../core/Schemas";
-import { discordLogin, getUserMe, isLoggedIn, logOut } from "./jwt";
-import { generateCryptoRandomUUID, incrementGamesPlayed, translateText } from "./Utils";
-import { DarkModeButton } from "./DarkModeButton";
+import version from "../../resources/version.txt";
+import { UserMeResponse } from "../core/ApiSchemas";
+import { ID } from "../core/BaseSchemas";
+import { ServerConfig } from "../core/configuration/Config";
+import { getServerConfigFromClient } from "../core/configuration/ConfigLoader";
 import { EventBus } from "../core/EventBus";
+import { GameType } from "../core/game/Game";
+import { UserSettings } from "../core/game/UserSettings";
+import { GameRecord, GameStartInfo } from "../core/Schemas";
+import { getClientID } from "../core/Util";
+import { joinLobby } from "./ClientGameRunner";
+import { OButton } from "./components/baseComponents/Button";
+import { NewsButton } from "./components/NewsButton";
+import { DarkModeButton } from "./DarkModeButton";
 import { FlagInput } from "./FlagInput";
 import { FlagInputModal } from "./FlagInputModal";
 import { GameStartingModal } from "./GameStartingModal";
-import { GameType } from "../core/game/Game";
 import { HelpModal } from "./HelpModal";
 import { HostLobbyModal } from "./HostLobbyModal";
-import { ID } from "../core/BaseSchemas";
 import { JoinPrivateLobbyModal } from "./JoinPrivateLobbyModal";
+import { discordLogin, getUserMe, isLoggedIn, logOut } from "./jwt";
 import { LangSelector } from "./LangSelector";
 import { LanguageModal } from "./LanguageModal";
-import { NewsButton } from "./components/NewsButton";
 import { NewsModal } from "./NewsModal";
-import { OButton } from "./components/baseComponents/Button";
 import { PublicLobby } from "./PublicLobby";
-import { SendKickPlayerIntentEvent } from "./Transport";
-import { ServerConfig } from "../core/configuration/Config";
 import { SinglePlayerModal } from "./SinglePlayerModal";
 import { TerritoryPatternsModal } from "./TerritoryPatternsModal";
-import { UserMeResponse } from "../core/ApiSchemas";
-import { UserSettingModal } from "./UserSettingModal";
-import { UserSettings } from "../core/game/UserSettings";
+import { SendKickPlayerIntentEvent } from "./Transport";
 import { UsernameInput } from "./UsernameInput";
-import { getClientID } from "../core/Util";
-import { getServerConfigFromClient } from "../core/configuration/ConfigLoader";
-import { joinLobby } from "./ClientGameRunner";
-import version from "../../resources/version.txt";
+import { UserSettingModal } from "./UserSettingModal";
+import {
+  generateCryptoRandomUUID,
+  incrementGamesPlayed,
+  translateText,
+} from "./Utils";
 
 declare global {
   // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
@@ -467,18 +471,18 @@ class Client {
     this.gameStop = joinLobby(
       this.eventBus,
       {
-        gameID: lobby.gameID,
-        serverConfig: config,
-        pattern: this.userSettings.getSelectedPattern(),
+        clientID: getClientID(lobby.gameID),
         flag:
           this.flagInput === null || this.flagInput.getCurrentFlag() === "xx"
             ? ""
             : this.flagInput.getCurrentFlag(),
-        playerName: this.usernameInput?.getCurrentUsername() ?? "",
-        token: getPlayToken(),
-        clientID: getClientID(lobby.gameID),
-        gameStartInfo: lobby.gameStartInfo ?? lobby.gameRecord?.info,
+        gameID: lobby.gameID,
         gameRecord: lobby.gameRecord,
+        gameStartInfo: lobby.gameStartInfo ?? lobby.gameRecord?.info,
+        pattern: this.userSettings.getSelectedPattern(),
+        playerName: this.usernameInput?.getCurrentUsername() ?? "",
+        serverConfig: config,
+        token: getPlayToken(),
       },
       () => {
         console.log("Closing modals");

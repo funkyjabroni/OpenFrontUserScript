@@ -1,19 +1,19 @@
+import { jwtVerify } from "jose";
+import { z } from "zod";
 import {
   TokenPayload,
   TokenPayloadSchema,
   UserMeResponse,
   UserMeResponseSchema,
 } from "../core/ApiSchemas";
-import { PersistentIdSchema } from "../core/Schemas";
 import { ServerConfig } from "../core/configuration/Config";
-import { jwtVerify } from "jose";
-import { z } from "zod";
+import { PersistentIdSchema } from "../core/Schemas";
 
 type TokenVerificationResult =
   | {
-    persistentId: string;
-    claims: TokenPayload | null;
-  }
+      persistentId: string;
+      claims: TokenPayload | null;
+    }
   | false;
 
 export async function verifyClientToken(
@@ -21,8 +21,7 @@ export async function verifyClientToken(
   config: ServerConfig,
 ): Promise<TokenVerificationResult> {
   if (PersistentIdSchema.safeParse(token).success) {
-    // eslint-disable-next-line sort-keys
-    return { persistentId: token, claims: null };
+    return { claims: null, persistentId: token };
   }
   try {
     const issuer = config.jwtIssuer();

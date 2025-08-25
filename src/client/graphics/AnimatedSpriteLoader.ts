@@ -1,19 +1,19 @@
-import { AnimatedSprite } from "./AnimatedSprite";
-import { FxType } from "./fx/Fx";
-import { PlayerView } from "../../core/game/GameView";
-import SAMExplosion from "../../../resources/sprites/samExplosion.png";
-import { Theme } from "../../core/configuration/Config";
-import { colorizeCanvas } from "./SpriteLoader";
+import miniBigSmoke from "../../../resources/sprites/bigsmoke.png";
 import conquestSword from "../../../resources/sprites/conquestSword.png";
 import dust from "../../../resources/sprites/dust.png";
-import miniBigSmoke from "../../../resources/sprites/bigsmoke.png";
 import miniExplosion from "../../../resources/sprites/miniExplosion.png";
 import miniFire from "../../../resources/sprites/minifire.png";
+import nuke from "../../../resources/sprites/nukeExplosion.png";
+import SAMExplosion from "../../../resources/sprites/samExplosion.png";
+import sinkingShip from "../../../resources/sprites/sinkingShip.png";
 import miniSmoke from "../../../resources/sprites/smoke.png";
 import miniSmokeAndFire from "../../../resources/sprites/smokeAndFire.png";
-import nuke from "../../../resources/sprites/nukeExplosion.png";
-import sinkingShip from "../../../resources/sprites/sinkingShip.png";
 import unitExplosion from "../../../resources/sprites/unitExplosion.png";
+import { Theme } from "../../core/configuration/Config";
+import { PlayerView } from "../../core/game/GameView";
+import { AnimatedSprite } from "./AnimatedSprite";
+import { FxType } from "./fx/Fx";
+import { colorizeCanvas } from "./SpriteLoader";
 
 type AnimatedSpriteConfig = {
   url: string;
@@ -27,108 +27,109 @@ type AnimatedSpriteConfig = {
 
 const ANIMATED_SPRITE_CONFIG: Partial<Record<FxType, AnimatedSpriteConfig>> = {
   [FxType.MiniFire]: {
-    url: miniFire,
-    frameWidth: 7,
     frameCount: 6,
     frameDuration: 100,
+    frameWidth: 7,
     looping: true,
     originX: 3,
     originY: 11,
+    url: miniFire,
   },
   [FxType.MiniSmoke]: {
-    url: miniSmoke,
-    frameWidth: 11,
     frameCount: 4,
     frameDuration: 120,
+    frameWidth: 11,
     looping: true,
     originX: 2,
     originY: 10,
+    url: miniSmoke,
   },
   [FxType.MiniBigSmoke]: {
-    url: miniBigSmoke,
-    frameWidth: 24,
     frameCount: 5,
     frameDuration: 120,
+    frameWidth: 24,
     looping: true,
     originX: 9,
     originY: 14,
+    url: miniBigSmoke,
   },
   [FxType.MiniSmokeAndFire]: {
-    url: miniSmokeAndFire,
-    frameWidth: 24,
     frameCount: 5,
     frameDuration: 120,
+    frameWidth: 24,
     looping: true,
     originX: 9,
     originY: 14,
+    url: miniSmokeAndFire,
   },
   [FxType.MiniExplosion]: {
-    url: miniExplosion,
-    frameWidth: 13,
     frameCount: 4,
     frameDuration: 70,
+    frameWidth: 13,
     looping: false,
     originX: 6,
     originY: 6,
+    url: miniExplosion,
   },
   [FxType.Dust]: {
-    url: dust,
-    frameWidth: 9,
     frameCount: 3,
     frameDuration: 100,
+    frameWidth: 9,
     looping: false,
     originX: 4,
     originY: 5,
+    url: dust,
   },
   [FxType.UnitExplosion]: {
-    url: unitExplosion,
-    frameWidth: 19,
     frameCount: 4,
     frameDuration: 70,
+    frameWidth: 19,
     looping: false,
     originX: 9,
     originY: 9,
+    url: unitExplosion,
   },
   [FxType.SinkingShip]: {
-    url: sinkingShip,
-    frameWidth: 16,
     frameCount: 14,
     frameDuration: 90,
+    frameWidth: 16,
     looping: false,
     originX: 7,
     originY: 7,
+    url: sinkingShip,
   },
   [FxType.Nuke]: {
-    url: nuke,
-    frameWidth: 60,
     frameCount: 9,
     frameDuration: 70,
+    frameWidth: 60,
     looping: false,
     originX: 30,
     originY: 30,
+    url: nuke,
   },
   [FxType.SAMExplosion]: {
-    url: SAMExplosion,
-    frameWidth: 48,
     frameCount: 9,
     frameDuration: 70,
+    frameWidth: 48,
     looping: false,
     originX: 23,
     originY: 19,
+    url: SAMExplosion,
   },
   [FxType.Conquest]: {
-    url: conquestSword,
-    frameWidth: 21,
     frameCount: 10,
     frameDuration: 90,
+    frameWidth: 21,
     looping: false,
     originX: 10,
     originY: 16,
+    url: conquestSword,
   },
 };
 
 export class AnimatedSpriteLoader {
-  private readonly animatedSpriteImageMap: Map<FxType, HTMLCanvasElement> = new Map();
+  private readonly animatedSpriteImageMap: Map<FxType, HTMLCanvasElement> =
+    new Map();
   // Do not color the same sprite twice
   private readonly coloredAnimatedSpriteCache: Map<string, HTMLCanvasElement> =
     new Map();

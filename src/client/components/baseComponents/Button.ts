@@ -1,4 +1,4 @@
-import { LitElement, html } from "lit";
+import { html, LitElement } from "lit";
 import { customElement, property } from "lit/decorators.js";
 import { classMap } from "lit/directives/class-map.js";
 import { translateText } from "../../Utils";
@@ -23,14 +23,16 @@ export class OButton extends LitElement {
           "c-button": true,
           "c-button--block": this.block,
           "c-button--blockDesktop": this.blockDesktop,
-          "c-button--secondary": this.secondary,
           "c-button--disabled": this.disable,
+          "c-button--secondary": this.secondary,
         })}
         ?disabled=${this.disable}
       >
-        ${`${this.translationKey}` === ""
-          ? `${this.title}`
-          : `${translateText(this.translationKey)}`}
+        ${
+          `${this.translationKey}` === ""
+            ? `${this.title}`
+            : `${translateText(this.translationKey)}`
+        }
       </button>
     `;
   }

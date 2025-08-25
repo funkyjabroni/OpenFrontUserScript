@@ -1,14 +1,14 @@
-import { GameView, UnitView } from "../../../core/game/GameView";
 import { Colord } from "colord";
-import { EventBus } from "../../../core/EventBus";
-import { GameUpdateType } from "../../../core/game/GameUpdates";
-import { Layer } from "./Layer";
-import { ProgressBar } from "../ProgressBar";
 import { Theme } from "../../../core/configuration/Config";
-import { TransformHandler } from "../TransformHandler";
-import { UnitSelectionEvent } from "../../InputHandler";
+import { EventBus } from "../../../core/EventBus";
 import { UnitType } from "../../../core/game/Game";
+import { GameUpdateType } from "../../../core/game/GameUpdates";
+import { GameView, UnitView } from "../../../core/game/GameView";
 import { UserSettings } from "../../../core/game/UserSettings";
+import { UnitSelectionEvent } from "../../InputHandler";
+import { ProgressBar } from "../ProgressBar";
+import { TransformHandler } from "../TransformHandler";
+import { Layer } from "./Layer";
 
 const COLOR_PROGRESSION = [
   "rgb(232, 25, 25)",
@@ -69,8 +69,7 @@ export class UILayer implements Layer {
 
     this.game
       .updatesSinceLastTick()
-      ?.[GameUpdateType.Unit]
-      ?.map((unit) => this.game.unit(unit.id))
+      ?.[GameUpdateType.Unit]?.map((unit) => this.game.unit(unit.id))
       ?.forEach((unitView) => {
         if (unitView === undefined) return;
         this.onUnitEvent(unitView);
@@ -253,9 +252,9 @@ export class UILayer implements Layer {
 
     // Store current selection box position for next cleanup
     this.lastSelectionBoxCenter = {
+      size: selectionSize,
       x: centerX,
       y: centerY,
-      size: selectionSize,
     };
   }
 
@@ -350,8 +349,8 @@ export class UILayer implements Layer {
         0,
       );
       this.allProgressBars.set(unit.id(), {
-        unit,
         progressBar,
+        unit,
       });
     }
   }

@@ -2,6 +2,22 @@
 import "./components/Difficulties";
 import "./components/Maps";
 import "./components/baseComponents/Modal";
+import { html, LitElement } from "lit";
+import { customElement, query, state } from "lit/decorators.js";
+import randomMap from "../../resources/images/RandomMap.webp";
+import { translateText } from "../client/Utils";
+import { getServerConfigFromClient } from "../core/configuration/ConfigLoader";
+import {
+  Difficulty,
+  Duos,
+  GameMapType,
+  GameMode,
+  mapCategories,
+  Quads,
+  Trios,
+  UnitType,
+} from "../core/game/Game";
+import { UserSettings } from "../core/game/UserSettings";
 import {
   ClientInfo,
   GameConfig,
@@ -9,26 +25,10 @@ import {
   GameInfoSchema,
   TeamCountConfig,
 } from "../core/Schemas";
-import {
-  Difficulty,
-  Duos,
-  GameMapType,
-  GameMode,
-  Quads,
-  Trios,
-  UnitType,
-  mapCategories,
-} from "../core/game/Game";
-import { LitElement, html } from "lit";
-import { customElement, query, state } from "lit/decorators.js";
+import { generateID } from "../core/Util";
 import { DifficultyDescription } from "./components/Difficulties";
 import { JoinLobbyEvent } from "./Main";
-import { UserSettings } from "../core/game/UserSettings";
-import { generateID } from "../core/Util";
-import { getServerConfigFromClient } from "../core/configuration/ConfigLoader";
-import randomMap from "../../resources/images/RandomMap.webp";
 import { renderUnitTypeOptions } from "./utilities/RenderUnitTypeOptions";
-import { translateText } from "../client/Utils";
 
 @customElement("host-lobby-modal")
 export class HostLobbyModal extends LitElement {
@@ -206,8 +206,10 @@ export class HostLobbyModal extends LitElement {
                           >
                             <map-display
                               .mapKey=${mapKey}
-                              .selected=${!this.useRandomMap &&
-                              this.selectedMap === mapValue}
+                              .selected=${
+                                !this.useRandomMap &&
+                                this.selectedMap === mapValue
+                              }
                               .translation=${translateText(
                                 `map.${mapKey?.toLowerCase()}`,
                               )}
@@ -248,9 +250,9 @@ export class HostLobbyModal extends LitElement {
                 .map(
                   ([key, value]) => html`
                     <div
-                      class="option-card ${this.selectedDifficulty === value
-                        ? "selected"
-                        : ""}"
+                      class="option-card ${
+                        this.selectedDifficulty === value ? "selected" : ""
+                      }"
                       @click=${() => this.handleDifficultySelection(value)}
                     >
                       <difficulty-display
@@ -303,17 +305,19 @@ export class HostLobbyModal extends LitElement {
                       ${[2, 3, 4, 5, 6, 7, Quads, Trios, Duos].map(
                         (o) => html`
                           <div
-                            class="option-card ${this.teamCount === o
-                              ? "selected"
-                              : ""}"
+                            class="option-card ${
+                              this.teamCount === o ? "selected" : ""
+                            }"
                             @click=${() => this.handleTeamCountSelection(o)}
                           >
                             <div class="option-card-title">
-                              ${typeof o === "string"
-                                ? translateText(`public_lobby.teams_${o}`)
-                                : translateText("public_lobby.teams", {
-                                  num: o,
-                                })}
+                              ${
+                                typeof o === "string"
+                                  ? translateText(`public_lobby.teams_${o}`)
+                                  : translateText("public_lobby.teams", {
+                                      num: o,
+                                    })
+                              }
                             </div>
                           </div>
                         `,
@@ -457,9 +461,9 @@ export class HostLobbyModal extends LitElement {
                   style="display: flex; flex-wrap: wrap; justify-content: center; gap: 12px;"
                 >
                    ${renderUnitTypeOptions({
-                      disabledUnits: this.disabledUnits,
-                      toggleUnit: this.toggleUnit.bind(this),
-                    })}
+                     disabledUnits: this.disabledUnits,
+                     toggleUnit: this.toggleUnit.bind(this),
+                   })}
                   </div>
                 </div>
               </div>
@@ -482,11 +486,12 @@ export class HostLobbyModal extends LitElement {
               (client) => html`
                 <span class="player-tag">
                   ${client.username}
-                  ${client.clientID === this.lobbyCreatorClientID
-                    ? html`<span class="host-badge"
+                  ${
+                    client.clientID === this.lobbyCreatorClientID
+                      ? html`<span class="host-badge"
                         >(${translateText("host_modal.host_badge")})</span
                       >`
-                    : html`
+                      : html`
                         <button
                           class="remove-player-btn"
                           @click=${() => this.kickPlayer(client.clientID)}
@@ -494,7 +499,8 @@ export class HostLobbyModal extends LitElement {
                         >
                           ×
                         </button>
-                      `}
+                      `
+                  }
                 </span>
               `,
             )}
@@ -538,12 +544,12 @@ export class HostLobbyModal extends LitElement {
       .then(() => {
         this.dispatchEvent(
           new CustomEvent("join-lobby", {
-            detail: {
-              gameID: this.lobbyId,
-              clientID: this.lobbyCreatorClientID,
-            } as JoinLobbyEvent,
             bubbles: true,
             composed: true,
+            detail: {
+              clientID: this.lobbyCreatorClientID,
+              gameID: this.lobbyId,
+            } as JoinLobbyEvent,
           }),
         );
       });
@@ -649,24 +655,24 @@ export class HostLobbyModal extends LitElement {
     const response = await fetch(
       `${window.location.origin}/${config.workerPath(this.lobbyId)}/api/game/${this.lobbyId}`,
       {
-        method: "PUT",
+        body: JSON.stringify({
+          bots: this.bots,
+          difficulty: this.selectedDifficulty,
+          disabledUnits: this.disabledUnits,
+          disableNPCs: this.disableNPCs,
+          donateGold: this.donateGold,
+          donateTroops: this.donateTroops,
+          gameMap: this.selectedMap,
+          gameMode: this.gameMode,
+          infiniteGold: this.infiniteGold,
+          infiniteTroops: this.infiniteTroops,
+          instantBuild: this.instantBuild,
+          playerTeams: this.teamCount,
+        } satisfies Partial<GameConfig>),
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          gameMap: this.selectedMap,
-          difficulty: this.selectedDifficulty,
-          disableNPCs: this.disableNPCs,
-          bots: this.bots,
-          infiniteGold: this.infiniteGold,
-          donateGold: this.donateGold,
-          infiniteTroops: this.infiniteTroops,
-          donateTroops: this.donateTroops,
-          instantBuild: this.instantBuild,
-          gameMode: this.gameMode,
-          disabledUnits: this.disabledUnits,
-          playerTeams: this.teamCount,
-        } satisfies Partial<GameConfig>),
+        method: "PUT",
       },
     );
     return response;
@@ -695,18 +701,18 @@ export class HostLobbyModal extends LitElement {
     await this.putGameConfig();
     console.log(
       `Starting private game with map: ${
-        GameMapType[this.selectedMap as keyof typeof GameMapType]} ${
-        this.useRandomMap ? " (Randomly selected)" : ""}`,
+        GameMapType[this.selectedMap as keyof typeof GameMapType]
+      } ${this.useRandomMap ? " (Randomly selected)" : ""}`,
     );
     this.close();
     const config = await getServerConfigFromClient();
     const response = await fetch(
       `${window.location.origin}/${config.workerPath(this.lobbyId)}/api/start_game/${this.lobbyId}`,
       {
-        method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
+        method: "POST",
       },
     );
     return response;
@@ -730,10 +736,10 @@ export class HostLobbyModal extends LitElement {
   private async pollPlayers() {
     const config = await getServerConfigFromClient();
     fetch(`/${config.workerPath(this.lobbyId)}/api/game/${this.lobbyId}`, {
-      method: "GET",
       headers: {
         "Content-Type": "application/json",
       },
+      method: "GET",
     })
       .then((response) => response.json())
       .then(GameInfoSchema.parse)
@@ -748,9 +754,9 @@ export class HostLobbyModal extends LitElement {
     // Dispatch event to be handled by WebSocket instead of HTTP
     this.dispatchEvent(
       new CustomEvent("kick-player", {
-        detail: { target: clientID },
         bubbles: true,
         composed: true,
+        detail: { target: clientID },
       }),
     );
   }
@@ -763,10 +769,10 @@ async function createLobby(creatorClientID: string): Promise<GameInfo> {
     const response = await fetch(
       `/${config.workerPath(id)}/api/create_game/${id}?creatorClientID=${encodeURIComponent(creatorClientID)}`,
       {
-        method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
+        method: "POST",
         // body: JSON.stringify(data), // Include this if you need to send data
       },
     );

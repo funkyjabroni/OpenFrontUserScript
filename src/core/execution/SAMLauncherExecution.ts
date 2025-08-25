@@ -1,15 +1,15 @@
 import {
   Execution,
   Game,
+  isUnit,
   MessageType,
   Player,
   Unit,
   UnitType,
-  isUnit,
 } from "../game/Game";
+import { TileRef } from "../game/GameMap";
 import { PseudoRandom } from "../PseudoRandom";
 import { SAMMissileExecution } from "./SAMMissileExecution";
-import { TileRef } from "../game/GameMap";
 
 type Target = {
   unit: Unit;
@@ -97,8 +97,7 @@ class SAMTargetingSystem {
       }
       const interceptionTile = this.computeInterceptionTile(nuke.unit);
       if (interceptionTile !== undefined) {
-        // eslint-disable-next-line sort-keys
-        targets.push({ unit: nuke.unit, tile: interceptionTile });
+        targets.push({ tile: interceptionTile, unit: nuke.unit });
       } else {
         // Store unreachable nukes in order to prevent useless interception computation
         this.storeUnreachableNukes(nuke.unit.id());

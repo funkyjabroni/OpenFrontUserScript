@@ -1,13 +1,12 @@
-import eslintConfigPrettier from "eslint-config-prettier/flat";
-import eslintPluginLocal from "./eslint-plugin-local/plugin.js";
-import { fileURLToPath } from "node:url";
-import globals from "globals";
-import { includeIgnoreFile } from "@eslint/compat";
-import jest from "eslint-plugin-jest";
 import path from "node:path";
+import { fileURLToPath } from "node:url";
+import { includeIgnoreFile } from "@eslint/compat";
 import pluginJs from "@eslint/js";
 import stylistic from "@stylistic/eslint-plugin";
+import jest from "eslint-plugin-jest";
+import globals from "globals";
 import tseslint from "typescript-eslint";
+import eslintPluginLocal from "./eslint-plugin-local/plugin.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -21,7 +20,6 @@ export default [
   { languageOptions: { globals: { ...globals.browser, ...globals.node } } },
   pluginJs.configs.recommended,
   ...tseslint.configs.recommended,
-  eslintConfigPrettier,
   {
     languageOptions: {
       parserOptions: {
@@ -55,7 +53,6 @@ export default [
     rules: {
       // Enable rules
       "@stylistic/quotes": ["error", "double", { avoidEscape: true }],
-      "@stylistic/indent": ["error", 2],
       "@stylistic/semi": "error",
       "@stylistic/space-infix-ops": "error",
       "@stylistic/type-annotation-spacing": [
@@ -71,10 +68,7 @@ export default [
         },
       ],
       "@stylistic/eol-last": "error",
-      "@typescript-eslint/consistent-type-definitions": [
-        "error",
-        "type",
-      ],
+      "@typescript-eslint/consistent-type-definitions": ["error", "type"],
       "@typescript-eslint/no-duplicate-enum-values": "error",
       "@typescript-eslint/no-explicit-any": "error",
       "@typescript-eslint/no-inferrable-types": "error",
@@ -88,9 +82,7 @@ export default [
       "@typescript-eslint/prefer-literal-enum-member": "error",
       "@typescript-eslint/prefer-nullish-coalescing": "error",
       "@typescript-eslint/prefer-readonly": "error",
-      "eqeqeq": "error",
-      "indent": "off", // @stylistic/indent
-      "sort-keys": "error",
+      eqeqeq: "error",
       "@typescript-eslint/no-unsafe-argument": "error",
       "@typescript-eslint/no-unsafe-assignment": "error",
       "@typescript-eslint/no-unsafe-member-access": "error",
@@ -107,7 +99,10 @@ export default [
       "function-call-argument-newline": ["error", "consistent"],
       "max-depth": ["error", { max: 5 }],
       "max-len": ["error", { code: 120 }],
-      "max-lines": ["error", { max: 677, skipBlankLines: true, skipComments: true }],
+      "max-lines": [
+        "error",
+        { max: 677, skipBlankLines: true, skipComments: true },
+      ],
       "max-lines-per-function": ["error", { max: 561 }],
       "no-loss-of-precision": "error",
       "no-multi-spaces": "error",
@@ -115,22 +110,30 @@ export default [
       "no-trailing-spaces": "error",
       "object-curly-newline": ["error", { multiline: true, consistent: true }],
       "object-curly-spacing": ["error", "always"],
-      "object-property-newline": ["error", { allowAllPropertiesOnSameLine: true }],
+      "object-property-newline": [
+        "error",
+        { allowAllPropertiesOnSameLine: true },
+      ],
       "object-shorthand": ["error", "always"],
       "no-undef": "error",
       "no-unused-vars": "off", // @typescript-eslint/no-unused-vars
-      "prefer-destructuring": ["error", {
-        array: false,
-        object: true,
-      }],
-      "quote-props": ["error", "consistent-as-needed"],
-      "sort-imports": "error",
+      "prefer-destructuring": [
+        "error",
+        {
+          array: false,
+          object: true,
+        },
+      ],
+      "quote-props": ["error", "as-needed"],
       "space-before-blocks": ["error", "always"],
-      "space-before-function-paren": ["error", {
-        anonymous: "always",
-        named: "never",
-        asyncArrow: "always",
-      }],
+      "space-before-function-paren": [
+        "error",
+        {
+          anonymous: "always",
+          named: "never",
+          asyncArrow: "always",
+        },
+      ],
       "space-infix-ops": "off",
     },
   },
@@ -149,7 +152,6 @@ export default [
       "@typescript-eslint/no-unsafe-assignment": "off",
       "@typescript-eslint/no-unsafe-member-access": "off",
       "max-len": "off",
-      "sort-keys": "off",
     },
   },
   {
@@ -158,21 +160,9 @@ export default [
         ...globals.jest,
       },
     },
-    files: [
-      "**/*.test.{js,ts,jsx,tsx}",
-      "tests/**/*.{js,ts,jsx,tsx}",
-    ],
+    files: ["**/*.test.{js,ts,jsx,tsx}", "tests/**/*.{js,ts,jsx,tsx}"],
     plugins: ["jest"],
     ...jest.configs["flat/style"],
-  },
-  {
-    files: [
-      "src/client/**/*.{js,ts,jsx,tsx}",
-    ],
-    rules: {
-      // Disabled rules for frontend
-      "sort-keys": "off",
-    },
   },
   {
     plugins: {

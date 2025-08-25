@@ -1,9 +1,9 @@
-import { AStar, AStarResult, PathFindResultType } from "./AStar";
-import { GameMap, TileRef } from "../game/GameMap";
-import { DistanceBasedBezierCurve } from "../utilities/Line";
 import { Game } from "../game/Game";
-import { MiniAStar } from "./MiniAStar";
+import { GameMap, TileRef } from "../game/GameMap";
 import { PseudoRandom } from "../PseudoRandom";
+import { DistanceBasedBezierCurve } from "../utilities/Line";
+import { AStar, AStarResult, PathFindResultType } from "./AStar";
+import { MiniAStar } from "./MiniAStar";
 
 const parabolaMinHeight = 50;
 
@@ -148,8 +148,7 @@ export class PathFinder {
     }
 
     if (this.game.manhattanDist(curr, dst) < dist) {
-      // eslint-disable-next-line sort-keys
-      return { type: PathFindResultType.Completed, node: curr };
+      return { node: curr, type: PathFindResultType.Completed };
     }
 
     if (this.computeFinished) {
@@ -165,8 +164,8 @@ export class PathFinder {
         if (tile === undefined) {
           throw new Error("missing tile");
         }
-        // eslint-disable-next-line sort-keys
-        return { type: PathFindResultType.NextTile, node: tile };
+
+        return { node: tile, type: PathFindResultType.NextTile };
       }
     }
 

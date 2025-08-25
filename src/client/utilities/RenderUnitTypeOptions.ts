@@ -1,5 +1,5 @@
 // renderUnitTypeOptions.ts
-import { TemplateResult, html } from "lit";
+import { html, TemplateResult } from "lit";
 import { UnitType } from "../../core/game/Game";
 import { translateText } from "../Utils";
 
@@ -9,16 +9,16 @@ export type UnitTypeRenderContext = {
 };
 
 const unitOptions: { type: UnitType; translationKey: string }[] = [
-  { type: UnitType.City, translationKey: "unit_type.city" },
-  { type: UnitType.DefensePost, translationKey: "unit_type.defense_post" },
-  { type: UnitType.Port, translationKey: "unit_type.port" },
-  { type: UnitType.Warship, translationKey: "unit_type.warship" },
-  { type: UnitType.MissileSilo, translationKey: "unit_type.missile_silo" },
-  { type: UnitType.SAMLauncher, translationKey: "unit_type.sam_launcher" },
-  { type: UnitType.AtomBomb, translationKey: "unit_type.atom_bomb" },
-  { type: UnitType.HydrogenBomb, translationKey: "unit_type.hydrogen_bomb" },
-  { type: UnitType.MIRV, translationKey: "unit_type.mirv" },
-  { type: UnitType.Factory, translationKey: "unit_type.factory" },
+  { translationKey: "unit_type.city", type: UnitType.City },
+  { translationKey: "unit_type.defense_post", type: UnitType.DefensePost },
+  { translationKey: "unit_type.port", type: UnitType.Port },
+  { translationKey: "unit_type.warship", type: UnitType.Warship },
+  { translationKey: "unit_type.missile_silo", type: UnitType.MissileSilo },
+  { translationKey: "unit_type.sam_launcher", type: UnitType.SAMLauncher },
+  { translationKey: "unit_type.atom_bomb", type: UnitType.AtomBomb },
+  { translationKey: "unit_type.hydrogen_bomb", type: UnitType.HydrogenBomb },
+  { translationKey: "unit_type.mirv", type: UnitType.MIRV },
+  { translationKey: "unit_type.factory", type: UnitType.Factory },
 ];
 
 export function renderUnitTypeOptions({
@@ -36,7 +36,7 @@ export function renderUnitTypeOptions({
           type="checkbox"
           .checked=${disabledUnits.includes(type)}
           @change=${(e: Event) => {
-            const { checked } = (e.target as HTMLInputElement);
+            const { checked } = e.target as HTMLInputElement;
             toggleUnit(type, checked);
           }}
         />

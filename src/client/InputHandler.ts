@@ -1,8 +1,8 @@
 import { EventBus, GameEvent } from "../core/EventBus";
-import { ReplaySpeedMultiplier } from "./utilities/ReplaySpeedMultiplier";
 import { UnitType } from "../core/game/Game";
 import { UnitView } from "../core/game/GameView";
 import { UserSettings } from "../core/game/UserSettings";
+import { ReplaySpeedMultiplier } from "./utilities/ReplaySpeedMultiplier";
 
 export class MouseUpEvent implements GameEvent {
   constructor(
@@ -145,20 +145,20 @@ export class InputHandler {
 
   initialize() {
     this.keybinds = {
-      toggleView: "Space",
-      centerCamera: "KeyC",
-      moveUp: "KeyW",
-      moveDown: "KeyS",
-      moveLeft: "KeyA",
-      moveRight: "KeyD",
-      zoomOut: "KeyQ",
-      zoomIn: "KeyE",
+      altKey: "AltLeft",
       attackRatioDown: "Digit1",
       attackRatioUp: "Digit2",
       boatAttack: "KeyB",
+      centerCamera: "KeyC",
       groundAttack: "KeyG",
       modifierKey: "ControlLeft",
-      altKey: "AltLeft",
+      moveDown: "KeyS",
+      moveLeft: "KeyA",
+      moveRight: "KeyD",
+      moveUp: "KeyW",
+      toggleView: "Space",
+      zoomIn: "KeyE",
+      zoomOut: "KeyQ",
       ...(JSON.parse(localStorage.getItem("settings.keybinds") ?? "{}") ?? {}),
     };
 
