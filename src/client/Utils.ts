@@ -45,6 +45,7 @@ export function createCanvas(): HTMLCanvasElement {
 
   return canvas;
 }
+
 /**
  * A polyfill for crypto.randomUUID that provides fallback implementations
  * for older browsers, particularly Safari versions < 15.4
@@ -234,4 +235,17 @@ export function incrementGamesPlayed(): void {
   } catch (error) {
     console.warn("Failed to increment games played in localStorage:", error);
   }
+}
+
+export function beforeUnloadCallback(event: BeforeUnloadEvent): void {
+  event.preventDefault();
+  event.returnValue = false;
+}
+
+export function setBeforeUnloadCallback(): void {
+  window.addEventListener("beforeunload", beforeUnloadCallback);
+}
+
+export function removeBeforeUnloadCallback(): void {
+  window.removeEventListener("beforeunload", beforeUnloadCallback);
 }
