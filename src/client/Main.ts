@@ -10,7 +10,7 @@ import "./components/baseComponents/Modal";
 import "./styles.css";
 import { GameRecord, GameStartInfo } from "../core/Schemas";
 import { discordLogin, getUserMe, isLoggedIn, logOut } from "./jwt";
-import { generateCryptoRandomUUID, incrementGamesPlayed, translateText } from "./Utils";
+import { generateCryptoRandomUUID, incrementGamesPlayed, setBeforeUnloadCallback, translateText } from "./Utils";
 import { DarkModeButton } from "./DarkModeButton";
 import { EventBus } from "../core/EventBus";
 import { FlagInput } from "./FlagInput";
@@ -164,9 +164,8 @@ class Client {
 
     window.addEventListener("beforeunload", () => {
       console.log("Browser is closing");
-      if (this.gameStop !== null) {
-        this.gameStop();
-      }
+      if (this.gameStop === null) return;
+      this.gameStop();
     });
 
     document.addEventListener("join-lobby", this.handleJoinLobby.bind(this));

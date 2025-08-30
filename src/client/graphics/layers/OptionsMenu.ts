@@ -1,6 +1,7 @@
 import { AlternateViewEvent, RedrawGraphicsEvent } from "../../InputHandler";
 import { LitElement, html } from "lit";
 import { customElement, state } from "lit/decorators.js";
+import { removeBeforeUnloadCallback, translateText } from "../../Utils";
 import { EventBus } from "../../../core/EventBus";
 import { GameType } from "../../../core/game/Game";
 import { GameUpdateType } from "../../../core/game/GameUpdates";
@@ -8,7 +9,6 @@ import { GameView } from "../../../core/game/GameView";
 import { Layer } from "./Layer";
 import { PauseGameEvent } from "../../Transport";
 import { UserSettings } from "../../../core/game/UserSettings";
-import { translateText } from "../../Utils";
 
 const button = ({
   classes = "",
@@ -80,6 +80,7 @@ export class OptionsMenu extends LitElement implements Layer {
       );
       if (!isConfirmed) return;
     }
+    removeBeforeUnloadCallback();
     // redirect to the home page
     window.location.href = "/";
   }
