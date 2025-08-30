@@ -628,5 +628,8 @@
   "radial_menu": {
     "delete_unit_title": "Delete Unit",
     "delete_unit_description": "Click to delete the nearest unit"
+  },
+  "catchup_overlay": {
+    "catchup_notice": "Catching up to the server... {progress}%"
   }
 }

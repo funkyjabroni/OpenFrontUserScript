@@ -18,6 +18,7 @@ import { PlayerActions } from "../../../core/game/Game";
 import { PlayerPanel } from "./PlayerPanel";
 import { TileRef } from "../../../core/game/GameMap";
 import { TransformHandler } from "../TransformHandler";
+import { TurnDebtEvent } from "../../Transport";
 import { UIState } from "../UIState";
 import { customElement } from "lit/decorators.js";
 import swordIcon from "../../../../resources/images/SwordIconWhite.svg";
@@ -30,6 +31,7 @@ export class MainRadialMenu extends LitElement implements Layer {
   private readonly chatIntegration: ChatIntegration;
 
   private clickedTile: TileRef | null = null;
+  private isInTurnDebt = false;
 
   constructor(
     private readonly eventBus: EventBus,
@@ -72,12 +74,21 @@ export class MainRadialMenu extends LitElement implements Layer {
 
   init() {
     this.radialMenu.init();
+    this.eventBus.on(TurnDebtEvent, (e) => {
+      this.isInTurnDebt = e.isInTurnDebt;
+      if (this.isInTurnDebt) {
+        this.closeMenu();
+      }
+    });
     this.eventBus.on(ContextMenuEvent, async (event) => {
       const worldCoords = this.transformHandler.screenToWorldCoordinates(
         event.x,
         event.y,
       );
       if (!this.game.isValidCoord(worldCoords.x, worldCoords.y)) {
+        return;
+      }
+      if (this.isInTurnDebt) {
         return;
       }
       const myPlayer = this.game.myPlayer();

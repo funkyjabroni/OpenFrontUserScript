@@ -1,6 +1,7 @@
 import {
   BuildUnitIntentEvent,
   SendUpgradeStructureIntentEvent,
+  TurnDebtEvent,
 } from "../../Transport";
 import {
   BuildableUnit,
@@ -129,13 +130,21 @@ export class BuildMenu extends LitElement implements Layer {
   public playerActions: PlayerActions | null = null;
   private filteredBuildTable: BuildItemDisplay[][] = buildTable;
   public transformHandler: TransformHandler | undefined;
+  private isInTurnDebt = false;
 
   init() {
     if (this.eventBus === undefined) throw new Error("Not initialized");
+    this.eventBus.on(TurnDebtEvent, (e) => {
+      this.isInTurnDebt = e.isInTurnDebt;
+      if (this.isInTurnDebt) {
+        this.hideMenu();
+      }
+    });
+
     this.eventBus.on(ShowBuildMenuEvent, (e) => {
       if (!this.game) return;
       if (!this.transformHandler) return;
-      if (!this.game.myPlayer()?.isAlive()) {
+      if (!this.game.myPlayer()?.isAlive() || this.isInTurnDebt) {
         return;
       }
       if (!this._hidden) {
