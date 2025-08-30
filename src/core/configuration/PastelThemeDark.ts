@@ -30,12 +30,18 @@ export class PastelThemeDark implements Theme {
   private readonly water = colord({ r: 14, g: 11, b: 30 });
   private readonly shorelineWater = colord({ r: 50, g: 50, b: 50 });
 
-  private readonly _selfColor = colord({ r: 0, g: 255, b: 0 });
-  private readonly _allyColor = colord({ r: 255, g: 255, b: 0 });
+  private readonly _selfColor = colord({ r: 255, g: 255, b: 0 });
+  private readonly _allyColor = colord({ r: 0, g: 255, b: 0 });
   private readonly _neutralColor = colord({ r: 128, g: 128, b: 128 });
   private readonly _enemyColor = colord({ r: 255, g: 0, b: 0 });
 
+  private readonly _colorBlindSelfColor = colord({ r: 255, g: 200, b: 0 });
+  private readonly _colorBlindAllyColor = colord({ r: 0, g: 180, b: 255 });
+  private readonly _colorBlindNeutralColor = colord({ r: 160, g: 160, b: 160 });
+  private readonly _colorBlindEnemyColor = colord({ r: 230, g: 0, b: 255 });
+
   private readonly _spawnHighlightColor = colord({ r: 255, g: 213, b: 79 });
+  private readonly _colorBlindSpawnHighlightColor = colord({ r: 255, g: 255, b: 120 });
   /* eslint-enable sort-keys */
 
   teamColor(team: Team): Colord {
@@ -173,7 +179,24 @@ export class PastelThemeDark implements Theme {
     return this._enemyColor;
   }
 
+  colorBlindSelfColor(): Colord {
+    return this._colorBlindSelfColor;
+  }
+  colorBlindAllyColor(): Colord {
+    return this._colorBlindAllyColor;
+  }
+  colorBlindNeutralColor(): Colord {
+    return this._colorBlindNeutralColor;
+  }
+  colorBlindEnemyColor(): Colord {
+    return this._colorBlindEnemyColor;
+  }
+
   spawnHighlightColor(): Colord {
     return this._spawnHighlightColor;
+  }
+
+  colorBlindSpawnHighlightColor(): Colord {
+    return this._colorBlindSpawnHighlightColor;
   }
 }

@@ -177,14 +177,30 @@ export class TerritoryLayer implements Layer {
       if (!centerTile) {
         continue;
       }
-      let color = this.theme.spawnHighlightColor();
+      const isColorBlind = this.userSettings.colorBlindMode();
       const myPlayer = this.game.myPlayer();
-      if (
-        myPlayer !== null &&
-        myPlayer !== human &&
-        myPlayer.isFriendly(human)
-      ) {
-        color = this.theme.selfColor();
+      let color;
+
+      if (!myPlayer) {
+        color = isColorBlind
+          ? this.theme.colorBlindSpawnHighlightColor()
+          : this.theme.spawnHighlightColor();
+      } else if (human.smallID() === myPlayer.smallID()) {
+        color = isColorBlind
+          ? this.theme.colorBlindSelfColor()
+          : this.theme.selfColor();
+      } else if (myPlayer.isFriendly(human)) {
+        color = isColorBlind
+          ? this.theme.colorBlindAllyColor()
+          : this.theme.allyColor();
+      } else if (!human.hasEmbargo(myPlayer)) {
+        color = isColorBlind
+          ? this.theme.colorBlindNeutralColor()
+          : this.theme.neutralColor();
+      } else {
+        color = isColorBlind
+          ? this.theme.colorBlindEnemyColor()
+          : this.theme.enemyColor();
       }
       for (const tile of this.game.bfs(
         centerTile,
@@ -494,18 +510,28 @@ export class TerritoryLayer implements Layer {
   alternateViewColor(other: PlayerView): Colord {
     const myPlayer = this.game.myPlayer();
     if (!myPlayer) {
-      return this.theme.neutralColor();
+      return this.userSettings.colorBlindMode()
+        ? this.theme.colorBlindNeutralColor()
+        : this.theme.neutralColor();
     }
     if (other.smallID() === myPlayer.smallID()) {
-      return this.theme.selfColor();
+      return this.userSettings.colorBlindMode()
+        ? this.theme.colorBlindSelfColor()
+        : this.theme.selfColor();
     }
     if (other.isFriendly(myPlayer)) {
-      return this.theme.allyColor();
+      return this.userSettings.colorBlindMode()
+        ? this.theme.colorBlindAllyColor()
+        : this.theme.allyColor();
     }
     if (!other.hasEmbargo(myPlayer)) {
-      return this.theme.neutralColor();
+      return this.userSettings.colorBlindMode()
+        ? this.theme.colorBlindNeutralColor()
+        : this.theme.neutralColor();
     }
-    return this.theme.enemyColor();
+    return this.userSettings.colorBlindMode()
+      ? this.theme.colorBlindEnemyColor()
+      : this.theme.enemyColor();
   }
 
   paintAlternateViewTile(tile: TileRef, other: PlayerView) {
