@@ -16,6 +16,7 @@ import { PseudoRandom } from "../../../core/PseudoRandom";
 import { Theme } from "../../../core/configuration/Config";
 import { TransformHandler } from "../TransformHandler";
 import { UserSettings } from "../../../core/game/UserSettings";
+import spawnFlagIcon from "../../../../resources/images/RedFlagIcon.svg";
 
 export class TerritoryLayer implements Layer {
   private readonly userSettings: UserSettings;
@@ -38,6 +39,7 @@ export class TerritoryLayer implements Layer {
   // Used for spawn highlighting
   private highlightCanvas: HTMLCanvasElement | undefined;
   private highlightContext: CanvasRenderingContext2D | undefined;
+  private readonly spawnFlagIconImage: HTMLImageElement;
 
   private highlightedTerritory: PlayerView | null = null;
 
@@ -60,6 +62,13 @@ export class TerritoryLayer implements Layer {
     this.userSettings = userSettings;
     this.theme = game.config().theme();
     this.cachedTerritoryPatternsEnabled = undefined;
+    this.spawnFlagIconImage = new Image();
+    this.spawnFlagIconImage.decoding = "async";
+    this.spawnFlagIconImage.src = spawnFlagIcon;
+    this.spawnFlagIconImage.onload = () => this.eventBus.emit(new RedrawGraphicsEvent());
+    this.spawnFlagIconImage.onerror = (e) => {
+      console.warn("Failed to load spawn flag icon:", e);
+    };
   }
 
   shouldTransform(): boolean {
@@ -193,6 +202,26 @@ export class TerritoryLayer implements Layer {
         if (!this.game.hasOwner(tile)) {
           this.paintHighlightTile(tile, color, 255);
         }
+      }
+
+      // draw spawn flag for the local player
+      if (
+        myPlayer !== null &&
+        human === myPlayer &&
+        this.spawnFlagIconImage &&
+        this.spawnFlagIconImage.complete &&
+        this.highlightContext
+      ) {
+        const iconSize = 32;
+        const offsetX = center.x - iconSize / 5;
+        const offsetY = center.y - iconSize;
+        this.highlightContext.drawImage(
+          this.spawnFlagIconImage,
+          offsetX,
+          offsetY,
+          iconSize,
+          iconSize,
+        );
       }
     }
   }
