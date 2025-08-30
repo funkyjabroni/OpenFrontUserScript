@@ -22,6 +22,7 @@ import { logger } from "./Logger";
 import path from "path";
 import { preJoinMessageHandler } from "./worker/websocket/handler/message/PreJoinHandler";
 import rateLimit from "express-rate-limit";
+import { replacer } from "../core/Util";
 import { z } from "zod";
 
 const config = getServerConfigFromServer();
@@ -239,9 +240,9 @@ export async function startWorker() {
     gatekeeper.httpHandler(LimiterType.Get, async (req, res) => {
       const gameRecord = await readGameRecord(req.params.id);
 
-      if (!gameRecord) {
+      if (typeof gameRecord === "string") {
         return res.status(404).json({
-          error: "Game not found",
+          error: gameRecord,
           exists: false,
           success: false,
         });
@@ -265,11 +266,19 @@ export async function startWorker() {
         });
       }
 
-      return res.status(200).json({
-        exists: true,
-        gameRecord,
-        success: true,
-      });
+      return res
+        .status(200)
+        .header("Content-Type", "application/json")
+        .send(
+          JSON.stringify(
+            {
+              exists: true,
+              gameRecord,
+              success: true,
+            },
+            replacer,
+          ),
+        );
     }),
   );
 
