@@ -416,6 +416,8 @@ export const PlayerSchema = z.object({
 export const GameStartInfoSchema = z.object({
   config: GameConfigSchema,
   gameID: ID,
+  // Epoch time in milliseconds when the lobby was created.
+  lobbyCreatedAt: z.number().int().nonnegative(),
   players: PlayerSchema.array(),
 });
 
@@ -541,6 +543,7 @@ export type PlayerRecord = z.infer<typeof PlayerRecordSchema>;
 export const GameEndInfoSchema = GameStartInfoSchema.extend({
   duration: z.number().nonnegative(),
   end: z.number(),
+  lobbyFillTime: z.number().nonnegative(),
   num_turns: z.number(),
   players: PlayerRecordSchema.array(),
   start: z.number(),

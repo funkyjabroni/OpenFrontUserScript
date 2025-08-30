@@ -286,6 +286,7 @@ export class GameServer {
     this.gameStartInfo = {
       config: this.gameConfig,
       gameID: this.id,
+      lobbyCreatedAt: this.createdAt,
       players: this.activeClients.map((c) => ({
         clientID: c.clientID,
         flag: c.flag,
@@ -583,6 +584,7 @@ export class GameServer {
         Date.now(),
         this.winner?.winner,
         this.config,
+        this.gameStartInfo.lobbyCreatedAt,
       ),
     );
   }
