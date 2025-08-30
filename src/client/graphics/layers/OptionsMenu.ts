@@ -5,6 +5,9 @@ import { EventBus } from "../../../core/EventBus";
 import { GameType } from "../../../core/game/Game";
 import { GameUpdateType } from "../../../core/game/GameUpdates";
 import { GameView } from "../../../core/game/GameView";
+import { UserSettings } from "../../../core/game/UserSettings";
+import { AlternateViewEvent, RefreshGraphicsEvent } from "../../InputHandler";
+import { soundManager } from "../../SoundManager";
 import { Layer } from "./Layer";
 import { PauseGameEvent } from "../../Transport";
 import { UserSettings } from "../../../core/game/UserSettings";
@@ -137,8 +140,23 @@ export class OptionsMenu extends LitElement implements Layer {
     this.requestUpdate();
   }
 
+
+  private onMuteButtonClick() {
+    if (soundManager.isMuted()) {
+      soundManager.unmute();
+    } else {
+      soundManager.mute();
+    }
+    this.requestUpdate();
+  }
+
+  private onVolumeChange(e: Event) {
+    const volume = parseFloat((e.target as HTMLInputElement).value);
+    soundManager.setMasterVolume(volume);
+
   private onTogglePerformanceOverlayButtonClick() {
     this.userSettings.togglePerformanceOverlay();
+
     this.requestUpdate();
   }
 
@@ -275,6 +293,21 @@ export class OptionsMenu extends LitElement implements Layer {
                 ? "Focus locked"
                 : "Hover focus"),
           })} -->
+
+          ${button({
+            onClick: this.onMuteButtonClick,
+            title: "Mute",
+            children: soundManager.isMuted() ? "🔇" : "🔊",
+          })}
+
+          <input
+            type="range"
+            min="0"
+            max="1"
+            step="0.01"
+            .value=${soundManager.getMasterVolume()}
+            @input=${this.onVolumeChange}
+          />
         </div>
       </div>
     `;
