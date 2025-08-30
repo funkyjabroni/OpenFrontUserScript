@@ -34,6 +34,10 @@ jobs:
     name: 🔬 Test
     runs-on: ubuntu-latest
     timeout-minutes: 30
+    permissions:
+      checks: write
+      pull-requests: write
+      contents: write
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -44,7 +48,18 @@ jobs:
         with:
           node-version: 20
       - run: npm ci
-      - run: npm run test:coverage
+      - uses: actions/create-github-app-token@v2
+        id: generate-token
+        if: ${{ github.repository == 'openfrontio/OpenFrontIO' }}
+        with:
+          app-id: ${{ vars.APP_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
+      - uses: ArtiomTr/jest-coverage-report-action@262a7bb0b20c4d1d6b6b026af0f008f78da72788
+        if: ${{ github.repository != 'openfrontio/OpenFrontIO' }}
+      - uses: ArtiomTr/jest-coverage-report-action@262a7bb0b20c4d1d6b6b026af0f008f78da72788
+        if: ${{ github.repository == 'openfrontio/OpenFrontIO' }}
+        with:
+          github-token: ${{ steps.generate-token.outputs.token }}
 
   eslint:
     name: 🔍 ESLint
