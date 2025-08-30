@@ -95,7 +95,7 @@ class Client {
   private publicLobby: PublicLobby | undefined;
   private readonly userSettings: UserSettings = new UserSettings();
 
-  constructor() {}
+  constructor() { }
 
   initialize(): void {
     const gameVersion = document.getElementById(
@@ -309,15 +309,25 @@ class Client {
         loginDiscordButton.translationKey = "main.login_discord";
         logoutDiscordButton.hidden = true;
         territoryModal.onUserMe(null);
+        if (this.usernameInput) {
+          this.usernameInput.disabled = true;
+          const current = this.usernameInput.getCurrentUsername();
+          if (!/^Anon\d{3}$/.test(current)) {
+            this.usernameInput.resetToAnonymous();
+          }
+        }
       } else {
         // Authorized
         console.log(
           `Your player ID is ${userMeResponse.player.publicId}\n` +
-            "Sharing this ID will allow others to view your game history and stats.",
+          "Sharing this ID will allow others to view your game history and stats.",
         );
         loginDiscordButton.translationKey = "main.logged_in";
         loginDiscordButton.hidden = true;
         territoryModal.onUserMe(userMeResponse);
+        if (this.usernameInput) {
+          this.usernameInput.disabled = false;
+        }
       }
     };
 
