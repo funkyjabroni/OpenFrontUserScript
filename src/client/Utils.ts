@@ -147,6 +147,37 @@ export const translateText = (
 };
 
 /**
+ * Normalizes a string to be used as a translation key.
+ * Removes accents, converts to lowercase, replaces spaces with underscores,
+ * and ensures only alphanumeric characters, hyphens, and underscores remain.
+ *
+ * @example normalizeKeyName("São Tomé & Príncipe") // Returns "sao_tome_principe"
+ */
+export function normalizeKeyName(key: string): string {
+  return key
+    .normalize("NFKD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .replace(/\s+/g, "_")
+    .replace(/[^a-z0-9\-_]/g, "")
+    .replace(/_+/g, "_")
+    .replace(/^_|_$/g, "");
+}
+
+export function getTranslatedCountryName(
+  countryCode: string,
+  countryName: string,
+): string {
+  const normalizedCode = normalizeKeyName(countryCode);
+  if (!normalizedCode) {
+    return countryName;
+  }
+  const translationKey = `flags.${normalizedCode}`;
+  const translatedName = translateText(translationKey);
+  return translatedName === translationKey ? countryName : translatedName;
+}
+
+/**
  * Severity colors mapping for message types
  */
 export const severityColors: Record<string, string> = {
