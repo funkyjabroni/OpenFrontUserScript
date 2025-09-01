@@ -24,6 +24,7 @@ import { PlayerPanel } from "./layers/PlayerPanel";
 import { RailroadLayer } from "./layers/RailroadLayer";
 import { RedrawGraphicsEvent } from "../InputHandler";
 import { ReplayPanel } from "./layers/ReplayPanel";
+import { SAMRadiusLayer } from "./layers/SAMRadiusLayer";
 import { SettingsModal } from "./layers/SettingsModal";
 import { SpawnAd } from "./layers/SpawnAd";
 import { SpawnTimer } from "./layers/SpawnTimer";
@@ -199,6 +200,7 @@ export function createRenderer(
   headsUpMessage.game = game;
 
   const structureLayer = new StructureLayer(game, eventBus, transformHandler);
+  const samRadiusLayer = new SAMRadiusLayer(game, eventBus, transformHandler);
 
   const fpsDisplay = document.querySelector("fps-display") as FPSDisplay;
   if (!(fpsDisplay instanceof FPSDisplay)) {
@@ -235,6 +237,8 @@ export function createRenderer(
     new TerritoryLayer(game, eventBus, transformHandler, userSettings),
     new RailroadLayer(game),
     structureLayer,
+    samRadiusLayer,
+    new StructureIconsLayer(game, eventBus, transformHandler),
     new UnitLayer(game, eventBus, transformHandler),
     new FxLayer(game),
     new UILayer(game, eventBus),
