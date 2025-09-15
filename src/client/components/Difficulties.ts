@@ -1,13 +1,5 @@
 import { LitElement, css, html } from "lit";
 import { customElement, property } from "lit/decorators.js";
-import { Difficulty } from "../../core/game/Game";
-
-export const DifficultyDescription: Record<Difficulty, string> = {
-  Easy: "Relaxed",
-  Medium: "Balanced",
-  Hard: "Intense",
-  Impossible: "Impossible",
-} as const;
 
 @customElement("difficulty-display")
 export class DifficultyDisplay extends LitElement {

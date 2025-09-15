@@ -21,7 +21,6 @@ import { generateID } from "../core/Util";
 import "./components/baseComponents/Button";
 import "./components/baseComponents/Modal";
 import "./components/Difficulties";
-import { DifficultyDescription } from "./components/Difficulties";
 import "./components/Maps";
 import { FlagInput } from "./FlagInput";
 import { JoinLobbyEvent } from "./Main";
@@ -145,9 +144,7 @@ export class SinglePlayerModal extends LitElement {
                       .difficultyKey=${value}
                     ></difficulty-display>
                     <p class="option-card-title">
-                      ${translateText(
-                        `difficulty.${DifficultyDescription[value]}`,
-                      )}
+                      ${translateText(`difficulty.${value.toLowerCase()}`)}
                     </p>
                   </div>
                 `,
