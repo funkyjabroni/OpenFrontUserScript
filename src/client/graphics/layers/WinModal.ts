@@ -213,7 +213,7 @@ export class WinModal extends LitElement implements Layer {
       this.show();
     }
     const updates = this.game.updatesSinceLastTick();
-    const winUpdates = updates !== null ? updates["Win"] : [];
+    const winUpdates = updates?.["Win"] ?? [];
     winUpdates.forEach((wu) => {
       if (wu.winner === undefined) {
         // ...

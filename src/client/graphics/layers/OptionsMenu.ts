@@ -152,7 +152,8 @@ export class OptionsMenu extends LitElement implements Layer {
   tick() {
     const updates = this.game.updatesSinceLastTick();
     if (updates) {
-      this.hasWinner = this.hasWinner || updates["Win"].length > 0;
+      const winUpdates = updates?.["Win"] ?? [];
+      this.hasWinner = this.hasWinner || winUpdates.length > 0;
     }
     if (this.game.inSpawnPhase()) {
       this.timer = 0;
