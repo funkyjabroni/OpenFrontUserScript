@@ -49,7 +49,7 @@ export async function setup(
   // Configure the game
   const serverConfig = new TestServerConfig();
   const gameConfig: GameConfig = {
-    gameMap: "Asia",
+    gameMap: "asia",
     gameMode: "Free For All",
     gameType: "Singleplayer",
     difficulty: "Medium",

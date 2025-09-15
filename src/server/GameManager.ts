@@ -38,7 +38,7 @@ export class GameManager {
       Date.now(),
       this.config,
       {
-        gameMap: "World",
+        gameMap: "world",
         gameType: "Private",
         difficulty: "Medium",
         disableNPCs: false,

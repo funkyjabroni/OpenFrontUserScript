@@ -35,7 +35,7 @@ export class HostLobbyModal extends LitElement {
     open: () => void;
     close: () => void;
   };
-  @state() private selectedMap: GameMapType = "World";
+  @state() private selectedMap: GameMapType = "world";
   @state() private selectedDifficulty: Difficulty = "Medium";
   @state() private disableNPCs = false;
   @state() private gameMode: GameMode = "Free For All";

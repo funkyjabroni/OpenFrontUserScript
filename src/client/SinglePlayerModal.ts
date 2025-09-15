@@ -33,7 +33,7 @@ export class SinglePlayerModal extends LitElement {
     open: () => void;
     close: () => void;
   };
-  @state() private selectedMap: GameMapType = "World";
+  @state() private selectedMap: GameMapType = "world";
   @state() private selectedDifficulty: Difficulty = "Medium";
   @state() private disableNPCs: boolean = false;
   @state() private bots: number = 400;

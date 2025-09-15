@@ -4,39 +4,6 @@ import { GameMapType, GameMapTypeSchema } from "../../core/game/Game";
 import { terrainMapFileLoader } from "../TerrainMapFileLoader";
 import { translateText } from "../Utils";
 
-// Add map descriptions
-export const MapDescription: Record<GameMapType, string> = {
-  World: "World",
-  "Giant World Map": "Giant World Map",
-  Europe: "Europe",
-  "Europe Classic": "Europe Classic",
-  Mena: "MENA",
-  "North America": "North America",
-  Oceania: "Oceania",
-  "Black Sea": "Black Sea",
-  Africa: "Africa",
-  Pangaea: "Pangaea",
-  Asia: "Asia",
-  Mars: "Mars",
-  "Mars Revised": "Mars Revised",
-  "South America": "South America",
-  Britannia: "Britannia",
-  "Gateway to the Atlantic": "Gateway to the Atlantic",
-  Australia: "Australia",
-  Iceland: "Iceland",
-  "East Asia": "East Asia",
-  "Between Two Seas": "Between Two Seas",
-  "Faroe Islands": "Faroe Islands",
-  "Deglaciated Antarctica": "Deglaciated Antarctica",
-  "Falkland Islands": "Falkland Islands",
-  Baikal: "Baikal",
-  Halkidiki: "Halkidiki",
-  "Strait of Gibraltar": "Strait of Gibraltar",
-  Italia: "Italia",
-  Yenisei: "Yenisei",
-  Pluto: "Pluto",
-};
-
 @customElement("map-display")
 export class MapDisplay extends LitElement {
   @property({ type: String }) mapKey = "";
