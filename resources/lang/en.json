@@ -236,10 +236,10 @@
   },
   "difficulty": {
     "difficulty": "Difficulty",
-    "Relaxed": "Relaxed",
-    "Balanced": "Balanced",
-    "Intense": "Intense",
-    "Impossible": "Impossible"
+    "easy": "Relaxed",
+    "medium": "Balanced",
+    "hard": "Intense",
+    "impossible": "Impossible"
   },
   "game_mode": {
     "ffa": "Free for All",
