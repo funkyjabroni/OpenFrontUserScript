@@ -286,6 +286,8 @@
 })();
 
 
+
+//Wonder's Optimal Pop Tier Bar - All Credit Goees to His Design
 (function() {
     'use strict';
 
