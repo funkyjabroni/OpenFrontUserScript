@@ -285,15 +285,13 @@
   );
 })();
 
-
-
 //Wonder's Optimal Pop Tier Bar - All Credit Goees to His Design
-(function() {
-    'use strict';
+(function () {
+  "use strict";
 
-    // Inject CSS for the progress bar
-    const style = document.createElement('style');
-    style.textContent = `
+  // Inject CSS for the progress bar
+  const style = document.createElement("style");
+  style.textContent = `
         /* Progress bar styles */
         #troop-progress-bar {
             width: 100%;
@@ -351,248 +349,305 @@
         .troop-line-with-progress .font-bold {
             display: inline !important;
         }
+
+        .wonder-credit {
+            margin-top: 6px;
+            font-size: 10px;
+            color: rgba(255, 255, 255, 0.45);
+            text-align: right;
+            font-style: italic;
+        }
     `;
 
-    document.head.appendChild(style);
+  document.head.appendChild(style);
 
-    // Calculate troop regen rate (same formula as regen calculator)
-    function calculateTroopIncreaseRate(currentTroops, maxTroops) {
-        let toAdd = 10 + Math.pow(currentTroops, 0.73) / 4;
-        const ratio = 1 - currentTroops / maxTroops;
-        toAdd *= ratio;
-        return Math.min(currentTroops + toAdd, maxTroops) - currentTroops;
+  // Calculate troop regen rate (same formula as regen calculator)
+  function calculateTroopIncreaseRate(currentTroops, maxTroops) {
+    let toAdd = 10 + Math.pow(currentTroops, 0.73) / 4;
+    const ratio = 1 - currentTroops / maxTroops;
+    toAdd *= ratio;
+    return Math.min(currentTroops + toAdd, maxTroops) - currentTroops;
+  }
+
+  // Find optimal troop count for max regen
+  function findOptimalTroops(maxTroops) {
+    let maxRegen = 0;
+    let optimalTroops = 0;
+
+    for (
+      let troops = 0;
+      troops <= maxTroops;
+      troops += Math.max(1, Math.floor(maxTroops / 1000))
+    ) {
+      const regen = calculateTroopIncreaseRate(troops, maxTroops);
+      if (regen > maxRegen) {
+        maxRegen = regen;
+        optimalTroops = troops;
+      }
     }
 
-    // Find optimal troop count for max regen
-    function findOptimalTroops(maxTroops) {
-        let maxRegen = 0;
-        let optimalTroops = 0;
+    return { maxRegen, optimalTroops };
+  }
 
-        for (let troops = 0; troops <= maxTroops; troops += Math.max(1, Math.floor(maxTroops / 1000))) {
-            const regen = calculateTroopIncreaseRate(troops, maxTroops);
-            if (regen > maxRegen) {
-                maxRegen = regen;
-                optimalTroops = troops;
-            }
-        }
+  // Find the troop count range for a specific regen percentage on one side of optimal
+  function findRegenTierRangeOneSide(
+    maxTroops,
+    maxRegen,
+    optimalTroops,
+    minPercent,
+    maxPercent,
+    beforeOptimal,
+  ) {
+    let rangeStart = maxTroops;
+    let rangeEnd = 0;
 
-        return { maxRegen, optimalTroops };
+    const searchStart = beforeOptimal ? 0 : optimalTroops;
+    const searchEnd = beforeOptimal ? optimalTroops : maxTroops;
+
+    for (
+      let troops = searchStart;
+      troops <= searchEnd;
+      troops += Math.max(1, Math.floor(maxTroops / 1000))
+    ) {
+      const regen = calculateTroopIncreaseRate(troops, maxTroops);
+      const regenPercent = regen / maxRegen;
+
+      if (regenPercent >= minPercent && regenPercent <= maxPercent) {
+        rangeStart = Math.min(rangeStart, troops);
+        rangeEnd = Math.max(rangeEnd, troops);
+      }
     }
 
-    // Find the troop count range for a specific regen percentage on one side of optimal
-    function findRegenTierRangeOneSide(maxTroops, maxRegen, optimalTroops, minPercent, maxPercent, beforeOptimal) {
-        let rangeStart = maxTroops;
-        let rangeEnd = 0;
-
-        const searchStart = beforeOptimal ? 0 : optimalTroops;
-        const searchEnd = beforeOptimal ? optimalTroops : maxTroops;
-
-        for (let troops = searchStart; troops <= searchEnd; troops += Math.max(1, Math.floor(maxTroops / 1000))) {
-            const regen = calculateTroopIncreaseRate(troops, maxTroops);
-            const regenPercent = regen / maxRegen;
-
-            if (regenPercent >= minPercent && regenPercent <= maxPercent) {
-                rangeStart = Math.min(rangeStart, troops);
-                rangeEnd = Math.max(rangeEnd, troops);
-            }
-        }
-
-        // Return null if no valid range found
-        if (rangeStart > rangeEnd) {
-            return null;
-        }
-
-        return { rangeStart, rangeEnd };
+    // Return null if no valid range found
+    if (rangeStart > rangeEnd) {
+      return null;
     }
 
-    // Function to parse troop numbers and add progress bar
-    function addProgressBar(troopsLine, parentContainer) {
-        try {
-            // Check if progress bar already exists
-            const existingBar = parentContainer.querySelector('#troop-progress-bar');
-            if (existingBar) {
-                // Update existing progress bar
-                const text = troopsLine.textContent;
-                const match = text.match(/([\d.]+)([KM])?\s*\/\s*([\d.]+)([KM])?/);
+    return { rangeStart, rangeEnd };
+  }
 
-                if (!match) return;
+  // Function to parse troop numbers and add progress bar
+  function addProgressBar(troopsLine, parentContainer) {
+    try {
+      // Check if progress bar already exists
+      const existingBar = parentContainer.querySelector("#troop-progress-bar");
+      if (existingBar) {
+        // Update existing progress bar
+        const text = troopsLine.textContent;
+        const match = text.match(/([\d.]+)([KM])?\s*\/\s*([\d.]+)([KM])?/);
 
-                let current = parseFloat(match[1]);
-                let max = parseFloat(match[3]);
+        if (!match) return;
 
-                // Convert K (thousands) or M (millions) to actual numbers
-                const currentUnit = match[2];
-                const maxUnit = match[4];
+        let current = parseFloat(match[1]);
+        let max = parseFloat(match[3]);
 
-                if (currentUnit === 'K') current *= 1000;
-                else if (currentUnit === 'M') current *= 1000000;
+        // Convert K (thousands) or M (millions) to actual numbers
+        const currentUnit = match[2];
+        const maxUnit = match[4];
 
-                if (maxUnit === 'K') max *= 1000;
-                else if (maxUnit === 'M') max *= 1000000;
+        if (currentUnit === "K") current *= 1000;
+        else if (currentUnit === "M") current *= 1000000;
 
-                const percentage = (current / max) * 100;
-                const progressFill = existingBar.querySelector('#troop-progress-fill');
-                if (progressFill) {
-                    progressFill.style.width = percentage + '%';
-                }
-                return;
-            }
+        if (maxUnit === "K") max *= 1000;
+        else if (maxUnit === "M") max *= 1000000;
 
-            // Parse current and max troops from the text
-            const text = troopsLine.textContent;
-            const match = text.match(/([\d.]+)([KM])?\s*\/\s*([\d.]+)([KM])?/);
-
-            if (!match) return;
-
-            let current = parseFloat(match[1]);
-            let max = parseFloat(match[3]);
-
-            // Convert K (thousands) or M (millions) to actual numbers
-            const currentUnit = match[2];
-            const maxUnit = match[4];
-
-            if (currentUnit === 'K') current *= 1000;
-            else if (currentUnit === 'M') current *= 1000000;
-
-            if (maxUnit === 'K') max *= 1000;
-            else if (maxUnit === 'M') max *= 1000000;
-
-            const percentage = (current / max) * 100;
-
-            // Calculate optimal regen using same logic as regen calculator
-            const { maxRegen, optimalTroops } = findOptimalTroops(max);
-
-            // Define tier ranges based on regen percentage (same as regen calculator)
-            // S: 90%+, A: 75-90%, B: 60-75%, C: 40-60%, D: <40%
-            const tierDefinitions = [
-                { tier: 'S', min: 0.9, max: 1.0, color: '#FFD700' },
-                { tier: 'A', min: 0.75, max: 0.9, color: '#90EE90' },
-                { tier: 'B', min: 0.6, max: 0.75, color: '#87CEEB' },
-                { tier: 'C', min: 0.4, max: 0.6, color: '#FFA500' },
-                { tier: 'D', min: 0, max: 0.4, color: '#FF6B6B' }
-            ];
-
-            // Create progress bar container
-            const progressBar = document.createElement('div');
-            progressBar.id = 'troop-progress-bar';
-
-            const progressFill = document.createElement('div');
-            progressFill.id = 'troop-progress-fill';
-            progressFill.style.width = percentage + '%';
-
-            // Add tier range brackets - show ranges on both sides of optimal
-            tierDefinitions.forEach(({ tier, min, max: maxPercent, color }) => {
-                // Before optimal (approaching S-tier) - show as +
-                const beforeRange = findRegenTierRangeOneSide(max, maxRegen, optimalTroops, min, maxPercent, true);
-                if (beforeRange && beforeRange.rangeStart < beforeRange.rangeEnd) {
-                    const startPos = (beforeRange.rangeStart / max) * 100;
-                    const endPos = (beforeRange.rangeEnd / max) * 100;
-                    const width = endPos - startPos;
-
-                    const rangeEl = document.createElement('div');
-                    rangeEl.className = 'tier-range';
-                    rangeEl.style.left = startPos + '%';
-                    rangeEl.style.width = width + '%';
-
-                    const labelEl = document.createElement('div');
-                    labelEl.className = 'tier-range-label';
-                    labelEl.textContent = tier + '+';
-                    labelEl.style.color = color;
-
-                    rangeEl.appendChild(labelEl);
-                    progressBar.appendChild(rangeEl);
-                }
-
-                // After optimal (moving away from S-tier) - show as -
-                const afterRange = findRegenTierRangeOneSide(max, maxRegen, optimalTroops, min, maxPercent, false);
-                if (afterRange && afterRange.rangeStart < afterRange.rangeEnd) {
-                    const startPos = (afterRange.rangeStart / max) * 100;
-                    const endPos = (afterRange.rangeEnd / max) * 100;
-                    const width = endPos - startPos;
-
-                    const rangeEl = document.createElement('div');
-                    rangeEl.className = 'tier-range';
-                    rangeEl.style.left = startPos + '%';
-                    rangeEl.style.width = width + '%';
-
-                    const labelEl = document.createElement('div');
-                    labelEl.className = 'tier-range-label';
-                    labelEl.textContent = tier + '-';
-                    labelEl.style.color = color;
-
-                    rangeEl.appendChild(labelEl);
-                    progressBar.appendChild(rangeEl);
-                }
-            });
-
-            progressBar.appendChild(progressFill);
-
-            // Add the progress bar after the troops line (as a sibling, not child)
-            troopsLine.classList.add('troop-line-with-progress');
-            troopsLine.parentElement.insertBefore(progressBar, troopsLine.nextSibling);
-
-        } catch (e) {
+        const percentage = (current / max) * 100;
+        const progressFill = existingBar.querySelector("#troop-progress-fill");
+        if (progressFill) {
+          progressFill.style.width = percentage + "%";
         }
+        return;
+      }
+
+      // Parse current and max troops from the text
+      const text = troopsLine.textContent;
+      const match = text.match(/([\d.]+)([KM])?\s*\/\s*([\d.]+)([KM])?/);
+
+      if (!match) return;
+
+      let current = parseFloat(match[1]);
+      let max = parseFloat(match[3]);
+
+      // Convert K (thousands) or M (millions) to actual numbers
+      const currentUnit = match[2];
+      const maxUnit = match[4];
+
+      if (currentUnit === "K") current *= 1000;
+      else if (currentUnit === "M") current *= 1000000;
+
+      if (maxUnit === "K") max *= 1000;
+      else if (maxUnit === "M") max *= 1000000;
+
+      const percentage = (current / max) * 100;
+
+      // Calculate optimal regen using same logic as regen calculator
+      const { maxRegen, optimalTroops } = findOptimalTroops(max);
+
+      // Define tier ranges based on regen percentage (same as regen calculator)
+      // S: 90%+, A: 75-90%, B: 60-75%, C: 40-60%, D: <40%
+      const tierDefinitions = [
+        { tier: "S", min: 0.9, max: 1.0, color: "#FFD700" },
+        { tier: "A", min: 0.75, max: 0.9, color: "#90EE90" },
+        { tier: "B", min: 0.6, max: 0.75, color: "#87CEEB" },
+        { tier: "C", min: 0.4, max: 0.6, color: "#FFA500" },
+        { tier: "D", min: 0, max: 0.4, color: "#FF6B6B" },
+      ];
+
+      // Create progress bar container
+      const progressBar = document.createElement("div");
+      progressBar.id = "troop-progress-bar";
+
+      const progressFill = document.createElement("div");
+      progressFill.id = "troop-progress-fill";
+      progressFill.style.width = percentage + "%";
+
+      // Add tier range brackets - show ranges on both sides of optimal
+      tierDefinitions.forEach(({ tier, min, max: maxPercent, color }) => {
+        // Before optimal (approaching S-tier) - show as +
+        const beforeRange = findRegenTierRangeOneSide(
+          max,
+          maxRegen,
+          optimalTroops,
+          min,
+          maxPercent,
+          true,
+        );
+        if (beforeRange && beforeRange.rangeStart < beforeRange.rangeEnd) {
+          const startPos = (beforeRange.rangeStart / max) * 100;
+          const endPos = (beforeRange.rangeEnd / max) * 100;
+          const width = endPos - startPos;
+
+          const rangeEl = document.createElement("div");
+          rangeEl.className = "tier-range";
+          rangeEl.style.left = startPos + "%";
+          rangeEl.style.width = width + "%";
+
+          const labelEl = document.createElement("div");
+          labelEl.className = "tier-range-label";
+          labelEl.textContent = tier + "+";
+          labelEl.style.color = color;
+
+          rangeEl.appendChild(labelEl);
+          progressBar.appendChild(rangeEl);
+        }
+
+        // After optimal (moving away from S-tier) - show as -
+        const afterRange = findRegenTierRangeOneSide(
+          max,
+          maxRegen,
+          optimalTroops,
+          min,
+          maxPercent,
+          false,
+        );
+        if (afterRange && afterRange.rangeStart < afterRange.rangeEnd) {
+          const startPos = (afterRange.rangeStart / max) * 100;
+          const endPos = (afterRange.rangeEnd / max) * 100;
+          const width = endPos - startPos;
+
+          const rangeEl = document.createElement("div");
+          rangeEl.className = "tier-range";
+          rangeEl.style.left = startPos + "%";
+          rangeEl.style.width = width + "%";
+
+          const labelEl = document.createElement("div");
+          labelEl.className = "tier-range-label";
+          labelEl.textContent = tier + "-";
+          labelEl.style.color = color;
+
+          rangeEl.appendChild(labelEl);
+          progressBar.appendChild(rangeEl);
+        }
+      });
+
+      progressBar.appendChild(progressFill);
+
+      // Add the progress bar after the troops line (as a sibling, not child)
+      troopsLine.classList.add("troop-line-with-progress");
+      const parent = troopsLine.parentElement;
+      parent.insertBefore(progressBar, troopsLine.nextSibling);
+
+      // Add a subtle credit to Wonder for the original design
+      if (!parent.querySelector(".wonder-credit")) {
+        const credit = document.createElement("div");
+        credit.className = "wonder-credit";
+        credit.textContent = "Shoutout to Wonder for the original design!";
+        parent.insertBefore(credit, progressBar.nextSibling);
+      }
+    } catch (e) {
+      // Ignore parsing errors so the HUD can continue updating normally.
+    }
+  }
+
+  // Function to find and enhance the troops line
+  function enhanceTroopsDisplay() {
+    const controlPanel = document.querySelector("control-panel");
+    if (!controlPanel) return;
+
+    // Find the troops/gold info block
+    const infoBlock = Array.from(controlPanel.querySelectorAll("div")).find(
+      (div) => {
+        return (
+          div.className.includes("bg-black") &&
+          div.textContent.includes("Troops")
+        );
+      },
+    );
+
+    if (!infoBlock) {
+      return;
     }
 
-    // Function to find and enhance the troops line
-    function enhanceTroopsDisplay() {
-        const controlPanel = document.querySelector('control-panel');
-        if (!controlPanel) return;
+    // Find the troops line
+    const allFlexDivs = Array.from(
+      infoBlock.querySelectorAll(
+        '.flex.justify-between, [class*="flex"][class*="justify-between"]',
+      ),
+    );
+    const troopsLine = allFlexDivs.find((div) =>
+      div.textContent.includes("Troops:"),
+    );
 
-        // Find the troops/gold info block
-        const infoBlock = Array.from(controlPanel.querySelectorAll('div')).find(div => {
-            return div.className.includes('bg-black') && div.textContent.includes('Troops');
-        });
-
-        if (!infoBlock) {
-            return;
-        }
-
-        // Find the troops line
-        const allFlexDivs = Array.from(infoBlock.querySelectorAll('.flex.justify-between, [class*="flex"][class*="justify-between"]'));
-        const troopsLine = allFlexDivs.find(div => div.textContent.includes('Troops:'));
-
-        if (!troopsLine) {
-            return;
-        }
-
-        // Add or update the progress bar
-        addProgressBar(troopsLine, infoBlock);
+    if (!troopsLine) {
+      return;
     }
 
-    // Wait for the control panel
-    function setup() {
-        const controlPanel = document.querySelector('control-panel');
+    // Add or update the progress bar
+    addProgressBar(troopsLine, infoBlock);
+  }
 
-        if (controlPanel) {
-            enhanceTroopsDisplay();
-        } else {
-            setTimeout(setup, 500);
-        }
+  // Wait for the control panel
+  function setup() {
+    const controlPanel = document.querySelector("control-panel");
+
+    if (controlPanel) {
+      enhanceTroopsDisplay();
+    } else {
+      setTimeout(setup, 500);
     }
+  }
 
-    // Start the setup
-    setup();
+  // Start the setup
+  setup();
 
-    // Keep updating the display as data changes
-    setInterval(enhanceTroopsDisplay, 1000);
+  // Keep updating the display as data changes
+  setInterval(enhanceTroopsDisplay, 1000);
 
-    // Also observe DOM changes
-    const observer = new MutationObserver(() => {
-        enhanceTroopsDisplay();
-    });
+  // Also observe DOM changes
+  const observer = new MutationObserver(() => {
+    enhanceTroopsDisplay();
+  });
 
-    setTimeout(() => {
-        const controlPanel = document.querySelector('control-panel');
-        if (controlPanel) {
-            observer.observe(controlPanel, {
-                childList: true,
-                subtree: true,
-                characterData: true
-            });
-        }
-    }, 1000);
+  setTimeout(() => {
+    const controlPanel = document.querySelector("control-panel");
+    if (controlPanel) {
+      observer.observe(controlPanel, {
+        childList: true,
+        subtree: true,
+        characterData: true,
+      });
+    }
+  }, 1000);
 
-    console.log('[OpenFront - Tier Ranges] - Active!');
+  console.log("[OpenFront - Tier Ranges] - Active!");
 })();
