@@ -102,6 +102,14 @@
   statusLabel.style.textTransform = "none";
   statusLabel.style.marginTop = "2px";
 
+  const embargoCredit = document.createElement("div");
+  embargoCredit.textContent = "Shoutout to Trade King for the original concept!";
+  embargoCredit.style.fontSize = "10px";
+  embargoCredit.style.color = "rgba(248, 250, 252, 0.45)";
+  embargoCredit.style.textAlign = "right";
+  embargoCredit.style.fontStyle = "italic";
+  embargoCredit.style.marginTop = "-2px";
+
   const toggleButton = document.createElement("button");
   toggleButton.type = "button";
   toggleButton.textContent = "Embargo Everyone";
@@ -276,6 +284,7 @@
   hud.appendChild(dragHandle);
   hud.appendChild(toggleButton);
   hud.appendChild(statusLabel);
+  hud.appendChild(embargoCredit);
   document.body.appendChild(hud);
 
   updateUi();
