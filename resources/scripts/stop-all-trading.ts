@@ -83,6 +83,16 @@
   hud.style.userSelect = "none";
   hud.style.backdropFilter = "blur(6px)";
 
+  const hudTitle = document.createElement("div");
+  hudTitle.textContent = "UN STANDARD ISSUE HUD";
+  hudTitle.style.fontSize = "11px";
+  hudTitle.style.fontWeight = "700";
+  hudTitle.style.letterSpacing = "0.18em";
+  hudTitle.style.textTransform = "uppercase";
+  hudTitle.style.textAlign = "center";
+  hudTitle.style.color = "rgba(248, 250, 252, 0.75)";
+  hudTitle.style.paddingBottom = "2px";
+
   const dragHandle = document.createElement("div");
   dragHandle.textContent = "Trade Control";
   dragHandle.style.fontSize = "13px";
@@ -103,7 +113,8 @@
   statusLabel.style.marginTop = "2px";
 
   const embargoCredit = document.createElement("div");
-  embargoCredit.textContent = "Shoutout to Trade King for the original concept!";
+  embargoCredit.textContent =
+    "Shoutout to Trade King for the original concept!";
   embargoCredit.style.fontSize = "10px";
   embargoCredit.style.color = "rgba(248, 250, 252, 0.45)";
   embargoCredit.style.textAlign = "right";
@@ -281,6 +292,7 @@
   });
 
   dragHandle.appendChild(closeButton);
+  hud.appendChild(hudTitle);
   hud.appendChild(dragHandle);
   hud.appendChild(toggleButton);
   hud.appendChild(statusLabel);
